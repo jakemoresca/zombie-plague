@@ -37,6 +37,7 @@ public static class GridHelper
 
         var collisionMaps = map.GetCollisionMaps();
         var collisionMapKey = $"col{column}row{row}";
+        passable = true;
 
         if(collisionMaps.Contains(collisionMapKey))
         {
@@ -44,10 +45,50 @@ public static class GridHelper
 
             if(collisionMapValue.Contains(direction))
             {
-                return !bool.Parse(collisionMapValue[direction].ToString());
+                passable = !bool.Parse(collisionMapValue[direction].ToString());
             }
         }
 
-        return true;
+        var doors = map.GetDoors();
+
+        if(doors.Contains(collisionMapKey))
+        {
+            var collisionMapValue = (Godot.Collections.Dictionary)doors[collisionMapKey];
+
+            if(collisionMapValue.Contains(direction))
+            {
+                if(collisionMapValue.Contains("IsClosed"))
+                {
+                    var isClosed = bool.Parse(collisionMapValue["IsClosed"].ToString());
+                    passable = !isClosed && !bool.Parse(collisionMapValue[direction].ToString());
+                }
+                else
+                {
+                    passable = true;
+                }
+            }
+        }
+
+        var windows = map.GetWindows();
+
+        if(windows.Contains(collisionMapKey))
+        {
+            var collisionMapValue = (Godot.Collections.Dictionary)windows[collisionMapKey];
+
+            if(collisionMapValue.Contains(direction))
+            {
+                if(collisionMapValue.Contains("IsClosed"))
+                {
+                    var isClosed = bool.Parse(collisionMapValue["IsClosed"].ToString());
+                    passable = !isClosed && !bool.Parse(collisionMapValue[direction].ToString());
+                }
+                else
+                {
+                    passable = true;
+                }
+            }
+        }
+
+        return passable;
     }
 }

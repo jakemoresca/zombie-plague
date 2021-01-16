@@ -28,6 +28,9 @@ public class Map : Area2D
 
 	private Godot.Collections.Dictionary _collisionMaps;
 
+	private Godot.Collections.Dictionary _doors;
+	private Godot.Collections.Dictionary _windows;
+
 	private Node2D _currentSelectedNode;
 
 	// Called when the node enters the scene tree for the first time.
@@ -119,10 +122,22 @@ public class Map : Area2D
 		var contentResult = (Godot.Collections.Dictionary)content.Result;
 
 		_collisionMaps = (Godot.Collections.Dictionary)contentResult["collisionMaps"];
+		_windows = (Godot.Collections.Dictionary)contentResult["windows"];
+		_doors = (Godot.Collections.Dictionary)contentResult["doors"];
 	}
 
 	public Godot.Collections.Dictionary GetCollisionMaps()
 	{
 		return _collisionMaps;
+	}
+
+	public Godot.Collections.Dictionary GetDoors()
+	{
+		return _doors;
+	}
+
+	public Godot.Collections.Dictionary GetWindows()
+	{
+		return _windows;
 	}
 }
