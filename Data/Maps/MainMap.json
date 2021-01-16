@@ -1,0 +1,10 @@
+{
+    "collisionMaps": {
+        "col2row1": { "left": false, "right": true, "up": false, "down": false },
+        "col3row1": { "left": true, "right": false, "up": false, "down": false },
+        "col2row2": { "left": false, "right": true, "up": false, "down": false },
+        "col3row2": { "left": true, "right": false, "up": false, "down": false },
+
+        "col14row2": { "left": false, "right": true, "up": false, "down": false }
+    }
+}

@@ -4,19 +4,41 @@ using System;
 public class Map : Area2D
 {
 	// Declare member variables here. Examples:
-	private int _numberOfColumns = 0;
-	private int _numberOfRows = 0;
-	private float _tileSize = 0;
-	private float _initX = 0;
-	private float _initY = 0;
+
+	[Export]
+	private int numberOfColumns = 0;
+
+	[Export]
+	private int numberOfRows = 0;
+
+	[Export]
+	private float tileSize = 0;
+
+	[Export]
+	private float initX = 0;
+
+	[Export]
+	private float initY = 0;
+
+	[Export]
+	private string mapData = "";
+
+	[Signal]
+	private delegate void FinishedUpdating();
+
+	private Godot.Collections.Dictionary _collisionMaps;
+
 	private Node2D _currentSelectedNode;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		/*
 		SetDimension(24, 20);
 		SetTileSize(71.28f);
 		SetInitCoordinates(-825.44f, -703.207f);
+		*/
+		LoadMapData();
 
 		TestInitialSetup();
 	}
@@ -32,34 +54,34 @@ public class Map : Area2D
 
 	public void SetDimension(int columns, int rows)
 	{
-		_numberOfColumns = columns;
-		_numberOfRows = rows;
+		numberOfColumns = columns;
+		numberOfRows = rows;
 	}
 
 	public (int, int) GetDimension()
 	{
-		return (_numberOfColumns, _numberOfRows);
+		return (numberOfColumns, numberOfRows);
 	}
 
 	public void SetTileSize(float tileSize)
 	{
-		_tileSize = tileSize;
+		this.tileSize = tileSize;
 	}
 
 	public float GetTileSize()
 	{
-		return _tileSize;
+		return tileSize;
 	}
 
 	public void SetInitCoordinates(float initX, float initY)
 	{
-		_initX = initX;
-		_initY = initY;
+		this.initX = initX;
+		this.initY = initY;
 	}
 
 	public (float, float) GetInitCoordinates()
 	{
-		return (_initX, _initY);
+		return (initX, initY);
 	}
 
 	public void SelectNode(Node2D node)
@@ -85,13 +107,22 @@ public class Map : Area2D
 
 	private void _on_Player_FinishedMovement(int column, int row, string direction)
 	{
-		var forwardButton = this.GetNode<ForwardButton>("./DirectionalButtons/Forward");
-		forwardButton.UpdateDirectionalButtonsPosition(column, row, direction);
+		EmitSignal(nameof(FinishedUpdating));
 	}
 
-	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-	//  public override void _Process(float delta)
-	//  {
-	//      
-	//  }
+	private void LoadMapData()
+	{
+		var mapDataFile = new Godot.File();
+		mapDataFile.Open("res://Data/Maps/" + mapData, File.ModeFlags.Read);
+
+		var content = Godot.JSON.Parse(mapDataFile.GetAsText());
+		var contentResult = (Godot.Collections.Dictionary)content.Result;
+
+		_collisionMaps = (Godot.Collections.Dictionary)contentResult["collisionMaps"];
+	}
+
+	public Godot.Collections.Dictionary GetCollisionMaps()
+	{
+		return _collisionMaps;
+	}
 }

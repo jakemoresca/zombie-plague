@@ -9,7 +9,9 @@ public class RotateRightButton : Area2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_map = this.GetNode<Map>("../../../MainMap");
+		_map = this.GetNode<Map>("../../MainMap");
+
+		_map.Connect("FinishedUpdating", this, "_on_Map_finished_updating");
 	}
 
 	private void _on_RotateRight_input_event(Viewport viewport, InputEvent @event, int shape_idx)
@@ -32,6 +34,17 @@ public class RotateRightButton : Area2D
 		}
 	}
 
+	private void _on_Map_finished_updating()
+	{
+		var currentSelectedNode = _map.GetSelectedNode();
+
+		if (currentSelectedNode is PlayerMovement player)
+		{
+			var newAngle = GetTargetAngle(player.GetDirection());
+			this.RotationDegrees = newAngle;
+		}
+	}
+
 	private string GetNewDirection(PlayerMovement player)
 	{
 		switch (player.GetDirection())
@@ -50,6 +63,26 @@ public class RotateRightButton : Area2D
 		}
 
 		return string.Empty;
+	}
+
+	private int GetTargetAngle(string direction)
+	{
+		switch(direction)
+		{
+			case "up":
+				return 0;
+
+			case "down":
+				return 180;
+
+			case "left":
+				return 270;
+
+			case "right":
+				return 90;
+		}
+
+		return 0;
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.

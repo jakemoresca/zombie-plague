@@ -18,8 +18,14 @@
 position = Vector2( -62.9961, 70.5555 )
 
 [node name="MainMap" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1032.12, 485.196 )
+position = Vector2( 1030.79, 485.196 )
 script = ExtResource( 4 )
+numberOfColumns = 24
+numberOfRows = 20
+tileSize = 71.28
+initX = -825.44
+initY = -703.207
+mapData = "MainMap.json"
 
 [node name="Character1" parent="MainMap" instance=ExtResource( 3 )]
 position = Vector2( -825.44, -703.207 )
@@ -30,21 +36,6 @@ script = ExtResource( 10 )
 position = Vector2( -35.756, 0 )
 scale = Vector2( 2, 2 )
 script = ExtResource( 10 )
-
-[node name="DirectionalButtons" type="Node2D" parent="MainMap"]
-position = Vector2( -825.44, -723.855 )
-scale = Vector2( 0.8, 0.8 )
-
-[node name="Forward" parent="MainMap/DirectionalButtons" instance=ExtResource( 5 )]
-script = ExtResource( 11 )
-
-[node name="RotateLeft" parent="MainMap/DirectionalButtons" instance=ExtResource( 6 )]
-position = Vector2( -86, 0 )
-script = ExtResource( 13 )
-
-[node name="RotateRight" parent="MainMap/DirectionalButtons" instance=ExtResource( 7 )]
-position = Vector2( 86, 0 )
-script = ExtResource( 12 )
 
 [node name="Borders" type="Node2D" parent="."]
 position = Vector2( 1000, 485.196 )
@@ -80,6 +71,21 @@ scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="input_event" from="MainMap/DirectionalButtons/Forward" to="MainMap/DirectionalButtons/Forward" method="_on_Forward_input_event"]
-[connection signal="input_event" from="MainMap/DirectionalButtons/RotateLeft" to="MainMap/DirectionalButtons/RotateLeft" method="_on_RotateLeft_input_event"]
-[connection signal="input_event" from="MainMap/DirectionalButtons/RotateRight" to="MainMap/DirectionalButtons/RotateRight" method="_on_RotateRight_input_event"]
+
+[node name="ActionButtons" type="Node2D" parent="."]
+position = Vector2( 1032.12, 877.402 )
+scale = Vector2( 0.8, 0.8 )
+
+[node name="Forward" parent="ActionButtons" instance=ExtResource( 5 )]
+script = ExtResource( 11 )
+
+[node name="RotateLeft" parent="ActionButtons" instance=ExtResource( 6 )]
+position = Vector2( -86, 0 )
+script = ExtResource( 13 )
+
+[node name="RotateRight" parent="ActionButtons" instance=ExtResource( 7 )]
+position = Vector2( 86, 0 )
+script = ExtResource( 12 )
+[connection signal="input_event" from="ActionButtons/Forward" to="ActionButtons/Forward" method="_on_Forward_input_event"]
+[connection signal="input_event" from="ActionButtons/RotateLeft" to="ActionButtons/RotateLeft" method="_on_RotateLeft_input_event"]
+[connection signal="input_event" from="ActionButtons/RotateRight" to="ActionButtons/RotateRight" method="_on_RotateRight_input_event"]

@@ -5,11 +5,14 @@ public class ForwardButton : Area2D
 {
 	// Declare member variables here. Examples:
 	private Map _map;
+	private bool _disabled = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_map = this.GetNode<Map>("../../../MainMap");
+		_map = this.GetNode<Map>("../../MainMap");
+
+		_map.Connect("FinishedUpdating", this, "_on_Map_finished_updating");
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -20,6 +23,9 @@ public class ForwardButton : Area2D
 
 	private void _on_Forward_input_event(Viewport viewport, InputEvent @event, int shape_idx)
 	{
+		if(_disabled)
+			return;
+
 		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
 		{
 			switch ((ButtonList)mouseEvent.ButtonIndex)
@@ -38,40 +44,28 @@ public class ForwardButton : Area2D
 		}
 	}
 
-	public void UpdateDirectionalButtonsPosition(int column, int row, string playerDirection)
+	private void _on_Map_finished_updating()
 	{
-		var directionalButtons = this.GetNode<Node2D>("../../DirectionalButtons");
-		var tileSize = _map.GetTileSize();
-		var initCoordinates = _map.GetInitCoordinates();
+		var currentSelectedNode = _map.GetSelectedNode();
 
-		var targetPosition = GetTargetPosition(column, row, playerDirection, tileSize, initCoordinates);
-		var targetAngle = GetTargetAngle(playerDirection);
-
-		directionalButtons.Position = targetPosition;
-		directionalButtons.RotationDegrees = targetAngle;
-	}
-
-	private Vector2 GetTargetPosition(int column, int row, string direction, float tileSize, (float, float) initCoordinates)
-	{
-		var playerX = ((column - 1) * tileSize) + initCoordinates.Item1;
-		var playerY = ((row - 1) * tileSize) + initCoordinates.Item2;
-
-		switch(direction)
+		if (currentSelectedNode is PlayerMovement player)
 		{
-			case "up":
-				return new Vector2(playerX, playerY - tileSize);
+			var newAngle = GetTargetAngle(player.GetDirection());
+			this.RotationDegrees = newAngle;
 
-			case "down":
-				return new Vector2(playerX, playerY + tileSize);
+			var gridPosition = player.GetGridPosition();
 
-			case "left":
-				return new Vector2(playerX - tileSize, playerY);
-
-			case "right":
-				return new Vector2(playerX + tileSize, playerY);
+			if(GridHelper.CanMoveForward(_map, gridPosition.Column, gridPosition.Row, player.GetDirection()))
+			{
+				this.Modulate = new Color("ffffff");
+				_disabled = false;
+			}
+			else
+			{
+				this.Modulate = new Color("4affffff");
+				_disabled = true;
+			}
 		}
-
-		return new Vector2(playerX, playerY);
 	}
 
 	private int GetTargetAngle(string direction)
