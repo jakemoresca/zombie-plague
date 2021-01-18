@@ -52,8 +52,8 @@ public class Map : Area2D
 
 	public void TestInitialSetup()
 	{
-		var character1 = this.GetNode<PlayerMovement>("./Character1");
-		var zombie = this.GetNode<PlayerMovement>("./Zombie");
+		var character1 = this.GetNode<Player>("./Character1");
+		var zombie = this.GetNode<Player>("./Zombie");
 
 		character1.SetGridPosition(2, 2);
 		zombie.SetGridPosition(10, 11);
@@ -103,7 +103,7 @@ public class Map : Area2D
 
 		_currentSelectedNode.Connect("FinishedMovement", this, "_on_Player_FinishedMovement");
 
-		if(node is PlayerMovement player)
+		if(node is Player player)
 		{
 			var position = player.GetGridPosition();
 			_on_Player_FinishedMovement(position.Column, position.Row, player.GetDirection());

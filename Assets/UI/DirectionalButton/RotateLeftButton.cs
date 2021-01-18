@@ -24,7 +24,7 @@ public class RotateLeftButton : Area2D
 
 					var currentSelectedNode = _map.GetSelectedNode();
 
-					if (currentSelectedNode is PlayerMovement player)
+					if (currentSelectedNode is Player player)
 					{
 						player.FaceDirection(GetNewDirection(player));
 					}
@@ -38,14 +38,14 @@ public class RotateLeftButton : Area2D
 	{
 		var currentSelectedNode = _map.GetSelectedNode();
 
-		if (currentSelectedNode is PlayerMovement player)
+		if (currentSelectedNode is Player player)
 		{
 			var newAngle = GetTargetAngle(player.GetDirection());
 			this.RotationDegrees = newAngle;
 		}
 	}
 
-	private string GetNewDirection(PlayerMovement player)
+	private string GetNewDirection(Player player)
 	{
 		switch (player.GetDirection())
 		{

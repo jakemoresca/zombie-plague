@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class PlayerMovement : Area2D
+public class Player : Area2D
 {
 	// Declare member variables here. Examples:
 	private Map _map;

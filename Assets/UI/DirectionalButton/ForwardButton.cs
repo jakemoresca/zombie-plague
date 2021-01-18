@@ -34,7 +34,7 @@ public class ForwardButton : Area2D
 
 					var currentSelectedNode = _map.GetSelectedNode();
 
-					if(currentSelectedNode is PlayerMovement player)
+					if(currentSelectedNode is Player player)
 					{
 						player.MoveForward();
 					}
@@ -48,7 +48,7 @@ public class ForwardButton : Area2D
 	{
 		var currentSelectedNode = _map.GetSelectedNode();
 
-		if (currentSelectedNode is PlayerMovement player)
+		if (currentSelectedNode is Player player)
 		{
 			var newAngle = GetTargetAngle(player.GetDirection());
 			this.RotationDegrees = newAngle;

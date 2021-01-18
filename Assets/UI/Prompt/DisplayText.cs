@@ -21,8 +21,7 @@ public class DisplayText : Node2D
 	public override void _Ready()
 	{
 		_label = this.GetNode<RichTextLabel>("./RichTextLabel");
-		_label.Text = Text;		
-		//this.Hide();
+		_label.Text = Text;
 	}
 
 	public void SetText(string text)
@@ -40,7 +39,6 @@ public class DisplayText : Node2D
 	{
 		TimeToDisplay = timeToDisplay ?? TimeToDisplay;
 		this.Modulate = new Color(HIDDEN_COLOR);
-		//this.Show();
 		_phase = "SHOWING";
 	}
 
