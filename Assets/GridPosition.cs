@@ -91,4 +91,12 @@ public static class GridHelper
 
         return passable;
     }
+
+    public static Vector2 GetTargetPosition(GridPosition position, float tileSize, (float, float) initCoordinates)
+	{
+		var targetX = ((position.Column - 1) * tileSize) + initCoordinates.Item1;
+		var targetY = ((position.Row - 1) * tileSize) + initCoordinates.Item2;
+
+		return new Vector2(targetX, targetY);
+	}
 }

@@ -31,7 +31,7 @@ public class Player : Area2D
 		var tileSize = _map.GetTileSize();
 		var initCoordinates = _map.GetInitCoordinates();
 
-		this.Position = GetTargetPosition(_position, tileSize, initCoordinates);
+		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
 	}
 
 	public GridPosition GetGridPosition()
@@ -60,7 +60,6 @@ public class Player : Area2D
 
 	public void MoveForward()
 	{
-		var currentPosition = this.Position;
 		var tileSize = _map.GetTileSize();
 		var initCoordinates = _map.GetInitCoordinates();
 
@@ -68,28 +67,35 @@ public class Player : Area2D
 		{
 			case "up":
 				_position.Row -= 1;
-				this.Position = GetTargetPosition(_position, tileSize, initCoordinates);
-
 				break;
 
 			case "left":
 				_position.Column -= 1;
-				this.Position = GetTargetPosition(_position, tileSize, initCoordinates);
-
 				break;
 
 			case "right":
 				_position.Column += 1;
-				this.Position = GetTargetPosition(_position, tileSize, initCoordinates);
-
 				break;
 
 			case "down":
 				_position.Row += 1;
-				this.Position = GetTargetPosition(_position, tileSize, initCoordinates);
-
 				break;
 		}
+
+		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
+
+		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
+	}
+
+	public void MoveTo(int column, int row)
+	{
+		var tileSize = _map.GetTileSize();
+		var initCoordinates = _map.GetInitCoordinates();
+
+		_position.Row = row;
+		_position.Column = column;
+
+		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
 
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
 	}
@@ -102,14 +108,6 @@ public class Player : Area2D
 		_direction = direction;
 
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
-	}
-
-	private Vector2 GetTargetPosition(GridPosition position, float tileSize, (float, float) initCoordinates)
-	{
-		var targetX = ((position.Column - 1) * tileSize) + initCoordinates.Item1;
-		var targetY = ((position.Row - 1) * tileSize) + initCoordinates.Item2;
-
-		return new Vector2(targetX, targetY);
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.

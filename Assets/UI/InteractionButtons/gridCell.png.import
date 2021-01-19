@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/UI_Elements01.png-338870f0d03d987bd89c75182660e887.stex"
+path="res://.import/gridCell.png-1934f8647a593b91b103c2ffb2bfb46f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/InteractionButtons/UI_Elements01.png"
-dest_files=[ "res://.import/UI_Elements01.png-338870f0d03d987bd89c75182660e887.stex" ]
+source_file="res://Assets/UI/InteractionButtons/gridCell.png"
+dest_files=[ "res://.import/gridCell.png-1934f8647a593b91b103c2ffb2bfb46f.stex" ]
 
 [params]
 

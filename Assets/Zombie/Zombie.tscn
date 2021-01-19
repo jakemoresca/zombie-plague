@@ -6,11 +6,12 @@
 extents = Vector2( 15.6048, 23.5791 )
 
 [node name="Zombie" type="Area2D"]
+z_index = 1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "up"
-frame = 3
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
