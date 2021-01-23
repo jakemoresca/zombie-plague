@@ -131,6 +131,8 @@ public class Map : Area2D
 		_collisionMaps = (Godot.Collections.Dictionary)contentResult["collisionMaps"];
 		_windows = (Godot.Collections.Dictionary)contentResult["windows"];
 		_doors = (Godot.Collections.Dictionary)contentResult["doors"];
+
+		mapDataFile.Close();
 	}
 
 	public Godot.Collections.Dictionary GetCollisionMaps()
