@@ -28,6 +28,8 @@ public class Dice : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		this.Hide();
+
 		_rollButton = this.GetNode<Button>("./Button");
 		_sprite = this.GetNode<Sprite>("./Sprite");
 		_label = this.GetNode<RichTextLabel>("./Label");
@@ -40,6 +42,7 @@ public class Dice : Node2D
 
 	public void ShowDice()
 	{
+		this.Show();
 		this.Modulate = new Color(VISIBLE_COLOR);
 	}
 
@@ -93,6 +96,8 @@ public class Dice : Node2D
 			{
 				_phase = nameof(CommonDisplayPhase.NONE);
 				_currentTime = 0;
+
+				this.Hide();
 			}
 		}
 	}

@@ -26,8 +26,18 @@ public class GridCellIndicator : Area2D
 		UpdateGridPosition();
 	}
 
-	public void UpdateGridPosition()
+	public void UpdateGridPosition(int? column = null, int? row = null)
 	{
+		if(column != null)
+		{
+			this.Column = column.Value;
+		}
+
+		if(row != null)
+		{
+			this.Row = row.Value;
+		}
+
 		var tileSize = _map.GetTileSize();
 		var initCoordinates = _map.GetInitCoordinates();
 		var position = new GridPosition { Row = this.Row, Column = this.Column };
@@ -35,6 +45,7 @@ public class GridCellIndicator : Area2D
 		initCoordinates.Item2 += 28;
 
 		this.Position = GridHelper.GetTargetPosition(position, tileSize, initCoordinates);
+		this.Modulate = new Color(RED_COLOR);
 
 		PlayAnimation();
 	}

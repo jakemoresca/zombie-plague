@@ -3,16 +3,18 @@ using System;
 
 public class DisplayText : Node2D
 {
-	// Declare member variables here. Examples:
+	[Signal]
+	private delegate void FinishedDisplaying(string displayName, string text);
+	
 	[Export]
 	private float TimeToDisplay = 5000;
-
 	[Export]
 	private string Text = "";
 
 	private float _currentTime = 0;
 	private RichTextLabel _label;
 	private string _phase = nameof(CommonDisplayPhase.NONE);
+	public string _displayName = "";
 
 	private const string HIDDEN_COLOR = "00ffffff";
 	private const string VISIBLE_COLOR = "ffffffff";
@@ -26,20 +28,21 @@ public class DisplayText : Node2D
 
 	public void SetText(string text)
 	{
-		if(_label == null)
-		{
-			Text = text;
-			return;
-		}
+		Text = text;
 
-		_label.Text = text;
+		if(_label != null)
+		{
+			_label.Text = text;
+		}
 	}
 
-	public void Display(float? timeToDisplay = null)
+	public void Display(string displayName = "", float? timeToDisplay = null)
 	{
 		TimeToDisplay = timeToDisplay ?? TimeToDisplay;
 		this.Modulate = new Color(HIDDEN_COLOR);
+
 		_phase = nameof(CommonDisplayPhase.SHOWING);
+		_displayName = displayName;
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -84,6 +87,8 @@ public class DisplayText : Node2D
 			{
 				_phase = nameof(CommonDisplayPhase.NONE);
 				_currentTime = 0;
+
+				EmitSignal(nameof(FinishedDisplaying), _displayName, Text);
 			}
 		}
 	}

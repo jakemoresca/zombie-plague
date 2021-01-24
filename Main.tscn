@@ -8,17 +8,18 @@
 [ext_resource path="res://Assets/UI/DirectionalButton/RotateLeft.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Assets/UI/DirectionalButton/RotateRight.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Assets/UI/Border/Border.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Borders.cs" type="Script" id=9]
+[ext_resource path="res://Assets/UI/Border/Borders.cs" type="Script" id=9]
 [ext_resource path="res://Assets/Player.cs" type="Script" id=10]
 [ext_resource path="res://Assets/UI/DirectionalButton/ForwardButton.cs" type="Script" id=11]
 [ext_resource path="res://Assets/UI/DirectionalButton/RotateRightButton.cs" type="Script" id=12]
 [ext_resource path="res://Assets/UI/DirectionalButton/RotateLeftButton.cs" type="Script" id=13]
 [ext_resource path="res://Assets/UI/Prompt/DisplayText.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Assets/UI/InteractionButtons/SelectIndicator.tscn" type="PackedScene" id=15]
-[ext_resource path="res://Assets/UI/Dice/DirectionDice/DirectionDice.tscn" type="PackedScene" id=16]
+[ext_resource path="res://Managers/GameManager.cs" type="Script" id=17]
 
 [node name="Root" type="Node2D"]
 position = Vector2( -62.9961, 70.5555 )
+script = ExtResource( 17 )
 
 [node name="MainMap" parent="." instance=ExtResource( 2 )]
 position = Vector2( 1030.79, 485.196 )
@@ -94,9 +95,6 @@ script = ExtResource( 12 )
 
 [node name="DisplayText" parent="." instance=ExtResource( 14 )]
 position = Vector2( 1028.58, 33.3938 )
-
-[node name="DirectionDice" parent="." instance=ExtResource( 16 )]
-position = Vector2( 1029.8, 396.239 )
 [connection signal="input_event" from="ActionButtons/Forward" to="ActionButtons/Forward" method="_on_Forward_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateLeft" to="ActionButtons/RotateLeft" method="_on_RotateLeft_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateRight" to="ActionButtons/RotateRight" method="_on_RotateRight_input_event"]

@@ -39,14 +39,14 @@
 
 [resource]
 animations = [ {
-"frames": [ ExtResource( 11 ), ExtResource( 19 ), ExtResource( 14 ), ExtResource( 16 ), ExtResource( 12 ), ExtResource( 17 ), ExtResource( 13 ), ExtResource( 15 ), ExtResource( 18 ) ],
-"loop": true,
-"name": "right",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 22 ), ExtResource( 26 ), ExtResource( 25 ), ExtResource( 28 ), ExtResource( 20 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 21 ), ExtResource( 27 ) ],
 "loop": true,
 "name": "left",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 11 ), ExtResource( 19 ), ExtResource( 14 ), ExtResource( 16 ), ExtResource( 12 ), ExtResource( 17 ), ExtResource( 13 ), ExtResource( 15 ), ExtResource( 18 ) ],
+"loop": true,
+"name": "right",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 2 ), ExtResource( 8 ), ExtResource( 3 ), ExtResource( 10 ), ExtResource( 7 ) ],

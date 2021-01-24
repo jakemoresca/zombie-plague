@@ -33,8 +33,6 @@ public class Map : Area2D
 
 	private Node2D _currentSelectedNode;
 
-	private DisplayText _displayText;
-
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -43,8 +41,6 @@ public class Map : Area2D
 		SetTileSize(71.28f);
 		SetInitCoordinates(-825.44f, -703.207f);
 		*/
-
-		_displayText = this.GetNode<DisplayText>("../DisplayText");
 
 		LoadMapData();
 		TestInitialSetup();
@@ -57,9 +53,6 @@ public class Map : Area2D
 
 		character1.SetGridPosition(2, 2);
 		zombie.SetGridPosition(10, 11);
-
-		_displayText.SetText("Choose your starting point.");
-		_displayText.Display();
 	}
 
 	public void SetDimension(int columns, int rows)
