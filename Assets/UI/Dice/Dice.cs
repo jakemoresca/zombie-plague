@@ -3,28 +3,27 @@ using System;
 
 public class Dice : Node2D
 {
-	// Declare member variables here. Examples:
-	// private int a = 2;
-	// private string b = "text";
-
 	[Export]
 	private string[] DiceNames;
 	[Export]
 	private int[] DiceArtAngles;
 	[Export]
 	private string[] DiceArts;
+	
 	[Signal]
 	private delegate void DiceRolled(string rolledValue);
+
 	private Button _rollButton;
 	private Sprite _sprite;
 	private RichTextLabel _label;
 	private bool _rolled = false;
-	private string _phase = "NONE";
+	private string _phase = nameof(CommonDisplayPhase.NONE);
 	private float _currentTime;
 	private RandomNumberGenerator _random;
 	private string _lastRolledValue;
 	private const string HIDDEN_COLOR = "00ffffff";
 	private const string VISIBLE_COLOR = "ffffffff";
+	private const string ROLLING_PHASE = "ROLLING";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -46,22 +45,22 @@ public class Dice : Node2D
 
 	public void HideDice()
 	{
-		_phase = "DECAY";
+		_phase = nameof(CommonDisplayPhase.DECAY);
 	}
 
 	private void _on_Button_pressed()
 	{
 		_rolled = true;
-		_phase = "ROLLING";
+		_phase = ROLLING_PHASE;
 		_lastRolledValue = string.Empty;
 	}
 
 	public override void _Process(float delta)
 	{
-		if(_phase == "NONE")
+		if(_phase == nameof(CommonDisplayPhase.NONE))
 			return;
 
-		if(_phase == "ROLLING")
+		if(_phase == ROLLING_PHASE)
 		{
 			_currentTime += (delta * 1000);
 
@@ -76,14 +75,14 @@ public class Dice : Node2D
 			if(_currentTime >= 1000)
 			{
 				_lastRolledValue = DiceNames[selectedIndex];
-				_phase = "NONE";
+				_phase = nameof(CommonDisplayPhase.NONE);
 				_currentTime = 0;
 
 				EmitSignal(nameof(DiceRolled), _lastRolledValue);
 			}
 		}
 
-		if(_phase == "DECAY")
+		if(_phase == nameof(CommonDisplayPhase.DECAY))
 		{
 			_currentTime += (delta);
 
@@ -92,7 +91,7 @@ public class Dice : Node2D
 
 			if(this.Modulate.ToHtml() == HIDDEN_COLOR)
 			{
-				_phase = "NONE";
+				_phase = nameof(CommonDisplayPhase.NONE);
 				_currentTime = 0;
 			}
 		}

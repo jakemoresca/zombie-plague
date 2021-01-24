@@ -36,7 +36,7 @@ public class GridCellIndicator : Area2D
 
 		this.Position = GridHelper.GetTargetPosition(position, tileSize, initCoordinates);
 
-		PlayAnimation();	
+		PlayAnimation();
 	}
 
 	private void PlayAnimation()

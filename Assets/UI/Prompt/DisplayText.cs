@@ -12,7 +12,7 @@ public class DisplayText : Node2D
 
 	private float _currentTime = 0;
 	private RichTextLabel _label;
-	private string _phase = "NONE";
+	private string _phase = nameof(CommonDisplayPhase.NONE);
 
 	private const string HIDDEN_COLOR = "00ffffff";
 	private const string VISIBLE_COLOR = "ffffffff";
@@ -39,16 +39,16 @@ public class DisplayText : Node2D
 	{
 		TimeToDisplay = timeToDisplay ?? TimeToDisplay;
 		this.Modulate = new Color(HIDDEN_COLOR);
-		_phase = "SHOWING";
+		_phase = nameof(CommonDisplayPhase.SHOWING);
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
-		if(_phase == "NONE")
+		if(_phase == nameof(CommonDisplayPhase.NONE))
 			return;
 
-		if(_phase == "SHOWING")
+		if(_phase == nameof(CommonDisplayPhase.SHOWING))
 		{
 			_currentTime += (delta);
 
@@ -57,23 +57,23 @@ public class DisplayText : Node2D
 
 			if(this.Modulate.ToHtml() == VISIBLE_COLOR)
 			{
-				_phase = "SHOW";
+				_phase = nameof(CommonDisplayPhase.SHOW);
 				_currentTime = TimeToDisplay;
 			}
 		}
 
-		if(_phase == "SHOW")
+		if(_phase == nameof(CommonDisplayPhase.SHOW))
 		{
 			_currentTime -= (delta * 1000);
 
 			if(_currentTime <= 0)
 			{
 				_currentTime = 0;
-				_phase = "DECAY";
+				_phase = nameof(CommonDisplayPhase.DECAY);
 			}
 		}
 
-		if(_phase == "DECAY")
+		if(_phase == nameof(CommonDisplayPhase.DECAY))
 		{
 			_currentTime += (delta);
 
@@ -82,7 +82,7 @@ public class DisplayText : Node2D
 
 			if(this.Modulate.ToHtml() == HIDDEN_COLOR)
 			{
-				_phase = "NONE";
+				_phase = nameof(CommonDisplayPhase.NONE);
 				_currentTime = 0;
 			}
 		}
