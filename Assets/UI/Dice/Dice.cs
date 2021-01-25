@@ -87,7 +87,7 @@ public class Dice : Node2D
 
 		if(_phase == nameof(CommonDisplayPhase.DECAY))
 		{
-			_currentTime += (delta);
+			_currentTime += (delta * 0.004f);
 
 			var newColor = this.Modulate.LinearInterpolate(new Color(HIDDEN_COLOR), _currentTime);
 			this.Modulate = newColor;

@@ -45,7 +45,7 @@ public class DiceManager
 
                 diceInstance.Connect("DiceRolled", _root, "_on_Zombie_DiceRolled");
                 
-                SetDice(nameof(DiceName.ZombieDice), diceInstance);
+                SetDice(nameof(DiceName.DirectionDice), diceInstance);
 
                 return diceInstance;
             }

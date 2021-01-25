@@ -106,7 +106,7 @@ public class GridCellIndicator : Area2D
 
 					if(currentSelectedNode is Player player)
 					{
-						player.MoveTo(Column, Row);
+						player.SpawnTo(Column, Row);
 						
 						StopAnimation();
 					}

@@ -43,16 +43,6 @@ public class Map : Area2D
 		*/
 
 		LoadMapData();
-		TestInitialSetup();
-	}
-
-	public void TestInitialSetup()
-	{
-		var character1 = this.GetNode<Player>("./Character1");
-		var zombie = this.GetNode<Player>("./Zombie");
-
-		character1.SetGridPosition(2, 2);
-		zombie.SetGridPosition(10, 11);
 	}
 
 	public void SetDimension(int columns, int rows)

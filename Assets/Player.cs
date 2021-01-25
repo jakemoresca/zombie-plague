@@ -7,6 +7,9 @@ public class Player : Area2D
 	private Map _map;
 	private string _direction;
 	private GridPosition _position;
+	private int _AP;
+	private int _maxAP;
+	private bool _disabledWalk;
 
 	[Signal]
 	public delegate void FinishedMovement(int column, int row, string direction);
@@ -87,7 +90,7 @@ public class Player : Area2D
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
 	}
 
-	public void MoveTo(int column, int row)
+	public void SpawnTo(int column, int row)
 	{
 		var tileSize = _map.GetTileSize();
 		var initCoordinates = _map.GetInitCoordinates();
@@ -96,6 +99,8 @@ public class Player : Area2D
 		_position.Column = column;
 
 		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
+
+		this.Show();
 
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
 	}
@@ -108,6 +113,46 @@ public class Player : Area2D
 		_direction = direction;
 
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
+	}
+
+	public void SetAP(int ap)
+	{
+		_AP = ap;
+	}
+
+	public int GetAP()
+	{
+		return _AP;
+	}
+
+	public void SetMaxAP(int maxAP)
+	{
+		_maxAP = maxAP;
+	}
+
+	public int GetMaxAP()
+	{
+		return _maxAP;
+	}
+
+	public bool HasPosition()
+	{
+		return _position.Column > 0 && _position.Row > 0;
+	}
+
+	public AnimatedSprite GetAnimatedSprite()
+	{
+		return this.GetNode<AnimatedSprite>("./AnimatedSprite");
+	}
+
+	public void SetDisabledWalk(bool disabledWalk)
+	{
+		_disabledWalk = disabledWalk;
+	}
+
+	public bool IsDisabledToWalk()
+	{
+		return _disabledWalk;
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
