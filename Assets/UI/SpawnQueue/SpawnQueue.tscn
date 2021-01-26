@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueuePanel.png" type="Texture" id=1]
 [ext_resource path="res://Assets/UI/SpawnQueue/EquipmentPro.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.cs" type="Script" id=3]
 [ext_resource path="res://Assets/UI/SpawnQueue/Checked_04.png" type="Texture" id=4]
+[ext_resource path="res://Assets/UI/SpawnQueue/ErrorFont.tres" type="DynamicFont" id=5]
 
 [node name="SpawnQueue" type="Node2D"]
 script = ExtResource( 3 )
@@ -45,12 +46,27 @@ __meta__ = {
 margin_left = -259.0
 margin_top = -454.0
 margin_right = 238.0
-margin_bottom = -389.0
+margin_bottom = -413.0
+rect_pivot_offset = Vector2( -582.96, 133.188 )
 custom_fonts/normal_font = ExtResource( 2 )
 bbcode_enabled = true
 bbcode_text = "Choose Unit to Spawn"
 text = "Choose Unit to Spawn"
 fit_content_height = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Error" type="RichTextLabel" parent="."]
+margin_left = -254.0
+margin_top = -406.28
+margin_right = 219.0
+margin_bottom = -366.28
+custom_fonts/normal_font = ExtResource( 5 )
+custom_colors/default_color = Color( 1, 0.0235294, 0.0235294, 1 )
+bbcode_enabled = true
+bbcode_text = "Please make sure to spawn all units."
+text = "Please make sure to spawn all units."
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/MainMap/MainMap.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/UI/InteractionButtons/MousePointer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/MainMap/Map.cs" type="Script" id=4]
 [ext_resource path="res://Assets/UI/DirectionalButton/Forward.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/UI/DirectionalButton/RotateLeft.tscn" type="PackedScene" id=6]
@@ -86,6 +87,8 @@ position = Vector2( 1028.58, 33.3938 )
 
 [node name="SpawnQueue" parent="." instance=ExtResource( 1 )]
 position = Vector2( 476.973, 571.414 )
+
+[node name="MousePoint" parent="." instance=ExtResource( 3 )]
 [connection signal="input_event" from="ActionButtons/Forward" to="ActionButtons/Forward" method="_on_Forward_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateLeft" to="ActionButtons/RotateLeft" method="_on_RotateLeft_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateRight" to="ActionButtons/RotateRight" method="_on_RotateRight_input_event"]

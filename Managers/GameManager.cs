@@ -65,8 +65,24 @@ public class GameManager : Node2D
 
 				directionDice.ShowDice();
 
-				_displayText.SetText("Zombie Player, Roll a Dice");
+				_displayText.SetText("Zombie Player, Roll a Dice.");
 				_displayText.Display();
+
+				break;
+
+			case nameof(GamePhase.PLAYERS_START):
+
+				_displayText.SetText("Human Player, Set your spawn location.");
+				_displayText.Display();
+
+				break;
+
+			case nameof(GamePhase.ROUND_START):
+
+				_displayText.SetText("Round Start!");
+				_displayText.Display();
+
+				SpawnQueue.HideWindow();
 
 				break;
 		}
@@ -88,7 +104,7 @@ public class GameManager : Node2D
 		_displayText.SetText($"You rolled, {rolledValue}");
 		_displayText.Display();
 
-		_spawnPointManager.CreateSpawnPoints(rolledValue);
+		_spawnPointManager.CreateSpawnPoints(rolledValue, (int)PlayerNumber.Zombie);
 		_playerManager.CreatePlayerCharacter((int)PlayerNumber.Zombie);
 
 		var directionDice = _diceManager.GetDirectionDice();
@@ -96,6 +112,38 @@ public class GameManager : Node2D
 
 		_playerManager.StartUnitSpawnSubPhase((int)PlayerNumber.Zombie);
 	}
+
+	private void _on_SpawnFinished(int playerNumber)
+	{
+		if (playerNumber == (int)PlayerNumber.Zombie)
+		{
+			ChangePhase(nameof(GamePhase.PLAYERS_START));
+
+			var nextPlayer = playerNumber + 1;
+			SpawnPlayerUnits(nextPlayer);
+		}
+		else if (playerNumber < (int)PlayerNumber.Player4)
+		{
+			var nextPlayer = playerNumber + 1;
+			SpawnPlayerUnits(nextPlayer);
+		}
+		else if(playerNumber == (int)PlayerNumber.Player4)
+		{
+			ChangePhase(nameof(GamePhase.ROUND_START));
+		}
+	}
+
+	private void SpawnPlayerUnits(int nextPlayer)
+	{
+		var oppositeDirection = _spawnPointManager.GetOppositeDirection(LastZombieDirection);
+		_spawnPointManager.CreateSpawnPoints(oppositeDirection, nextPlayer);
+		_playerManager.CreatePlayerCharacter(nextPlayer);
+		_playerManager.StartUnitSpawnSubPhase(nextPlayer);
+	}
+
+	public string Phase => _phase;
+	public void SetLastZombieDirection(string direction) => _spawnPointManager.SetLastZombieDirection(direction);
+	public string LastZombieDirection => _spawnPointManager.GetLastZombieDirection();
 }
 
 public enum GamePhase

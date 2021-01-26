@@ -1,11 +1,17 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SpawnQueue : Node2D
 {
+	[Signal]
+	private delegate void SpawnFinished(int playerNumber);
+
 	private GameManager _gameManager;
 	private GridContainer _gridContainer;
+	private Button _doneButton;
+	private RichTextLabel _error;
 	private float _currentTime = 0;
 	private string _phase = nameof(CommonDisplayPhase.NONE);
 	private const string HIDDEN_COLOR = "00ffffff";
@@ -18,14 +24,25 @@ public class SpawnQueue : Node2D
 		_playerUnits = new List<Player>();
 		_gameManager = this.GetNode<GameManager>("../../Root");
 		_gridContainer = this.GetNode<GridContainer>("./GridContainer");
+		_doneButton = this.GetNode<Button>("./Panel/DoneButton");
+		_error = this.GetNode<RichTextLabel>("./Error");
 
 		this.Hide();
+
+		_doneButton.Connect("pressed", this, "_on_DoneButton_pressed");
 	}
 
 	public void ShowWindow()
 	{
 		this.Show();
 		this.Modulate = new Color(VISIBLE_COLOR);
+
+		_error.Hide();
+	}
+
+	public void ShowError()
+	{
+		_error.Show();
 	}
 
 	public void HideWindow()
@@ -131,5 +148,17 @@ public class SpawnQueue : Node2D
 
 		var player = _playerUnits[cellIndex];
 		_gameManager.Map.SelectNode(player);
+	}
+
+	private void _on_DoneButton_pressed()
+	{
+		if(_playerUnits.Any(x => !x.HasPosition()))
+		{
+			ShowError();
+			return;
+		}
+		
+		ClearGridChildren();
+		EmitSignal(nameof(SpawnFinished), _playerUnits[0].GetPlayerNumber());
 	}
 }

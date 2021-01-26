@@ -6,6 +6,7 @@ public class SpawnPointManager
 {
     private GameManager _root;
     private List<GridCellIndicator> _gridCellIndicator;
+    private string _lastZombieDirection = "";
 
     public SpawnPointManager(GameManager root)
     {
@@ -13,10 +14,29 @@ public class SpawnPointManager
         _gridCellIndicator = new List<GridCellIndicator>();
     }
 
-    public void CreateSpawnPoints(string direction)
+    public void Hide()
+    {
+        foreach(var gridCell in _gridCellIndicator)
+        {
+            gridCell.Hide();
+        }
+    }
+
+    public void Show()
+    {
+        foreach(var gridCell in _gridCellIndicator)
+        {
+            gridCell.Show();
+        }
+    }
+
+    public void CreateSpawnPoints(string direction, int playerNumber)
     {
         var (maxColumns, maxRows) = _root.Map.GetDimension();
         List<Tuple<int, int>> spawnCellPosition;
+
+        if(playerNumber == (int)PlayerNumber.Zombie)
+            _lastZombieDirection = direction;
 
         if (direction != "Wild")
         {
@@ -118,5 +138,32 @@ public class SpawnPointManager
                 _gridCellIndicator.RemoveAt(_gridCellIndicator.Count - 1);
             }
         }
+    }
+
+    public void SetLastZombieDirection(string direction)
+    {
+        _lastZombieDirection = direction;
+    }
+
+    public string GetLastZombieDirection()
+    {
+        return _lastZombieDirection;
+    }
+
+    public string GetOppositeDirection(string direction)
+    {
+        switch(direction)
+        {
+            case "North":
+                return "South";
+            case "East":
+                return "West";
+            case "West":
+                return "East";
+            case "South":
+                return "North";
+        }
+
+        return string.Empty;
     }
 }

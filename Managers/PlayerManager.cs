@@ -8,7 +8,6 @@ public class PlayerManager
 	private GameManager _root;
 	private int _numberOfPlayers;
 	private Dictionary<int, List<Player>> _playerUnits;
-
 	public int ZombieAP = 2;
 	public int PlayerAP = 4;
 
@@ -16,6 +15,8 @@ public class PlayerManager
 	{
 		_root = root;
 		_playerUnits = new Dictionary<int, List<Player>>();
+
+		_root.SpawnQueue.Connect("SpawnFinished", root, "_on_SpawnFinished");
 	}
 
 	public void SetNumberOfPlayers(int numberOfPlayers)
@@ -35,7 +36,12 @@ public class PlayerManager
 		{
 			var numberOfNonZombiePlayers = _numberOfPlayers - 1;
 			var numberOfZombieUnits = _playerUnits.ContainsKey(playerNumber) ? _playerUnits[playerNumber].Count : 0;
-			var toCreateZombieUnits = (numberOfNonZombiePlayers * 2) - numberOfZombieUnits;
+			var maxNumberOfZombieUnits = numberOfNonZombiePlayers * 4;
+
+			var toCreateZombieUnits = _root.Phase == nameof(GamePhase.ZOMBIE_START) ? 1 : maxNumberOfZombieUnits;
+
+			if(toCreateZombieUnits > 2)
+				toCreateZombieUnits = 2;
 
 			//ToDo: randomize/unique character scene
 			CreateAdditionalUnit("res://Assets/Zombie/Zombie.tscn", toCreateZombieUnits, playerNumber);
@@ -63,10 +69,11 @@ public class PlayerManager
 			unitInstance.Scale = new Vector2(2, 2);
 			unitInstance.SetDisabledWalk(true);
 			unitInstance.Hide();
+			unitInstance.SetPlayerNumber(playerNumber);
 
 			if (unitScene != null)
 			{
-				if (_playerUnits.ContainsKey(1))
+				if (_playerUnits.ContainsKey(playerNumber))
 				{
 					var playerList = _playerUnits[playerNumber];
 					playerList.Add(unitInstance);

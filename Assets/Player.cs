@@ -10,6 +10,7 @@ public class Player : Area2D
 	private int _AP;
 	private int _maxAP;
 	private bool _disabledWalk;
+	private int _playerNumber;
 
 	[Signal]
 	public delegate void FinishedMovement(int column, int row, string direction);
@@ -153,6 +154,16 @@ public class Player : Area2D
 	public bool IsDisabledToWalk()
 	{
 		return _disabledWalk;
+	}
+
+	public void SetPlayerNumber(int playerNumber)
+	{
+		_playerNumber = playerNumber;
+	}
+
+	public int GetPlayerNumber()
+	{
+		return _playerNumber;
 	}
 
 	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
