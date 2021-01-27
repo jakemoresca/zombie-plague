@@ -55,7 +55,9 @@ public class ForwardButton : Area2D
 
 			var gridPosition = player.GetGridPosition();
 
-			if(GridHelper.CanMoveForward(_map, gridPosition.Column, gridPosition.Row, player.GetDirection()) && !player.IsDisabledToWalk())
+			if(GridHelper.CanMoveForward(_map, gridPosition.Column, gridPosition.Row, player.GetDirection()) 
+				&& !player.IsDisabledToWalk()
+				&& player.AP > 0)
 			{
 				this.Modulate = new Color("ffffff");
 				_disabled = false;

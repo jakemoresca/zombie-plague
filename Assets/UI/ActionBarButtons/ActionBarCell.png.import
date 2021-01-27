@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/forward.png-849c18c7f3f1026399520b547d6ee0a6.stex"
+path="res://.import/ActionBarCell.png-0f61a7280470796685e10e34c003decf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/DirectionalButton/forward.png"
-dest_files=[ "res://.import/forward.png-849c18c7f3f1026399520b547d6ee0a6.stex" ]
+source_file="res://Assets/UI/ActionBarButtons/ActionBarCell.png"
+dest_files=[ "res://.import/ActionBarCell.png-0f61a7280470796685e10e34c003decf.stex" ]
 
 [params]
 

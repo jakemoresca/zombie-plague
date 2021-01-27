@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/rotateRight.png-da29becbd2efa135fc0ac4c0e8112c08.stex"
+path="res://.import/rotateLeft.png-432a33f2524dbefd59358cbaa3115c7e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/DirectionalButton/rotateRight.png"
-dest_files=[ "res://.import/rotateRight.png-da29becbd2efa135fc0ac4c0e8112c08.stex" ]
+source_file="res://Assets/UI/ActionBarButtons/rotateLeft.png"
+dest_files=[ "res://.import/rotateLeft.png-432a33f2524dbefd59358cbaa3115c7e.stex" ]
 
 [params]
 

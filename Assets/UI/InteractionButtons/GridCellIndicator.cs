@@ -12,6 +12,7 @@ public class GridCellIndicator : Area2D
 	
 	private GameManager _gameManager;
 	private Map _map;
+	private CollisionShape2D _collisionShape;
 	private float _currentTime = 0;
 	private string _phase = "NONE";
 	private const string RED_COLOR = "ffff0000";
@@ -24,6 +25,7 @@ public class GridCellIndicator : Area2D
 	{
 		_map = this.GetNode<Map>("../../MainMap");
 		_gameManager = this.GetNode<GameManager>("../../../Root");
+		_collisionShape = this.GetNode<CollisionShape2D>("./CollisionShape2D");
 
 		UpdateGridPosition();
 	}
@@ -50,6 +52,18 @@ public class GridCellIndicator : Area2D
 		this.Modulate = new Color(RED_COLOR);
 
 		PlayAnimation();
+	}
+
+	public new void Hide()
+	{
+		_collisionShape.Disabled = true;
+		base.Hide();
+	}
+
+	public new void Show()
+	{
+		_collisionShape.Disabled = false;
+		base.Show();
 	}
 
 	private void PlayAnimation()

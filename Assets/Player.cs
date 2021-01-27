@@ -7,8 +7,8 @@ public class Player : Area2D
 	private Map _map;
 	private string _direction;
 	private GridPosition _position;
-	private int _AP;
-	private int _maxAP;
+	private int _AP = 0;
+	private int _maxAP = 0;
 	private bool _disabledWalk;
 	private int _playerNumber;
 
@@ -87,6 +87,7 @@ public class Player : Area2D
 		}
 
 		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
+		SetAP(this.AP - 1);
 
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
 	}
@@ -108,6 +109,8 @@ public class Player : Area2D
 
 	public void FaceDirection(string direction)
 	{
+		SetAP(this.AP - 1);
+
 		var animatedSprite = this.GetNode<AnimatedSprite>("./AnimatedSprite");
 		animatedSprite.Animation = direction;
 
@@ -121,19 +124,16 @@ public class Player : Area2D
 		_AP = ap;
 	}
 
-	public int GetAP()
-	{
-		return _AP;
-	}
-
+	public int AP => _AP;
+	public int MaxAP => _maxAP;
 	public void SetMaxAP(int maxAP)
 	{
 		_maxAP = maxAP;
 	}
 
-	public int GetMaxAP()
+	public void ReplenishAP()
 	{
-		return _maxAP;
+		SetAP(MaxAP);
 	}
 
 	public bool HasPosition()
@@ -165,11 +165,5 @@ public class Player : Area2D
 	{
 		return _playerNumber;
 	}
-
-	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-	//  public override void _Process(float delta)
-	//  {
-	//      
-	//  }
 }
 

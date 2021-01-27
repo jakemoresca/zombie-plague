@@ -70,6 +70,7 @@ public class PlayerManager
 			unitInstance.SetDisabledWalk(true);
 			unitInstance.Hide();
 			unitInstance.SetPlayerNumber(playerNumber);
+			unitInstance.SetMaxAP(playerNumber == (int)PlayerNumber.Zombie ? ZombieAP : PlayerAP);
 
 			if (unitScene != null)
 			{
@@ -99,6 +100,19 @@ public class PlayerManager
 	public List<Player> GetUnpositionedPlayerUnits(int playerNumber)
 	{
 		return _playerUnits[playerNumber].Where(x => !x.HasPosition()).ToList();
+	}
+
+	public void StartPlayerUnitsTurn(int playerNumber)
+	{
+		var playerUnits = _playerUnits[playerNumber];
+
+		foreach (var playerUnit in playerUnits)
+		{
+			playerUnit.ReplenishAP();
+			playerUnit.SetDisabledWalk(false);
+		}
+
+		_root.Map.SelectNode(playerUnits[0]);
 	}
 }
 

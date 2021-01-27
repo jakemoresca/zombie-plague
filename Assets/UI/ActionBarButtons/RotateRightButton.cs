@@ -1,10 +1,11 @@
 using Godot;
 using System;
 
-public class RotateLeftButton : Area2D
+public class RotateRightButton : Area2D
 {
 	// Declare member variables here. Examples:
 	private Map _map;
+	private bool _disabled = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -14,7 +15,7 @@ public class RotateLeftButton : Area2D
 		_map.Connect("FinishedUpdating", this, "_on_Map_finished_updating");
 	}
 
-	private void _on_RotateLeft_input_event(Viewport viewport, InputEvent @event, int shape_idx)
+	private void _on_RotateRight_input_event(Viewport viewport, InputEvent @event, int shape_idx)
 	{
 		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
 		{
@@ -42,6 +43,17 @@ public class RotateLeftButton : Area2D
 		{
 			var newAngle = GetTargetAngle(player.GetDirection());
 			this.RotationDegrees = newAngle;
+
+			if(player.AP > 0 || player.IsDisabledToWalk())
+			{
+				this.Modulate = new Color("ffffff");
+				_disabled = false;
+			}
+			else
+			{
+				this.Modulate = new Color("4affffff");
+				_disabled = true;
+			}
 		}
 	}
 
@@ -50,16 +62,16 @@ public class RotateLeftButton : Area2D
 		switch (player.GetDirection())
 		{
 			case "up":
-				return "left";
-
-			case "down":
 				return "right";
 
+			case "down":
+				return "left";
+
 			case "left":
-				return "down";
+				return "up";
 
 			case "right":
-				return "up";
+				return "down";
 		}
 
 		return string.Empty;

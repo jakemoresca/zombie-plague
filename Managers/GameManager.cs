@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class GameManager : Node2D
 {
@@ -13,6 +14,8 @@ public class GameManager : Node2D
 	private DisplayText _displayText;
 	public Map Map;
 	public SpawnQueue SpawnQueue;
+	public int _currentPlayersTurn = 0;
+	public int _roundNumber = 0;
 
 	public override void _Ready()
 	{
@@ -79,10 +82,13 @@ public class GameManager : Node2D
 
 			case nameof(GamePhase.ROUND_START):
 
-				_displayText.SetText("Round Start!");
-				_displayText.Display();
+				_roundNumber += 1;
+
+				_displayText.SetText($"Round {_roundNumber} Start!");
+				_displayText.Display(nameof(GamePhase.ROUND_START), 1000);
 
 				SpawnQueue.HideWindow();
+				_spawnPointManager.Hide();
 
 				break;
 		}
@@ -94,6 +100,11 @@ public class GameManager : Node2D
 		{
 			case nameof(GamePhase.GAME_START):
 				ChangePhase(nameof(GamePhase.ZOMBIE_START));
+
+				break;
+
+			case nameof(GamePhase.ROUND_START):
+				StartPlayersTurn();
 
 				break;
 		}
@@ -144,6 +155,38 @@ public class GameManager : Node2D
 	public string Phase => _phase;
 	public void SetLastZombieDirection(string direction) => _spawnPointManager.SetLastZombieDirection(direction);
 	public string LastZombieDirection => _spawnPointManager.GetLastZombieDirection();
+
+	public List<int> TurnOrder => new List<int>
+	{
+		{ (int)PlayerNumber.Player1 },
+		{ (int)PlayerNumber.Player2 },
+		{ (int)PlayerNumber.Player3 },
+		{ (int)PlayerNumber.Player4 },
+		{ (int)PlayerNumber.Zombie }
+	};
+
+	public int GetNextPlayer()
+	{
+		if(_currentPlayersTurn == 0 || TurnOrder.IndexOf(_currentPlayersTurn) == TurnOrder.Count - 1) 
+		{
+			return TurnOrder[0];
+		}
+		else
+		{
+			return TurnOrder[TurnOrder.IndexOf(_currentPlayersTurn) + 1];
+		}
+	}
+
+	public void StartPlayersTurn()
+	{
+		var nextplayerNumber = GetNextPlayer();
+		var playerName = ((PlayerNumber)nextplayerNumber).ToString();
+
+		_displayText.SetText($"{playerName}'s Turn");
+		_displayText.Display();
+
+		_playerManager.StartPlayerUnitsTurn(nextplayerNumber);
+	}
 }
 
 public enum GamePhase

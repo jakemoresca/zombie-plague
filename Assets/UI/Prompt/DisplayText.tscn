@@ -16,6 +16,7 @@ margin_left = -426.0
 margin_top = -13.0
 margin_right = 429.0
 margin_bottom = 42.0
+mouse_filter = 2
 custom_fonts/mono_font = ExtResource( 2 )
 custom_fonts/bold_italics_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 2 )
