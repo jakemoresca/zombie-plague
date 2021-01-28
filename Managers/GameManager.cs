@@ -91,6 +91,25 @@ public class GameManager : Node2D
 				_spawnPointManager.Hide();
 
 				break;
+
+			case nameof(GamePhase.HUMAN_PLAYER_START):
+
+				var playerName = ((PlayerNumber)_currentPlayersTurn).ToString();
+				_displayText.SetText($"{playerName}'s Turn. Survive!");
+				_displayText.Display();
+
+				_playerManager.StartPlayerUnitsTurn(_currentPlayersTurn);
+
+				break;
+
+			case nameof(GamePhase.ZOMBIE_PLAYER_START):
+
+				_displayText.SetText($"Z's Turn. Get them!");
+				_displayText.Display();
+
+				_playerManager.StartPlayerUnitsTurn(_currentPlayersTurn);
+
+				break;
 		}
 	}
 
@@ -138,7 +157,7 @@ public class GameManager : Node2D
 			var nextPlayer = playerNumber + 1;
 			SpawnPlayerUnits(nextPlayer);
 		}
-		else if(playerNumber == (int)PlayerNumber.Player4)
+		else if (playerNumber == (int)PlayerNumber.Player4)
 		{
 			ChangePhase(nameof(GamePhase.ROUND_START));
 		}
@@ -167,7 +186,7 @@ public class GameManager : Node2D
 
 	public int GetNextPlayer()
 	{
-		if(_currentPlayersTurn == 0 || TurnOrder.IndexOf(_currentPlayersTurn) == TurnOrder.Count - 1) 
+		if (_currentPlayersTurn == 0 || TurnOrder.IndexOf(_currentPlayersTurn) == TurnOrder.Count - 1)
 		{
 			return TurnOrder[0];
 		}
@@ -180,12 +199,21 @@ public class GameManager : Node2D
 	public void StartPlayersTurn()
 	{
 		var nextplayerNumber = GetNextPlayer();
-		var playerName = ((PlayerNumber)nextplayerNumber).ToString();
+		_currentPlayersTurn = nextplayerNumber;
 
-		_displayText.SetText($"{playerName}'s Turn");
-		_displayText.Display();
+		if (nextplayerNumber == (int)PlayerNumber.Zombie)
+		{
+			ChangePhase(nameof(GamePhase.ZOMBIE_PLAYER_START));
+		}
+		else
+		{
+			ChangePhase(nameof(GamePhase.HUMAN_PLAYER_START));
+		}
+	}
 
-		_playerManager.StartPlayerUnitsTurn(nextplayerNumber);
+	public void FinishTurn()
+	{
+		StartPlayersTurn();
 	}
 }
 
@@ -196,12 +224,8 @@ public enum GamePhase
 	ZOMBIE_START,
 	PLAYERS_START,
 	ROUND_START,
-	ZOMBIE_START_TURN,
-	ZOMBIE_START_MOVE, //sub phase: moving, attacking, breaching
-	ZOMBIE_DONE,
-	PLAYERS_START_TURN,
-	PLAYERS_START_MOVE, //sub phase: moving, searching, attacking, reinforcing, starting_car
-	PLAYERS_DONE,
+	HUMAN_PLAYER_START,
+	ZOMBIE_PLAYER_START,
 	ROUND_END,
 	GAME_END
 }
