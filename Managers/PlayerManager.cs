@@ -38,7 +38,7 @@ public class PlayerManager
 			var numberOfZombieUnits = _playerUnits.ContainsKey(playerNumber) ? _playerUnits[playerNumber].Count : 0;
 			var maxNumberOfZombieUnits = numberOfNonZombiePlayers * 4;
 
-			var toCreateZombieUnits = _root.Phase == nameof(GamePhase.ZOMBIE_START) ? 1 : maxNumberOfZombieUnits;
+			var toCreateZombieUnits = _root.Phase == nameof(GamePhase.ZOMBIE_START) ? 1 : maxNumberOfZombieUnits - numberOfZombieUnits;
 
 			if(toCreateZombieUnits > 2)
 				toCreateZombieUnits = 2;
@@ -113,6 +113,11 @@ public class PlayerManager
 		}
 
 		_root.Map.SelectNode(playerUnits[0]);
+	}
+
+	public List<Player> GetUnplayedUnits(int playerNumber)
+	{
+		return _playerUnits[playerNumber].Where(x => x.AP > 0).ToList();
 	}
 }
 

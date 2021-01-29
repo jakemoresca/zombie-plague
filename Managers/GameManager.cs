@@ -55,6 +55,8 @@ public class GameManager : Node2D
 
 	private void _on_PhaseChanged(string newPhase, string oldPhase)
 	{
+		var directionDice = _diceManager.GetDirectionDice();
+
 		switch (newPhase)
 		{
 			case nameof(GamePhase.GAME_START):
@@ -63,9 +65,7 @@ public class GameManager : Node2D
 				break;
 
 			case nameof(GamePhase.ZOMBIE_START):
-				var directionDice = _diceManager.GetDirectionDice();
 				directionDice.Position = new Vector2(1029.8f, 396.239f);
-
 				directionDice.ShowDice();
 
 				_displayText.SetText("Zombie Player, Roll a Dice.");
@@ -110,6 +110,17 @@ public class GameManager : Node2D
 				_playerManager.StartPlayerUnitsTurn(_currentPlayersTurn);
 
 				break;
+
+			case nameof(GamePhase.ROUND_END):
+
+				_displayText.SetText($"Player Z, Let's add minions.");
+				_displayText.Display();
+
+				directionDice.Position = new Vector2(1029.8f, 396.239f);
+
+				directionDice.ShowDice();
+
+				break;
 		}
 	}
 
@@ -147,10 +158,17 @@ public class GameManager : Node2D
 	{
 		if (playerNumber == (int)PlayerNumber.Zombie)
 		{
-			ChangePhase(nameof(GamePhase.PLAYERS_START));
+			if (_phase == nameof(GamePhase.ROUND_END))
+			{
+				ChangePhase(nameof(GamePhase.ROUND_START));
+			}
+			else
+			{
+				ChangePhase(nameof(GamePhase.PLAYERS_START));
 
-			var nextPlayer = playerNumber + 1;
-			SpawnPlayerUnits(nextPlayer);
+				var nextPlayer = playerNumber + 1;
+				SpawnPlayerUnits(nextPlayer);
+			}
 		}
 		else if (playerNumber < (int)PlayerNumber.Player4)
 		{
@@ -213,7 +231,23 @@ public class GameManager : Node2D
 
 	public void FinishTurn()
 	{
-		StartPlayersTurn();
+		var unplayedUnits = _playerManager.GetUnplayedUnits(_currentPlayersTurn);
+
+		if (unplayedUnits.Count > 0)
+		{
+			Map.SelectNode(unplayedUnits[0]);
+		}
+		else
+		{
+			if (_currentPlayersTurn == (int)PlayerNumber.Zombie)
+			{
+				ChangePhase(nameof(GamePhase.ROUND_END));
+			}
+			else
+			{
+				StartPlayersTurn();
+			}
+		}
 	}
 }
 
