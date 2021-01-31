@@ -29,9 +29,32 @@ public class PlayerManager
 		return _numberOfPlayers;
 	}
 
+	public bool CanCreateAdditionalCharacter(int playerNumber)
+	{
+		if (playerNumber == (int)PlayerNumber.Zombie)
+		{
+			var numberOfNonZombiePlayers = _numberOfPlayers - 1;
+			var numberOfZombieUnits = _playerUnits.ContainsKey(playerNumber) ? _playerUnits[playerNumber].Count : 0;
+			var maxNumberOfZombieUnits = numberOfNonZombiePlayers * 4;
+
+			var toCreateZombieUnits = _root.Phase == nameof(GamePhase.ZOMBIE_START) ? 1 : maxNumberOfZombieUnits - numberOfZombieUnits;
+
+			if(toCreateZombieUnits > 2)
+				toCreateZombieUnits = 2;
+
+			return toCreateZombieUnits > 0;
+		}
+		else
+		{
+			if(_playerUnits.ContainsKey(playerNumber) && _playerUnits.Count >= 1)
+				return false;
+
+			return true;
+		}
+	}
+
 	public void CreatePlayerCharacter(int playerNumber)
 	{
-		//1st player is always the zombie player
 		if (playerNumber == (int)PlayerNumber.Zombie)
 		{
 			var numberOfNonZombiePlayers = _numberOfPlayers - 1;
@@ -118,6 +141,16 @@ public class PlayerManager
 	public List<Player> GetUnplayedUnits(int playerNumber)
 	{
 		return _playerUnits[playerNumber].Where(x => x.AP > 0).ToList();
+	}
+
+	public bool HasPlayerUnits(int column, int row)
+	{
+		return _playerUnits.Any(x => x.Value.Any(y => 
+		{
+			var position = y.GetGridPosition();
+
+			return position.Column == column && position.Row == row;
+		}));
 	}
 }
 

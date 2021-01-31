@@ -3,23 +3,17 @@ using System;
 
 public class ForwardButton : Area2D
 {
-	// Declare member variables here. Examples:
+	private GameManager _gameManager;
 	private Map _map;
 	private bool _disabled = false;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_map = this.GetNode<Map>("../../MainMap");
+		_gameManager = this.GetNode<GameManager>("../../../Root");
 
 		_map.Connect("FinishedUpdating", this, "_on_Map_finished_updating");
 	}
-
-	//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-	//  public override void _Process(float delta)
-	//  {
-	//      
-	//  }
 
 	private void _on_Forward_input_event(Viewport viewport, InputEvent @event, int shape_idx)
 	{
@@ -56,6 +50,7 @@ public class ForwardButton : Area2D
 			var gridPosition = player.GetGridPosition();
 
 			if(GridHelper.CanMoveForward(_map, gridPosition.Column, gridPosition.Row, player.GetDirection()) 
+				&& !GridHelper.HasPlayerUnits(_gameManager, gridPosition.Column, gridPosition.Row, player.GetDirection())
 				&& !player.IsDisabledToWalk()
 				&& player.AP > 0)
 			{

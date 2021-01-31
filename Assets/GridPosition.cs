@@ -1,102 +1,138 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class GridPosition
 {
-    public int Column { get; set; }
-    public int Row { get; set; }
+	public int Column { get; set; }
+	public int Row { get; set; }
 }
 
 public static class GridHelper
 {
-    public static bool CanMoveForward(Map map, int column, int row, string direction)
-    {
-        var passable = false;
+	public static bool CanMoveForward(Map map, int column, int row, string direction)
+	{
+		var passable = false;
 
-        var (numberOfColumns, numberOfRows) = map.GetDimension();
+		var (numberOfColumns, numberOfRows) = map.GetDimension();
 
-        if (direction == "up" && row <= 1)
-        {
-            return passable;
-        }
+		if (direction == "up" && row <= 1)
+		{
+			return passable;
+		}
 
-        if (direction == "left" && column <= 1)
-        {
-            return passable;
-        }
+		if (direction == "left" && column <= 1)
+		{
+			return passable;
+		}
 
-        if (direction == "right" && column >= numberOfColumns)
-        {
-            return passable;
-        }
+		if (direction == "right" && column >= numberOfColumns)
+		{
+			return passable;
+		}
 
-        if (direction == "down" && row >= numberOfRows)
-        {
-            return passable;
-        }
+		if (direction == "down" && row >= numberOfRows)
+		{
+			return passable;
+		}
 
-        var collisionMaps = map.GetCollisionMaps();
-        var collisionMapKey = $"col{column}row{row}";
-        passable = true;
+		return HasObstacle(map, column, row, direction);
+	}
 
-        if(collisionMaps.Contains(collisionMapKey))
-        {
-            var collisionMapValue = (Godot.Collections.Dictionary)collisionMaps[collisionMapKey];
-
-            if(collisionMapValue.Contains(direction))
-            {
-                passable = !bool.Parse(collisionMapValue[direction].ToString());
-            }
-        }
-
-        var doors = map.GetDoors();
-
-        if(doors.Contains(collisionMapKey))
-        {
-            var collisionMapValue = (Godot.Collections.Dictionary)doors[collisionMapKey];
-
-            if(collisionMapValue.Contains(direction))
-            {
-                if(collisionMapValue.Contains("IsClosed"))
-                {
-                    var isClosed = bool.Parse(collisionMapValue["IsClosed"].ToString());
-                    passable = !isClosed && !bool.Parse(collisionMapValue[direction].ToString());
-                }
-                else
-                {
-                    passable = true;
-                }
-            }
-        }
-
-        var windows = map.GetWindows();
-
-        if(windows.Contains(collisionMapKey))
-        {
-            var collisionMapValue = (Godot.Collections.Dictionary)windows[collisionMapKey];
-
-            if(collisionMapValue.Contains(direction))
-            {
-                if(collisionMapValue.Contains("IsClosed"))
-                {
-                    var isClosed = bool.Parse(collisionMapValue["IsClosed"].ToString());
-                    passable = !isClosed && !bool.Parse(collisionMapValue[direction].ToString());
-                }
-                else
-                {
-                    passable = true;
-                }
-            }
-        }
-
-        return passable;
-    }
-
-    public static Vector2 GetTargetPosition(GridPosition position, float tileSize, (float, float) initCoordinates)
+	public static Vector2 GetTargetPosition(GridPosition position, float tileSize, (float, float) initCoordinates)
 	{
 		var targetX = ((position.Column - 1) * tileSize) + initCoordinates.Item1;
 		var targetY = ((position.Row - 1) * tileSize) + initCoordinates.Item2;
 
 		return new Vector2(targetX, targetY);
+	}
+
+	private static bool HasObstacle(Map map, int column, int row, string direction)
+	{
+		var collisionMapKey = $"col{column}row{row}";
+		var passable = true;
+
+		var collisionMaps = map.GetCollisionMaps();
+		var doors = map.GetDoors();
+		var windows = map.GetWindows();
+
+		var collisionChecks = new List<Tuple<Godot.Collections.Dictionary, bool>>();
+
+		collisionChecks.Add(new Tuple<Godot.Collections.Dictionary, bool>(collisionMaps, false));
+		collisionChecks.Add(new Tuple<Godot.Collections.Dictionary, bool>(doors, true));
+		collisionChecks.Add(new Tuple<Godot.Collections.Dictionary, bool>(windows, true));
+
+		foreach(var collisionCheck in collisionChecks)
+		{
+			if (collisionCheck.Item1.Contains(collisionMapKey))
+			{
+				passable = HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, collisionCheck.Item2);
+			}
+		}
+
+		return passable;
+	}
+
+	private static bool HasCollisionWithCollisionMaps(Godot.Collections.Dictionary collisionMap, string collisionMapKey,
+		string direction, bool canClose = false)
+	{
+		var passable = true;
+
+		if (collisionMap.Contains(collisionMapKey))
+		{
+			var collisionMapValue = (Godot.Collections.Dictionary)collisionMap[collisionMapKey];
+
+			if (collisionMapValue.Contains(direction))
+			{
+				if (canClose == true)
+				{
+					if (collisionMapValue.Contains("IsClosed"))
+					{
+						var isClosed = bool.Parse(collisionMapValue["IsClosed"].ToString());
+						passable = !isClosed && !bool.Parse(collisionMapValue[direction].ToString());
+
+						GD.Print($"Can Pass: {passable} {collisionMapKey}");
+					}
+					else
+					{
+						GD.Print($"Can Pass {collisionMapKey}");
+						passable = true;
+					}
+				}
+				else
+				{
+					passable = !bool.Parse(collisionMapValue[direction].ToString());
+
+					GD.Print($"Can Pass: {passable} {collisionMapKey}");
+				}
+			}
+		}
+
+		return passable;
+	}
+
+	public static bool HasPlayerUnits(GameManager _root, int column, int row, string direction)
+	{
+		var tempColumn = column;
+		var tempRow = row;
+
+		if (direction == "up")
+		{
+			tempRow -= 1;
+		}
+		else if (direction == "left")
+		{
+			tempColumn -= 1;
+		}
+		else if (direction == "right")
+		{
+			tempColumn += 1;
+		}
+		else if (direction == "down")
+		{
+			tempRow += 1;
+		}
+
+		return _root.HasPlayerUnits(tempColumn, tempRow);
 	}
 }

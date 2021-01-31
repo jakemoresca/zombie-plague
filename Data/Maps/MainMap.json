@@ -29,7 +29,7 @@
 
 
         "---------Tool Shed House------------------------------------------": {},
-        "col15row1": { "left": true, "right": false, "up": false, "down": true },
+        "col15row1": { "left": false, "right": false, "up": false, "down": true },
         "col16row1": { "left": false, "right": false, "up": false, "down": true },
         "col17row1": { "left": false, "right": false, "up": false, "down": true },
         "col18row1": { "left": false, "right": false, "up": false, "down": true },

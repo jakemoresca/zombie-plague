@@ -113,12 +113,20 @@ public class GameManager : Node2D
 
 			case nameof(GamePhase.ROUND_END):
 
-				_displayText.SetText($"Player Z, Let's add minions.");
-				_displayText.Display();
+				if (_playerManager.CanCreateAdditionalCharacter((int)PlayerNumber.Zombie))
+				{
+					_displayText.SetText($"Player Z, Let's add minions.");
+					_displayText.Display();
 
-				directionDice.Position = new Vector2(1029.8f, 396.239f);
+					directionDice.Position = new Vector2(1029.8f, 396.239f);
 
-				directionDice.ShowDice();
+					directionDice.ShowDice();
+				}
+				else
+				{
+					_displayText.SetText($"You are already strong enough Player Z, no more minions for you.");
+					_displayText.Display(nameof(GamePhase.ROUND_START));
+				}
 
 				break;
 		}
@@ -249,6 +257,8 @@ public class GameManager : Node2D
 			}
 		}
 	}
+
+	public bool HasPlayerUnits(int column, int row) => _playerManager.HasPlayerUnits(column, row);
 }
 
 public enum GamePhase
