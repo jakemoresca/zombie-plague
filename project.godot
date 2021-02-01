@@ -27,8 +27,17 @@ window/vsync/use_vsync=false
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "RPG_maker_Autotile2_3x3" )
+
+[physics]
+
+2d/cell_size=48
+
 [rendering]
 
+quality/2d/use_pixel_snap=true
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
 environment/default_environment="res://default_env.tres"
