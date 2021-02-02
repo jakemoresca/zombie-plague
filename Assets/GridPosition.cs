@@ -39,10 +39,15 @@ public static class GridHelper
 		return HasObstacle(map, column, row, direction);
 	}
 
-	public static Vector2 GetTargetPosition(GridPosition position, float tileSize, (float, float) initCoordinates)
+	public static Vector2 GetTargetPosition(TileMap tilemap, GridPosition position, int tileSize, (int, int) initCoordinates)
 	{
-		var targetX = ((position.Column - 1) * tileSize) + initCoordinates.Item1;
-		var targetY = ((position.Row - 1) * tileSize) + initCoordinates.Item2;
+		var (initX, initY) = initCoordinates;
+
+		var vector2Position = new Vector2(position.Column + initX, position.Row + initY);
+		var targetPosition = tilemap.MapToWorld(vector2Position, true);
+
+		var targetX = (targetPosition.x - (tileSize / 2)) * 1.5f;
+		var targetY = (targetPosition.y - (tileSize / 2)) * 1.5f;
 
 		return new Vector2(targetX, targetY);
 	}

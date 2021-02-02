@@ -25,9 +25,7 @@ public class SelectIndicator : Node2D
 			var gridPosition = player.GetGridPosition();
 			var position = new GridPosition { Row = gridPosition.Row, Column = gridPosition.Column };
 
-			initCoordinates.Item2 += 28;
-
-			this.Position = GridHelper.GetTargetPosition(position, tileSize, initCoordinates);
+			this.Position = GridHelper.GetTargetPosition(_map.Tilemap, position, (int)tileSize, initCoordinates);
 		}
 	}
 }

@@ -35,7 +35,8 @@ public class Player : Area2D
 		var tileSize = _map.GetTileSize();
 		var initCoordinates = _map.GetInitCoordinates();
 
-		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
+		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
+		this.Position = new Vector2(position.x, position.y - 48);
 	}
 
 	public GridPosition GetGridPosition()
@@ -86,7 +87,9 @@ public class Player : Area2D
 				break;
 		}
 
-		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
+		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
+		this.Position = new Vector2(position.x, position.y - 28);
+
 		SetAP(this.AP - 1);
 
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
@@ -100,7 +103,8 @@ public class Player : Area2D
 		_position.Row = row;
 		_position.Column = column;
 
-		this.Position = GridHelper.GetTargetPosition(_position, tileSize, initCoordinates);
+		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
+		this.Position = new Vector2(position.x, position.y - 28);
 
 		this.Show();
 

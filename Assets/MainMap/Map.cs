@@ -11,14 +11,14 @@ public class Map : Area2D
 	[Export]
 	private int numberOfRows = 0;
 
-	[Export]
-	private float tileSize = 0;
+	[Export(PropertyHint.MultilineText, "Grid Cell Size")]
+	private int tileSize = 48;
 
-	[Export]
-	private float initX = 0;
+	[Export(PropertyHint.MultilineText, "First Cell Grid Coordinates X-Axis")]
+	private int initX = -12;
 
-	[Export]
-	private float initY = 0;
+	[Export(PropertyHint.MultilineText, "First Cell Grid Coordinates Y-Axis")]
+	private int initY = -10;
 
 	[Export]
 	private string mapData = "";
@@ -32,6 +32,7 @@ public class Map : Area2D
 	private Godot.Collections.Dictionary _windows;
 
 	private Node2D _currentSelectedNode;
+	private TileMap _tileMap;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -41,6 +42,7 @@ public class Map : Area2D
 		SetTileSize(71.28f);
 		SetInitCoordinates(-825.44f, -703.207f);
 		*/
+		_tileMap = this.GetNode<TileMap>("./Ground");
 
 		LoadMapData();
 	}
@@ -56,7 +58,7 @@ public class Map : Area2D
 		return (numberOfColumns, numberOfRows);
 	}
 
-	public void SetTileSize(float tileSize)
+	public void SetTileSize(int tileSize)
 	{
 		this.tileSize = tileSize;
 	}
@@ -66,13 +68,13 @@ public class Map : Area2D
 		return tileSize;
 	}
 
-	public void SetInitCoordinates(float initX, float initY)
+	public void SetInitCoordinates(int initX, int initY)
 	{
 		this.initX = initX;
 		this.initY = initY;
 	}
 
-	public (float, float) GetInitCoordinates()
+	public (int, int) GetInitCoordinates()
 	{
 		return (initX, initY);
 	}
@@ -132,4 +134,6 @@ public class Map : Area2D
 	{
 		return _windows;
 	}
+
+	public TileMap Tilemap => _tileMap;
 }

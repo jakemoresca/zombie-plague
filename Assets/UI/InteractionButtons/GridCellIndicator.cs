@@ -46,9 +46,7 @@ public class GridCellIndicator : Area2D
 		var initCoordinates = _map.GetInitCoordinates();
 		var position = new GridPosition { Row = this.Row, Column = this.Column };
 
-		initCoordinates.Item2 += 28;
-
-		this.Position = GridHelper.GetTargetPosition(position, tileSize, initCoordinates);
+		this.Position = GridHelper.GetTargetPosition(_map.Tilemap, position, (int)tileSize, initCoordinates);
 		this.Modulate = new Color(RED_COLOR);
 
 		PlayAnimation();
