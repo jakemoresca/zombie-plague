@@ -3,8 +3,6 @@ using System;
 
 public class Map : Area2D
 {
-	// Declare member variables here. Examples:
-
 	[Export]
 	private int numberOfColumns = 0;
 
@@ -30,6 +28,7 @@ public class Map : Area2D
 
 	private Godot.Collections.Dictionary _doors;
 	private Godot.Collections.Dictionary _windows;
+	private Godot.Collections.Dictionary _searchables;
 
 	private Node2D _currentSelectedNode;
 	private TileMap _tileMap;
@@ -116,24 +115,19 @@ public class Map : Area2D
 		_collisionMaps = (Godot.Collections.Dictionary)contentResult["collisionMaps"];
 		_windows = (Godot.Collections.Dictionary)contentResult["windows"];
 		_doors = (Godot.Collections.Dictionary)contentResult["doors"];
+		_searchables = (Godot.Collections.Dictionary)contentResult["searchables"];
 
 		mapDataFile.Close();
 	}
 
-	public Godot.Collections.Dictionary GetCollisionMaps()
-	{
-		return _collisionMaps;
-	}
+	public Godot.Collections.Dictionary CollisionMaps => _collisionMaps;
 
-	public Godot.Collections.Dictionary GetDoors()
-	{
-		return _doors;
-	}
+	public Godot.Collections.Dictionary Doors => _doors;
 
-	public Godot.Collections.Dictionary GetWindows()
-	{
-		return _windows;
-	}
+	public Godot.Collections.Dictionary Windows => _windows;
+	public Godot.Collections.Dictionary Searchables => _searchables;
 
 	public TileMap Tilemap => _tileMap;
+
+	public string MapDataFileName => mapData;
 }

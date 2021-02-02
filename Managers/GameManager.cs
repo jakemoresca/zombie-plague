@@ -11,6 +11,7 @@ public class GameManager : Node2D
 	private DiceManager _diceManager;
 	private SpawnPointManager _spawnPointManager;
 	private PlayerManager _playerManager;
+	private CardManager _cardManager;
 	private DisplayText _displayText;
 	public Map Map;
 	public SpawnQueue SpawnQueue;
@@ -32,8 +33,10 @@ public class GameManager : Node2D
 		_diceManager = new DiceManager(this);
 		_spawnPointManager = new SpawnPointManager(this);
 		_playerManager = new PlayerManager(this);
+		_cardManager = new CardManager(this);
 
 		_playerManager.SetNumberOfPlayers(5);
+		_cardManager.LoadCards("MainMap.json");
 
 		ChangePhase(nameof(GamePhase.GAME_START));
 	}

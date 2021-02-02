@@ -190,8 +190,8 @@
         "col17row20": { "left": false, "right": false, "up": true, "down": false },
         "col18row20": { "left": false, "right": false, "up": true, "down": false }
     },
-    "chest": {
-        "col5row4": { "right": true },
+    "searchables": {
+        "col4row4": { "right": true },
         "col20row3": { "right": true },
         "col15row11": { "left": true },
         "col13row14": { "down": true },

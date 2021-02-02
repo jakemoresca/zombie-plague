@@ -57,9 +57,9 @@ public static class GridHelper
 		var collisionMapKey = $"col{column}row{row}";
 		var passable = true;
 
-		var collisionMaps = map.GetCollisionMaps();
-		var doors = map.GetDoors();
-		var windows = map.GetWindows();
+		var collisionMaps = map.CollisionMaps;
+		var doors = map.Doors;
+		var windows = map.Windows;
 
 		var collisionChecks = new List<Tuple<Godot.Collections.Dictionary, bool>>();
 
@@ -139,5 +139,13 @@ public static class GridHelper
 		}
 
 		return _root.HasPlayerUnits(tempColumn, tempRow);
+	}
+
+	public static bool HasSearchable(Map map, int column, int row, string direction)
+	{
+		var collisionMapKey = $"col{column}row{row}";
+		
+		var searchables = map.Searchables;
+		return !HasCollisionWithCollisionMaps(searchables, collisionMapKey, direction);
 	}
 }
