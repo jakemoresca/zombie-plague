@@ -23,7 +23,7 @@ public class DisplayText : Node2D
 	public override void _Ready()
 	{
 		_label = this.GetNode<RichTextLabel>("./RichTextLabel");
-		_label.Text = Text;
+		_label.BbcodeText = Text;
 	}
 
 	public void SetText(string text)
@@ -32,7 +32,7 @@ public class DisplayText : Node2D
 
 		if(_label != null)
 		{
-			_label.Text = text;
+			_label.BbcodeText = text;
 		}
 	}
 

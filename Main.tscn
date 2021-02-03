@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/MainMap/MainMap.tscn" type="PackedScene" id=2]
@@ -17,6 +17,7 @@
 [ext_resource path="res://Assets/UI/InteractionButtons/SelectIndicator.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Assets/UI/ActionBarButtons/DoneButton.tscn" type="PackedScene" id=16]
 [ext_resource path="res://Managers/GameManager.cs" type="Script" id=17]
+[ext_resource path="res://Assets/Cards/Card.tscn" type="PackedScene" id=18]
 
 [node name="Root" type="Node2D"]
 position = Vector2( -62.9961, 70.5555 )
@@ -37,7 +38,7 @@ position = Vector2( -889.449, -22.5 )
 scale = Vector2( 0.596627, 25.16 )
 
 [node name="RightBorder" parent="Borders" instance=ExtResource( 8 )]
-position = Vector2( 936.707, 0 )
+position = Vector2( 937.829, -4.48987 )
 scale = Vector2( 0.476627, 25.16 )
 
 [node name="DownBorder" parent="Borders" instance=ExtResource( 8 )]
@@ -87,13 +88,18 @@ position = Vector2( 172, 0 )
 [node name="DoneButton" parent="ActionButtons" instance=ExtResource( 16 )]
 position = Vector2( 258, 0 )
 
-[node name="DisplayText" parent="." instance=ExtResource( 14 )]
-position = Vector2( 1028.58, 33.3938 )
-
 [node name="SpawnQueue" parent="." instance=ExtResource( 1 )]
 position = Vector2( 476.973, 571.414 )
 
+[node name="DisplayText" parent="." instance=ExtResource( 14 )]
+position = Vector2( 633.927, 273.146 )
+z_index = 1000
+
 [node name="MousePoint" parent="." instance=ExtResource( 3 )]
+
+[node name="Card" parent="." instance=ExtResource( 18 )]
+position = Vector2( 1063.91, 472.929 )
+z_index = 999
 [connection signal="input_event" from="ActionButtons/Forward" to="ActionButtons/Forward" method="_on_Forward_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateLeft" to="ActionButtons/RotateLeft" method="_on_RotateLeft_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateRight" to="ActionButtons/RotateRight" method="_on_RotateRight_input_event"]

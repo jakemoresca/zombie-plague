@@ -1,21 +1,40 @@
 using Godot;
 using System;
 
-public class Card : Area2D
+public class Card : Sprite
 {
-	// Declare member variables here. Examples:
-	// private int a = 2;
-	// private string b = "text";
+	private CardData _cardData;
+	private RichTextLabel _title;
+	private RichTextLabel _description;
+	private TextureRect _cardImage;
+	private int _playerNumber;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		
+		_title = this.GetNode<RichTextLabel>("./Title");
+		_description = this.GetNode<RichTextLabel>("./Description");
+		_cardImage = this.GetNode<TextureRect>("./CardImage");
+
+		this.Hide();
 	}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+	public void SetCardData(CardData cardData)
+	{
+		_cardData = cardData;
+		ProcessCardData();
+
+		this.Show();
+	}
+
+	public void SetPlayerNumber(int playerNumber)
+	{
+		_playerNumber = playerNumber;
+	}
+
+	private void ProcessCardData()
+	{
+		_title.BbcodeText = _cardData.Name;
+		_description.BbcodeText = _cardData.Description;
+	}
 }

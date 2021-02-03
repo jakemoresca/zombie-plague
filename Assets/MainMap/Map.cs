@@ -130,4 +130,22 @@ public class Map : Area2D
 	public TileMap Tilemap => _tileMap;
 
 	public string MapDataFileName => mapData;
+
+	public void IncrementSearchCount(string searchableKey)
+	{
+		var searchable = (Godot.Collections.Dictionary)_searchables[searchableKey];
+
+		var hasSearchCount = searchable.Contains("searchCount");
+
+		if(hasSearchCount)
+		{
+			var searchCount = (int)searchable["searchCount"];
+			searchCount += 1;
+
+			searchable["searchCount"] = searchCount;
+		}
+		{
+			searchable.Add("searchCount", 1);
+		}
+	}
 }

@@ -1,51 +1,90 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Assets/Cards/Card Template.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Cards/EquipmentPro.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Graphics/Items/soaker.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Cards/Card.cs" type="Script" id=4]
+[ext_resource path="res://Assets/Cards/CardPanel.png" type="Texture" id=5]
+[ext_resource path="res://Fonts/Round9x13.ttf" type="DynamicFontData" id=6]
 
 [sub_resource type="DynamicFontData" id=1]
-font_path = "res://Assets/Cards/MatchupPro.ttf"
+font_path = "res://Fonts/Round9x13.ttf"
 
 [sub_resource type="DynamicFont" id=2]
-size = 20
+size = 40
 font_data = SubResource( 1 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=4]
 size = 25
+font_data = SubResource( 3 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 20
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 35
 font_data = ExtResource( 2 )
 
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 182.173, 257.753 )
+[sub_resource type="DynamicFont" id=7]
+size = 31
+font_data = ExtResource( 6 )
 
-[node name="Card" type="Area2D"]
+[node name="Card" type="Sprite"]
+position = Vector2( 34.7058, -113.127 )
+scale = Vector2( 1.11745, 0.778282 )
+texture = ExtResource( 5 )
 script = ExtResource( 4 )
 
-[node name="CardTemplate" type="Sprite" parent="."]
-scale = Vector2( 4, 4 )
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = -218.805
+margin_top = -376.0
+margin_right = 193.195
+margin_bottom = 326.0
 texture = ExtResource( 1 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Caption" type="RichTextLabel" parent="."]
+margin_left = -248.968
+margin_top = -445.546
+margin_right = 374.032
+margin_bottom = -355.546
+rect_min_size = Vector2( 623, 90 )
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "You found : "
+text = "You found : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Description" type="RichTextLabel" parent="."]
-margin_left = -141.0
-margin_top = 73.0
-margin_right = 139.0
-margin_bottom = 227.0
-custom_fonts/normal_font = SubResource( 2 )
+margin_left = -172.0
+margin_top = 74.0
+margin_right = 142.0
+margin_bottom = 274.0
+custom_fonts/bold_font = SubResource( 4 )
+custom_fonts/normal_font = SubResource( 5 )
 custom_colors/default_color = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 bbcode_text = "Range of 3 squares. Hits on a roll of [b]5[/b] or [b]6.[/b] A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks."
 text = "Range of 3 squares. Hits on a roll of 5 or 6. A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks."
+fit_content_height = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Title" type="RichTextLabel" parent="."]
-margin_left = -138.5
-margin_top = 14.5
-margin_right = 142.5
-margin_bottom = 42.5
-custom_fonts/normal_font = SubResource( 3 )
+margin_left = -175.753
+margin_top = -8.1447
+margin_right = 165.247
+margin_bottom = 37.8553
+custom_fonts/normal_font = SubResource( 6 )
 custom_colors/default_color = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 bbcode_text = "SUPER SOAKER"
@@ -54,9 +93,35 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CardImage" type="Sprite" parent="."]
-position = Vector2( 0, -122.861 )
+[node name="CardImage" type="TextureRect" parent="."]
+margin_left = -167.0
+margin_top = -319.0
+margin_right = 145.0
+margin_bottom = -48.0
 texture = ExtResource( 3 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 4 )
+[node name="TakeButton" type="Button" parent="."]
+margin_left = -212.833
+margin_top = 347.855
+margin_right = -24.8327
+margin_bottom = 444.855
+custom_fonts/font = SubResource( 7 )
+text = "Take"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DiscardButton" type="Button" parent="."]
+margin_left = -0.204056
+margin_top = 347.855
+margin_right = 187.796
+margin_bottom = 444.855
+custom_fonts/font = SubResource( 7 )
+text = "Discard"
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -42,7 +42,28 @@ public class SearchButton : Area2D
 
 	private void _on_SearchButton_input_event(object viewport, object @event, int shape_idx)
 	{
-		// Replace with function body.
+		if (_disabled)
+			return;
+
+		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
+		{
+			switch ((ButtonList)mouseEvent.ButtonIndex)
+			{
+				case ButtonList.Left:
+
+					var currentSelectedNode = _map.GetSelectedNode();
+
+					if (currentSelectedNode is Player player)
+					{
+						var gridPosition = player.GetGridPosition();
+						var searchableKey = $"col{gridPosition.Column}row{gridPosition.Row}";
+
+						_gameManager.InitiateSearch(player.GetPlayerNumber(), searchableKey);
+					}
+
+					break;
+			}
+		}
 	}
 
 }

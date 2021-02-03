@@ -17,12 +17,14 @@ public class GameManager : Node2D
 	public SpawnQueue SpawnQueue;
 	public int _currentPlayersTurn = 0;
 	public int _roundNumber = 0;
+	public Card Card;
 
 	public override void _Ready()
 	{
 		_displayText = this.GetNode<DisplayText>("./DisplayText");
 		Map = this.GetNode<Map>("./MainMap");
 		SpawnQueue = this.GetNode<SpawnQueue>("./SpawnQueue");
+		Card = this.GetNode<Card>("./Card");
 
 		RegisterSignals();
 		Setup();
@@ -63,7 +65,7 @@ public class GameManager : Node2D
 		switch (newPhase)
 		{
 			case nameof(GamePhase.GAME_START):
-				_displayText.SetText("Game START!");
+				_displayText.SetText("[center]Game START![/center]");
 				_displayText.Display(nameof(GamePhase.GAME_START));
 				break;
 
@@ -71,14 +73,14 @@ public class GameManager : Node2D
 				directionDice.Position = new Vector2(1029.8f, 396.239f);
 				directionDice.ShowDice();
 
-				_displayText.SetText("Zombie Player, Roll a Dice.");
+				_displayText.SetText("[center]Zombie Player, Roll a Dice.[/center]");
 				_displayText.Display();
 
 				break;
 
 			case nameof(GamePhase.PLAYERS_START):
 
-				_displayText.SetText("Human Player, Set your spawn location.");
+				_displayText.SetText("[center]Human Player, Set your spawn location.[/center]");
 				_displayText.Display();
 
 				break;
@@ -87,7 +89,7 @@ public class GameManager : Node2D
 
 				_roundNumber += 1;
 
-				_displayText.SetText($"Round {_roundNumber} Start!");
+				_displayText.SetText($"[center]Round {_roundNumber} Start![/center]");
 				_displayText.Display(nameof(GamePhase.ROUND_START), 1000);
 
 				SpawnQueue.HideWindow();
@@ -98,7 +100,7 @@ public class GameManager : Node2D
 			case nameof(GamePhase.HUMAN_PLAYER_START):
 
 				var playerName = ((PlayerNumber)_currentPlayersTurn).ToString();
-				_displayText.SetText($"{playerName}'s Turn. Survive!");
+				_displayText.SetText($"[center]{playerName} Turn. Survive![/center]");
 				_displayText.Display();
 
 				_playerManager.StartPlayerUnitsTurn(_currentPlayersTurn);
@@ -107,7 +109,7 @@ public class GameManager : Node2D
 
 			case nameof(GamePhase.ZOMBIE_PLAYER_START):
 
-				_displayText.SetText($"Z's Turn. Get them!");
+				_displayText.SetText($"[center]Z's Turn. Get them![/center]");
 				_displayText.Display();
 
 				_playerManager.StartPlayerUnitsTurn(_currentPlayersTurn);
@@ -262,6 +264,11 @@ public class GameManager : Node2D
 	}
 
 	public bool HasPlayerUnits(int column, int row) => _playerManager.HasPlayerUnits(column, row);
+
+	public void InitiateSearch(int playerNumber, string searchableKey)
+	{
+		_cardManager.InitiateSearch(playerNumber, searchableKey);
+	}
 }
 
 public enum GamePhase
