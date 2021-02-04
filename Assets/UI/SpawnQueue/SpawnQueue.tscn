@@ -11,7 +11,6 @@ script = ExtResource( 3 )
 
 [node name="Panel" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.745098 )
-position = Vector2( 0, -108.475 )
 scale = Vector2( 1, 0.777487 )
 texture = ExtResource( 1 )
 
@@ -28,10 +27,10 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="."]
-margin_left = -246.0
-margin_top = -361.0
-margin_right = 251.0
-margin_bottom = 130.0
+margin_left = -247.335
+margin_top = -251.543
+margin_right = 249.665
+margin_bottom = 239.457
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 100, 100 )
@@ -43,10 +42,10 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_left = -259.0
-margin_top = -454.0
-margin_right = 238.0
-margin_bottom = -413.0
+margin_left = -254.995
+margin_top = -355.222
+margin_right = 242.005
+margin_bottom = -314.222
 rect_pivot_offset = Vector2( -582.96, 133.188 )
 custom_fonts/normal_font = ExtResource( 2 )
 bbcode_enabled = true
@@ -58,10 +57,10 @@ __meta__ = {
 }
 
 [node name="Error" type="RichTextLabel" parent="."]
-margin_left = -254.0
-margin_top = -406.28
-margin_right = 219.0
-margin_bottom = -366.28
+margin_left = -252.665
+margin_top = -306.167
+margin_right = 220.335
+margin_bottom = -266.167
 custom_fonts/normal_font = ExtResource( 5 )
 custom_colors/default_color = Color( 1, 0.0235294, 0.0235294, 1 )
 bbcode_enabled = true

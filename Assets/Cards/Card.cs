@@ -7,6 +7,7 @@ public class Card : Sprite
 	private RichTextLabel _title;
 	private RichTextLabel _description;
 	private TextureRect _cardImage;
+	private string _cardType;
 	private int _playerNumber;
 
 	// Called when the node enters the scene tree for the first time.
@@ -36,5 +37,20 @@ public class Card : Sprite
 	{
 		_title.BbcodeText = _cardData.Name;
 		_description.BbcodeText = _cardData.Description;
+
+		var cardImageTexture = ResourceLoader.Load<StreamTexture>($"res://Graphics/Items/{_cardData.Image}");
+		_cardImage.Texture = cardImageTexture;
+
+		switch(_cardData.Type)
+		{
+			case "weapon":
+				break;
+			
+			case "item":
+				break;
+
+			case "event":
+				break;
+		}
 	}
 }

@@ -70,7 +70,7 @@ public class GameManager : Node2D
 				break;
 
 			case nameof(GamePhase.ZOMBIE_START):
-				directionDice.Position = new Vector2(1029.8f, 396.239f);
+				//directionDice.Position = new Vector2(1029.8f, 396.239f);
 				directionDice.ShowDice();
 
 				_displayText.SetText("[center]Zombie Player, Roll a Dice.[/center]");

@@ -12,8 +12,8 @@ public class Borders : Node2D
 	private bool _isScrollingUp;
 	private bool _isScrollingDown;
 	private RichTextLabel _debugPosition;
-	private float _yUpLimit = 755.196f;
-	private float _yDownLimit = 195.196f;
+	private float _yUpLimit = 370f;
+	private float _yDownLimit = -370f;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

@@ -24,17 +24,15 @@ position = Vector2( -62.9961, 70.5555 )
 script = ExtResource( 17 )
 
 [node name="MainMap" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1030.79, 485.196 )
 mapData = "MainMap.json"
 
 [node name="SelectIndicator" parent="MainMap" instance=ExtResource( 15 )]
 
 [node name="Borders" type="Node2D" parent="."]
-position = Vector2( 1000, 485.196 )
 script = ExtResource( 9 )
 
 [node name="LeftBorder" parent="Borders" instance=ExtResource( 8 )]
-position = Vector2( -889.449, -22.5 )
+position = Vector2( -949.381, -1.52369 )
 scale = Vector2( 0.596627, 25.16 )
 
 [node name="RightBorder" parent="Borders" instance=ExtResource( 8 )]
@@ -65,7 +63,7 @@ __meta__ = {
 }
 
 [node name="ActionButtons" type="Node2D" parent="."]
-position = Vector2( 1032.12, 877.402 )
+position = Vector2( 0, 400 )
 scale = Vector2( 0.8, 0.8 )
 
 [node name="APStatus" parent="ActionButtons" instance=ExtResource( 10 )]
@@ -89,17 +87,22 @@ position = Vector2( 172, 0 )
 position = Vector2( 258, 0 )
 
 [node name="SpawnQueue" parent="." instance=ExtResource( 1 )]
-position = Vector2( 476.973, 571.414 )
+visible = false
 
 [node name="DisplayText" parent="." instance=ExtResource( 14 )]
-position = Vector2( 633.927, 273.146 )
+visible = false
 z_index = 1000
 
 [node name="MousePoint" parent="." instance=ExtResource( 3 )]
+position = Vector2( -881.993, -621.003 )
 
 [node name="Card" parent="." instance=ExtResource( 18 )]
-position = Vector2( 1063.91, 472.929 )
+visible = false
+position = Vector2( 0, 0 )
 z_index = 999
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
 [connection signal="input_event" from="ActionButtons/Forward" to="ActionButtons/Forward" method="_on_Forward_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateLeft" to="ActionButtons/RotateLeft" method="_on_RotateLeft_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateRight" to="ActionButtons/RotateRight" method="_on_RotateRight_input_event"]

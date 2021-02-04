@@ -141,11 +141,21 @@ public static class GridHelper
 		return _root.HasPlayerUnits(tempColumn, tempRow);
 	}
 
-	public static bool HasSearchable(Map map, int column, int row, string direction)
+	public static bool HasSearchable(Map map, int column, int row, string direction, int playerNumber)
 	{
-		var collisionMapKey = $"col{column}row{row}";
+		var searchableKey = $"col{column}row{row}";
 		
 		var searchables = map.Searchables;
-		return !HasCollisionWithCollisionMaps(searchables, collisionMapKey, direction);
+		var hasSearchable = !HasCollisionWithCollisionMaps(searchables, searchableKey, direction);
+
+		if(hasSearchable)
+		{
+			var searchable = (Godot.Collections.Dictionary)searchables[searchableKey];
+			var hasSearchBy = searchable.Contains($"searchByPlayer{playerNumber}");
+
+			return hasSearchable && !hasSearchBy;
+		}
+
+		return hasSearchable;
 	}
 }

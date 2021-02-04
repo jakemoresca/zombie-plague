@@ -32,6 +32,7 @@ public class Map : Area2D
 
 	private Node2D _currentSelectedNode;
 	private TileMap _tileMap;
+	private CollisionShape2D _collisionShape2D;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -42,6 +43,7 @@ public class Map : Area2D
 		SetInitCoordinates(-825.44f, -703.207f);
 		*/
 		_tileMap = this.GetNode<TileMap>("./Ground");
+		_collisionShape2D = this.GetNode<CollisionShape2D>("./CollisionShape2D");
 
 		LoadMapData();
 	}
@@ -62,7 +64,7 @@ public class Map : Area2D
 		this.tileSize = tileSize;
 	}
 
-	public float GetTileSize()
+	public int GetTileSize()
 	{
 		return tileSize;
 	}
@@ -131,7 +133,9 @@ public class Map : Area2D
 
 	public string MapDataFileName => mapData;
 
-	public void IncrementSearchCount(string searchableKey)
+	public CollisionShape2D CollisionShape2D => _collisionShape2D;
+
+	public void IncrementSearchCount(string searchableKey, int playerNumber)
 	{
 		var searchable = (Godot.Collections.Dictionary)_searchables[searchableKey];
 
@@ -147,5 +151,7 @@ public class Map : Area2D
 		{
 			searchable.Add("searchCount", 1);
 		}
+
+		searchable.Add($"searchByPlayer{playerNumber}", true);
 	}
 }

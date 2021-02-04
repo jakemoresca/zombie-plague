@@ -53,7 +53,7 @@ public class CardManager
 
 	public void InitiateSearch(int playerNumber, string searchableKey)
 	{
-		_root.Map.IncrementSearchCount(searchableKey);
+		_root.Map.IncrementSearchCount(searchableKey, playerNumber);
 		
 		var cardData = GetRandomCard();
 

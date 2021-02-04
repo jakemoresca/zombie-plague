@@ -23,8 +23,7 @@ public class SearchButton : Area2D
 		{
 			var gridPosition = player.GetGridPosition();
 
-			if (GridHelper.HasSearchable(_map, gridPosition.Column, gridPosition.Row, player.GetDirection())
-				&& !GridHelper.HasPlayerUnits(_gameManager, gridPosition.Column, gridPosition.Row, player.GetDirection())
+			if (GridHelper.HasSearchable(_map, gridPosition.Column, gridPosition.Row, player.GetDirection(), player.GetPlayerNumber())
 				&& !player.IsDisabledToWalk()
 				&& player.AP > 0
 				&& player.GetPlayerNumber() != (int)PlayerNumber.Zombie)
