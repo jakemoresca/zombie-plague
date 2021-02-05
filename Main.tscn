@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/MainMap/MainMap.tscn" type="PackedScene" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://Managers/GameManager.cs" type="Script" id=17]
 [ext_resource path="res://Assets/Cards/Card.tscn" type="PackedScene" id=18]
 [ext_resource path="res://Assets/UI/Inventory/Inventory.tscn" type="PackedScene" id=19]
+[ext_resource path="res://Assets/UI/ActionBarButtons/BagButton.tscn" type="PackedScene" id=20]
 
 [node name="Root" type="Node2D"]
 position = Vector2( -62.9961, 70.5555 )
@@ -70,11 +71,14 @@ scale = Vector2( 0.8, 0.8 )
 [node name="APStatus" parent="ActionButtons" instance=ExtResource( 10 )]
 position = Vector2( -172, 0 )
 
+[node name="BagButton" parent="ActionButtons" instance=ExtResource( 20 )]
+position = Vector2( 258, 0 )
+
 [node name="Forward" parent="ActionButtons" instance=ExtResource( 5 )]
 script = ExtResource( 11 )
 
 [node name="RotateLeft" parent="ActionButtons" instance=ExtResource( 6 )]
-position = Vector2( -86, 0 )
+position = Vector2( -86, -1.98425 )
 script = ExtResource( 13 )
 
 [node name="RotateRight" parent="ActionButtons" instance=ExtResource( 7 )]
@@ -85,7 +89,7 @@ script = ExtResource( 12 )
 position = Vector2( 172, 0 )
 
 [node name="DoneButton" parent="ActionButtons" instance=ExtResource( 16 )]
-position = Vector2( 258, 0 )
+position = Vector2( 344, 0 )
 
 [node name="SpawnQueue" parent="." instance=ExtResource( 1 )]
 visible = false
