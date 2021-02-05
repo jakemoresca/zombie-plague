@@ -1,9 +1,9 @@
 {
     "cards": [
-        { "id": "superSoaker", "name": "Super Soaker", "description": "Range of 3 squares. Hits on a roll of [b]5[/b] or [b]6[/b] A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks.", "type": "weapon", "image": "soaker.png"},
-        { "id": "lemonPie", "name": "Lemon Meringue Pie", "description": "Range of 2 squares. Hits on a roll of [b]5[/b] or [b]6[/b] A hit causes a zombie to become disoriented and the human player may turn the zombie to face any direction. On a roll of OOPS!, out of pies.", "type": "weapon", "image": "soaker.png"},
+        { "id": "superSoaker", "name": "Super Soaker", "description": "Range of 3 squares. Hits on a roll of [b]5[/b] or [b]6[/b] A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks.", "type": "weapon", "image": "soaker.png", "range": 3, "wide": 1 },
+        { "id": "lemonPie", "name": "Lemon Meringue Pie", "description": "Range of 2 squares. Hits on a roll of [b]5[/b] or [b]6[/b] A hit causes a zombie to become disoriented and the human player may turn the zombie to face any direction. On a roll of OOPS!, out of pies.", "type": "weapon", "image": "soaker.png", "range": 2, "wide": 1 },
         { "id": "kitchenKnife", "name": "Kitchen Knife", "description": "Kills zombies on a roll of [b]6[/b]", "type": "weapon", "image": "soaker.png"},
-        { "id": "castIronSkillet", "name": "Cast Iron Skillet", "description": "", "type": "weapon", "image": "soaker.png"},
+        { "id": "castIronSkillet", "name": "Cast Iron Skillet", "description": "", "type": "weapon", "image": "soaker.png"}
     ],
     "cardTypes": [
         "weapon",

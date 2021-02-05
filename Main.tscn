@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/MainMap/MainMap.tscn" type="PackedScene" id=2]
@@ -18,6 +18,7 @@
 [ext_resource path="res://Assets/UI/ActionBarButtons/DoneButton.tscn" type="PackedScene" id=16]
 [ext_resource path="res://Managers/GameManager.cs" type="Script" id=17]
 [ext_resource path="res://Assets/Cards/Card.tscn" type="PackedScene" id=18]
+[ext_resource path="res://Assets/UI/Inventory/Inventory.tscn" type="PackedScene" id=19]
 
 [node name="Root" type="Node2D"]
 position = Vector2( -62.9961, 70.5555 )
@@ -92,6 +93,9 @@ visible = false
 [node name="DisplayText" parent="." instance=ExtResource( 14 )]
 visible = false
 z_index = 1000
+
+[node name="Inventory" parent="." instance=ExtResource( 19 )]
+visible = false
 
 [node name="MousePoint" parent="." instance=ExtResource( 3 )]
 position = Vector2( -913, -640 )

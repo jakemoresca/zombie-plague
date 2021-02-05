@@ -123,9 +123,14 @@ public class Player : Area2D
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
 	}
 
-	public void SetAP(int ap)
+	public void SetAP(int ap, bool emitSignal = false)
 	{
 		_AP = ap;
+
+		if(emitSignal)
+		{
+			EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
+		}
 	}
 
 	public int AP => _AP;

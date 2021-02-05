@@ -27,4 +27,3 @@ animations = [ {
 
 [node name="Wind" type="AnimatedSprite"]
 frames = SubResource( 1 )
-[connection signal="animation_finished" from="." to="." method="_on_Wind_animation_finished"]

@@ -37,6 +37,7 @@ public class GROUND_TILEMAP : TileMap
 
 				resourceSceneInstance.Position = GetAnimationRandomPosition(resourceTriggerTileId);
 				resourceSceneInstance.Scale = new Vector2(0.3f, 0.3f);
+
 				resourceSceneInstance.Connect("animation_finished", this, "_on_Animation_Finished", new Godot.Collections.Array { resourceTriggerTileId, resourceKey });
 
 				this.AddChild(resourceSceneInstance);

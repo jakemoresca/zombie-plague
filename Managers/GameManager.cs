@@ -123,8 +123,6 @@ public class GameManager : Node2D
 					_displayText.SetText($"Player Z, Let's add minions.");
 					_displayText.Display();
 
-					directionDice.Position = new Vector2(1029.8f, 396.239f);
-
 					directionDice.ShowDice();
 				}
 				else
@@ -269,6 +267,10 @@ public class GameManager : Node2D
 	{
 		_cardManager.InitiateSearch(playerNumber, searchableKey);
 	}
+
+	public void TakeCard(CardData cardData) => _cardManager.TakeCard(cardData);
+
+	public void DiscardCard(CardData cardData) => _cardManager.DiscardCard(cardData);
 }
 
 public enum GamePhase

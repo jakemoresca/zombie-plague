@@ -8,10 +8,13 @@ public class CardManager
 	private Godot.Collections.Array _cards;
 	private Godot.Collections.Array _graveyard;
 	private RandomNumberGenerator _random;
+	private Dictionary<ulong, List<CardData>> _playerItems;
 
 	public CardManager(GameManager root)
 	{
 		_root = root;
+
+		_playerItems = new Dictionary<ulong, List<CardData>>();
 
 		_random = new RandomNumberGenerator();
 		_random.Randomize();
@@ -59,6 +62,45 @@ public class CardManager
 
 		_root.Card.SetCardData(cardData);
 		_root.Card.SetPlayerNumber(playerNumber);
+	}
+
+	public void TakeCard(CardData cardData)
+	{
+		var currentSelectedNode = _root.Map.GetSelectedNode();
+
+		if(currentSelectedNode is Player player)
+		{
+			var playerInstanceId = player.GetInstanceId();
+
+			player.SetAP(player.AP - 1, true);
+
+			if(_playerItems.ContainsKey(playerInstanceId))
+			{
+				var cards = _playerItems[playerInstanceId];
+				cards.Add(cardData);
+
+				_playerItems[playerInstanceId] = cards;
+			}
+			else
+			{
+				_playerItems.Add(playerInstanceId, new List<CardData>{ cardData });
+			}
+		}
+	}
+
+	public void DiscardCard(CardData cardData)
+	{
+		var currentSelectedNode = _root.Map.GetSelectedNode();
+
+		if(currentSelectedNode is Player player)
+		{
+			player.SetAP(player.AP - 1, true);
+		}
+	}
+
+	private List<CardData> GetPlayerItems(ulong playerInstanceID)
+	{
+		return _playerItems[playerInstanceID];
 	}
 }
 

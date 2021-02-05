@@ -1,0 +1,98 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Assets/UI/Inventory/InventoryPanel.png" type="Texture" id=1]
+[ext_resource path="res://Fonts/Round9x13.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Fonts/Blocky5x7.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Assets/UI/Inventory/ItemCell.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/UI/Inventory/Inventory.cs" type="Script" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 34
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 30
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[node name="Inventory" type="Node2D"]
+script = ExtResource( 5 )
+
+[node name="Panel" type="Sprite" parent="."]
+position = Vector2( 0, -1.18921 )
+scale = Vector2( 0.939049, 0.81962 )
+texture = ExtResource( 1 )
+
+[node name="Close" type="Button" parent="Panel"]
+margin_left = -85.5328
+margin_top = 351.206
+margin_right = 81.3154
+margin_bottom = 449.206
+custom_fonts/font = SubResource( 1 )
+text = "Close"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponCell" parent="." instance=ExtResource( 4 )]
+margin_left = -64.0218
+margin_top = -305.093
+margin_right = 98.9782
+margin_bottom = -147.793
+
+[node name="InventoryLabel" type="Label" parent="."]
+margin_left = -226.997
+margin_top = -357.005
+margin_right = -37.9969
+margin_bottom = -324.005
+custom_fonts/font = SubResource( 2 )
+text = "Inventory"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponLabel" type="Label" parent="."]
+margin_left = -227.297
+margin_top = -283.853
+margin_right = -156.297
+margin_bottom = -252.853
+custom_fonts/font = SubResource( 3 )
+text = "Weapon"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemLabel" type="Label" parent="."]
+margin_left = -223.999
+margin_top = -136.587
+margin_right = -152.999
+margin_bottom = -105.587
+custom_fonts/font = SubResource( 3 )
+text = "Items"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = -250.0
+margin_top = -92.0
+margin_right = 254.0
+margin_bottom = 269.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemContainer" type="GridContainer" parent="ScrollContainer"]
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="gui_input" from="Panel/Close" to="." method="_on_Close_gui_input"]
