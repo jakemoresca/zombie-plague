@@ -94,7 +94,9 @@ visible = false
 z_index = 1000
 
 [node name="MousePoint" parent="." instance=ExtResource( 3 )]
-position = Vector2( -881.993, -621.003 )
+position = Vector2( -913, -640 )
+InitialX = -913.0
+InitialY = -640.0
 
 [node name="Card" parent="." instance=ExtResource( 18 )]
 visible = false

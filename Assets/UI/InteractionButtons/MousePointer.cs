@@ -7,6 +7,12 @@ public class MousePointer : Area2D
 	private Sprite _cursor;
 	private Sprite _subCursor;
 
+	[Export]
+	private float InitialX;
+
+	[Export]
+	private float InitialY;
+
 	public override void _Ready()
 	{
 		_map = this.GetNode<Map>("../MainMap");
@@ -18,8 +24,22 @@ public class MousePointer : Area2D
 
 	public override void _Process(float delta)
 	{
-		this.Position = this.GetGlobalMousePosition();
+		var mousePosition = this.GetGlobalMousePosition();
+		var initialPosition = new Vector2(InitialX, InitialY);
+
+		var difference = mousePosition - initialPosition;
+
+		var nearestPosition = new Vector2(RoundUp(difference.x), RoundUp(difference.y));
+
+		this.Position = new Vector2(nearestPosition.x + initialPosition.x - 48, nearestPosition.y + initialPosition.y - 48);
 	}
+
+	private float RoundUp(float toRound)
+	{
+		if (toRound % 72 == 0) return toRound;
+		return (72 - toRound % 72) + toRound;
+	}
+
 
 	public void SetSubCursor(Texture texture, float scale = 1f)
 	{
