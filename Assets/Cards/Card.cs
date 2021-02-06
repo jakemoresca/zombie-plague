@@ -63,8 +63,7 @@ public class Card : Sprite
 		}
 		else
 		{
-			var cardImageTexture = ResourceLoader.Load<StreamTexture>($"res://Graphics/Items/{_cardData.Image}");
-			_cardImage.Texture = cardImageTexture;
+			_cardImage.Texture = CardManagerHelper.GetCardResource(_cardData.Image);
 
 			switch (_cardData.Type)
 			{

@@ -95,4 +95,4 @@ columns = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="gui_input" from="Panel/Close" to="." method="_on_Close_gui_input"]
+[connection signal="pressed" from="Panel/Close" to="." method="_on_Close_pressed"]

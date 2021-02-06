@@ -271,6 +271,8 @@ public class GameManager : Node2D
 	public void TakeCard(CardData cardData) => _cardManager.TakeCard(cardData);
 
 	public void DiscardCard(CardData cardData) => _cardManager.DiscardCard(cardData);
+
+	public void OpenInventory(ulong playerInstanceID) => _cardManager.OpenInventory(playerInstanceID);
 }
 
 public enum GamePhase

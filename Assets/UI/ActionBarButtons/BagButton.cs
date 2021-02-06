@@ -15,9 +15,27 @@ public class BagButton : Area2D
 		_map.Connect("FinishedUpdating", this, "_on_Map_finished_updating");
 	}
 
-	private void _on_BagButton_input_event(object viewport, object @event, int shape_idx)
+	private void _on_BagButton_input_event(Viewport viewport, InputEvent @event, int shape_idx)
 	{
-		// Replace with function body.
+		if (_disabled)
+			return;
+
+		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
+		{
+			switch ((ButtonList)mouseEvent.ButtonIndex)
+			{
+				case ButtonList.Left:
+
+					var currentSelectedNode = _map.GetSelectedNode();
+
+					if (currentSelectedNode is Player player)
+					{
+						_gameManager.OpenInventory(player.GetInstanceId());
+					}
+
+					break;
+			}
+		}
 	}
 
 	private void _on_Map_finished_updating()
