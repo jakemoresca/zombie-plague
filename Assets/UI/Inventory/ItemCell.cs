@@ -3,15 +3,33 @@ using System;
 
 public class ItemCell : TextureRect
 {
+	[Signal]
+	private delegate void ItemCellClicked(int cellIndex);
+
 	private TextureRect _sprite;
 	private CardData _cardData;
 	private int _cellIndex;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_sprite = this.GetNode<TextureRect>("./Sprite");
+	}
 
+	private void _on_ItemCell_gui_input(InputEvent @event)
+	{
+		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
+		{
+			switch ((ButtonList)mouseEvent.ButtonIndex)
+			{
+				case ButtonList.Left:
+
+					if(_cardData == null || _cardData.Id == null)
+						return;
+
+					EmitSignal(nameof(ItemCellClicked), _cellIndex);
+					break;
+			}
+		}
 	}
 
 	public void SetCellSprite(Texture texture)

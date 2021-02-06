@@ -71,14 +71,13 @@ __meta__ = {
 margin_left = -172.0
 margin_top = 74.0
 margin_right = 142.0
-margin_bottom = 274.0
+margin_bottom = 276.0
 custom_fonts/bold_font = SubResource( 4 )
 custom_fonts/normal_font = SubResource( 5 )
 custom_colors/default_color = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 bbcode_text = "Range of 3 squares. Hits on a roll of [b]5[/b] or [b]6.[/b] A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks."
 text = "Range of 3 squares. Hits on a roll of 5 or 6. A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks."
-fit_content_height = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

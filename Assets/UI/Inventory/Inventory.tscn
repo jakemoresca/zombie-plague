@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/UI/Inventory/InventoryPanel.png" type="Texture" id=1]
 [ext_resource path="res://Fonts/Round9x13.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Blocky5x7.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Assets/UI/Inventory/ItemCell.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/UI/Inventory/Inventory.cs" type="Script" id=5]
+[ext_resource path="res://Assets/UI/Inventory/CardDetailsPanel.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -22,7 +23,16 @@ outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
+[sub_resource type="DynamicFont" id=4]
+size = 30
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 30
+font_data = ExtResource( 3 )
+
 [node name="Inventory" type="Node2D"]
+z_index = 999
 script = ExtResource( 5 )
 
 [node name="Panel" type="Sprite" parent="."]
@@ -92,6 +102,34 @@ __meta__ = {
 
 [node name="ItemContainer" type="GridContainer" parent="ScrollContainer"]
 columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CardDetails" type="Sprite" parent="."]
+texture = ExtResource( 6 )
+
+[node name="Label" type="RichTextLabel" parent="CardDetails"]
+margin_left = -345.944
+margin_top = -117.0
+margin_right = 353.056
+margin_bottom = 144.0
+custom_fonts/bold_italics_font = SubResource( 4 )
+custom_fonts/normal_font = SubResource( 5 )
+bbcode_enabled = true
+bbcode_text = "Range of 3 squares. Hits on a roll of [b]5[/b] or [b]6[/b] A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks."
+text = "Range of 3 squares. Hits on a roll of 5 or 6 A hit disorients the target zombie, and the human player may turn the zombie to face any direction. On a roll of OOPS!, the SUPER SOAKER breaks."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelHint" type="Label" parent="CardDetails"]
+margin_left = -321.908
+margin_top = 130.112
+margin_right = 302.092
+margin_bottom = 155.112
+text = "Click the Item to Close"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

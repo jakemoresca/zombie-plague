@@ -9,18 +9,25 @@ public class Inventory : Node2D
 	private List<CardData> _items;
 	private GridContainer _gridContainer;
 	private ItemCell _weaponCell;
+	private Sprite _cardDetails;
 	private float _currentTime = 0;
 	private string _phase = nameof(CommonDisplayPhase.NONE);
 	private const string HIDDEN_COLOR = "00ffffff";
 	private const string VISIBLE_COLOR = "ffffffff";
+	private int _currentSelectedCell = -2;
+	private bool _detailVisible = false;
 
 	public override void _Ready()
 	{
 		_gameManager = this.GetNode<GameManager>("../../Root");
 		_gridContainer = this.GetNode<GridContainer>("./ScrollContainer/ItemContainer");
 		_weaponCell = this.GetNode<ItemCell>("./WeaponCell");
+		_cardDetails = this.GetNode<Sprite>("./CardDetails");
+
+		_weaponCell.Connect("ItemCellClicked", this, "_On_ItemCellClicked");
 
 		this.Hide();
+		_cardDetails.Hide();
 	}
 
 	private void _on_Close_pressed()
@@ -31,6 +38,10 @@ public class Inventory : Node2D
 	public void SetItems(List<CardData> items)
 	{
 		_items = items;
+
+		var cardDetailLabel = _cardDetails.GetNode<RichTextLabel>("./Label");
+		cardDetailLabel.BbcodeText = string.Empty;
+
 		DrawItems();
 	}
 
@@ -43,6 +54,7 @@ public class Inventory : Node2D
 
 	public void HideWindow()
 	{
+		_cardDetails.Hide();
 		_phase = nameof(CommonDisplayPhase.DECAY);
 	}
 
@@ -79,14 +91,11 @@ public class Inventory : Node2D
 				itemCellInstance.SetCellIndex(cellIndex);
 				itemCellInstance.SetCellSprite(cellTexture);
 
-				//itemCellInstance.Connect("SpawnCellClicked", this, "_On_SpawnCellClicked");
+				itemCellInstance.Connect("ItemCellClicked", this, "_On_ItemCellClicked");
 
 				cellIndex++;
 			}
 		}
-
-		//HighlightCell(0);
-		//SetSelectedPlayerUnit(0);
 	}
 
 	public void ClearGridChildren()
@@ -119,5 +128,54 @@ public class Inventory : Node2D
 				this.Hide();
 			}
 		}
+	}
+
+	private void _On_ItemCellClicked(int cellIndex)
+	{
+		if(cellIndex == -1 && _weaponCell.CardData == null)
+			return;
+
+		if(_detailVisible)
+		{
+			_detailVisible = false;
+			_cardDetails.Hide();
+
+			return;
+		}
+
+		HighlightCell(cellIndex);
+		ShowCardDetails(cellIndex);
+	}
+
+	public void HighlightCell(int cellIndex)
+	{
+		ClearCellHighlights();
+
+		var outlineShader = ResourceLoader.Load<ShaderMaterial>("res://Shaders/Outline2d_outer.tres");
+		var cell = cellIndex == -1 ? _weaponCell : _gridContainer.GetChild<ItemCell>(cellIndex);
+		cell.Material = outlineShader;
+	}
+
+	public void ClearCellHighlights()
+	{
+		_weaponCell.Material = null;
+
+		foreach(ItemCell child in _gridContainer.GetChildren())
+		{
+			child.Material = null;
+		}
+	}
+
+	private void ShowCardDetails(int cellIndex)
+	{
+		_currentSelectedCell = cellIndex;
+		_detailVisible = true;
+
+		var gridCell = cellIndex == -1 ? _weaponCell : _gridContainer.GetChild<ItemCell>(cellIndex);
+		var cardDetailLabel = _cardDetails.GetNode<RichTextLabel>("./Label");
+
+		cardDetailLabel.BbcodeText = gridCell.CardData.Description;
+
+		_cardDetails.Show();
 	}
 }

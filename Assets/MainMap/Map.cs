@@ -148,6 +148,7 @@ public class Map : Area2D
 
 			searchable["searchCount"] = searchCount;
 		}
+		else
 		{
 			searchable.Add("searchCount", 1);
 		}
