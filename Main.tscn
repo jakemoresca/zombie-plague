@@ -91,10 +91,8 @@ position = Vector2( 172, 0 )
 position = Vector2( 344, 0 )
 
 [node name="SpawnQueue" parent="." instance=ExtResource( 1 )]
-visible = false
 
 [node name="DisplayText" parent="." instance=ExtResource( 14 )]
-visible = false
 z_index = 1000
 
 [node name="MousePoint" parent="." instance=ExtResource( 3 )]
@@ -103,7 +101,6 @@ InitialX = -913.0
 InitialY = -640.0
 
 [node name="Card" parent="." instance=ExtResource( 18 )]
-visible = false
 position = Vector2( 0, 0 )
 z_index = 999
 
