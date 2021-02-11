@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class GridCellIndicator : Area2D
+public class AttackIndicator : Area2D
 {
 	// Declare member variables here. Examples:
 	[Export]
@@ -9,7 +9,7 @@ public class GridCellIndicator : Area2D
 
 	[Export]
 	private int Row = 0;
-	
+
 	private GameManager _gameManager;
 	private Map _map;
 	private CollisionShape2D _collisionShape;
@@ -20,7 +20,6 @@ public class GridCellIndicator : Area2D
 	private const string BLUR_COLOr = "31ffffff";
 	private bool _disabled = false;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_map = this.GetNode<Map>("../../MainMap");
@@ -101,83 +100,6 @@ public class GridCellIndicator : Area2D
 			{
 				_phase = "SHOWING";
 				_currentTime = 0;
-			}
-		}
-	}
-
-	private void _on_GridCellIndicator_input_event(Viewport viewport, InputEvent @event, int shape_idx)
-	{
-		if (_disabled)
-			return;
-
-		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
-		{
-			switch ((ButtonList)mouseEvent.ButtonIndex)
-			{
-				case ButtonList.Left:
-
-					var currentSelectedNode = _map.GetSelectedNode();
-
-					if (currentSelectedNode is Player player)
-					{
-						player.SpawnTo(Column, Row);
-
-						StopAnimation();
-
-						if(_gameManager.LastZombieDirection == "Wild" && player.GetPlayerNumber() == (int)PlayerNumber.Zombie)
-						{
-							var (maxColumn, maxRow) = _map.GetDimension();
-
-							if(Row == 1)
-							{
-								_gameManager.SetLastZombieDirection("North");
-							}
-							else if(Row == maxRow)
-							{
-								_gameManager.SetLastZombieDirection("South");
-							}
-							else if(Column == 1)
-							{
-								_gameManager.SetLastZombieDirection("West");
-							}
-							else if(Column == maxColumn)
-							{
-								_gameManager.SetLastZombieDirection("East");
-							}
-						}
-					}
-
-					break;
-			}
-		}
-	}
-
-	private void _on_GridCellIndicator_area_entered(Area2D area)
-	{
-		if (area is MousePointer mousePointer)
-		{
-			var currentSelectedNode = _map.GetSelectedNode();
-
-			if (currentSelectedNode is Player player)
-			{
-				var playerSprite = player.GetAnimatedSprite();
-				var spriteTexture = playerSprite.Frames.GetFrame("down", 2);
-
-				mousePointer.SetSubCursor(spriteTexture, 2);
-			}
-		}
-	}
-
-
-	private void _on_GridCellIndicator_area_exited(Area2D area)
-	{
-		if (area is MousePointer mousePointer)
-		{
-			var currentSelectedNode = _map.GetSelectedNode();
-
-			if (currentSelectedNode is Player player)
-			{
-				mousePointer.SetSubCursor(null);
 			}
 		}
 	}

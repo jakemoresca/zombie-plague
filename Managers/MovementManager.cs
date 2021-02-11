@@ -1,18 +1,21 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public class AttackManager
+public class MovementManager
 {
     private GameManager _root;
     private PlayerManager _playerManager;
     private const int MAXVALUE = 100;
     private const int UNPASSABLE = -1;
+    private List<AttackIndicator> _attackIndicators;
 
-    public AttackManager(GameManager root, PlayerManager playerManager)
+    public MovementManager(GameManager root, PlayerManager playerManager)
     {
         _root = root;
         _playerManager = playerManager;
+        _attackIndicators = new List<AttackIndicator>();
     }
 
     public void GetAttackPositions(GridPosition position, string direction, int ap, int range, int wide)
@@ -20,7 +23,7 @@ public class AttackManager
         GetMovePositions(position, direction, ap - 1);
     }
 
-    public IDictionary<string, int> GetMovePositions(GridPosition position, string direction, int ap)
+    public List<string> GetMovePositions(GridPosition position, string direction, int ap)
     {
         var column = position.Column;
         var row = position.Row;
@@ -38,7 +41,9 @@ public class AttackManager
         SetScore(edges, leftEdgeKey, 0, direction, ap);
         SetScore(edges, rightEdgeKey, 0, direction, ap);
 
-        return edge
+        return edges.Where(x => x.Value <= ap)
+            .Select(x => x.Key)
+            .ToList();
     }
 
     private void SetScore(IDictionary<string, int> edges, string currentEdge, int currentAP, string currentDirection, int maxAP)
@@ -62,9 +67,12 @@ public class AttackManager
             computedScore = currentAP + 3 < computedScore ? currentAP + 1 : computedScore;
         }
 
+        if(computedScore >= edges[currentEdge])
+            return;
+
         if (computedScore < maxAP)
         {
-            edges[edgeDirection] = computedScore;
+            edges[currentEdge] = computedScore;
 
             var neighbors = GetNeighborEdges(currentEdge);
 
@@ -168,6 +176,70 @@ public class AttackManager
         }
 
         return edges;
+    }
+
+    public void ShowMovePoints(List<string> edges)
+    {
+        var movePositions = edges.Select(edge =>
+        {
+            var parsedKey = edge.Split("_")[0].Replace("col", "").Replace("row", "-");
+
+            var x = int.Parse(parsedKey.Split("-")[0]);
+            var y = int.Parse(parsedKey.Split("-")[1]);
+
+            return new Tuple<int, int>(x, y);
+        });
+
+        InstantiateAttackIndicators(movePositions.ToList());
+    }
+
+    private void InstantiateAttackIndicators(List<Tuple<int, int>> movePositions)
+    {
+        var numberOfSpawnPoints = movePositions.Count;
+        var numberOfCurrentCellIndicator = _attackIndicators.Count;
+        var difference = numberOfCurrentCellIndicator - numberOfSpawnPoints;
+
+        var reuseMax = difference < 0 ? numberOfCurrentCellIndicator : numberOfSpawnPoints;
+
+        //Reuse Logic
+        for (var x = 0; x < reuseMax; x++)
+        {
+            var gridCellIndicator = _attackIndicators[x];
+            var gridPosition = movePositions[x];
+
+            gridCellIndicator.UpdateGridPosition(gridPosition.Item1, gridPosition.Item2);
+            gridCellIndicator.Show();
+        }
+
+        //Create new ones
+        if (difference < 0)
+        {
+            for (var x = numberOfCurrentCellIndicator; x < numberOfSpawnPoints; x++)
+            {
+                var gridCellIndicatorScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/InteractionButtons/AttackIndicator.tscn");
+
+                if (gridCellIndicatorScene != null)
+                {
+                    var gridCellIndicatorInstance = (AttackIndicator)gridCellIndicatorScene.Instance();
+                    _root.Map.AddChild(gridCellIndicatorInstance);
+
+                    var gridPosition = movePositions[x];
+
+                    gridCellIndicatorInstance.UpdateGridPosition(gridPosition.Item1, gridPosition.Item2);
+                    gridCellIndicatorInstance.Show();
+
+                    _attackIndicators.Add(gridCellIndicatorInstance);
+                }
+            }
+        }
+        else if(difference > 0)
+        {
+            for(var x = difference - 1; x >= 0; x--)
+            {
+                _attackIndicators[_attackIndicators.Count - 1].Free();
+                _attackIndicators.RemoveAt(_attackIndicators.Count - 1);
+            }
+        }
     }
 }
 

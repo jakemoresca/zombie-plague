@@ -12,6 +12,7 @@ public class GameManager : Node2D
 	private SpawnPointManager _spawnPointManager;
 	private PlayerManager _playerManager;
 	private CardManager _cardManager;
+	private MovementManager _movementManager;
 	private DisplayText _displayText;
 	public Map Map;
 	public SpawnQueue SpawnQueue;
@@ -36,6 +37,7 @@ public class GameManager : Node2D
 		_spawnPointManager = new SpawnPointManager(this);
 		_playerManager = new PlayerManager(this);
 		_cardManager = new CardManager(this);
+		_movementManager = new MovementManager(this, _playerManager);
 
 		_playerManager.SetNumberOfPlayers(5);
 		_cardManager.LoadCards("MainMap.json");
@@ -47,6 +49,7 @@ public class GameManager : Node2D
 	{
 		this.Connect("PhaseChanged", this, "_on_PhaseChanged");
 		_displayText.Connect("FinishedDisplaying", this, "_on_DisplayText_FinishedDisplaying");
+		Map.Connect("FinishedUpdating", this, "_on_Map_FinishedDisplaying");
 	}
 
 	public void ChangePhase(string phase)
@@ -273,6 +276,22 @@ public class GameManager : Node2D
 	public void DiscardCard(CardData cardData) => _cardManager.DiscardCard(cardData);
 
 	public void OpenInventory(ulong playerInstanceID) => _cardManager.OpenInventory(playerInstanceID);
+
+	private void _on_Map_FinishedDisplaying()
+	{
+		if(_phase == nameof(GamePhase.HUMAN_PLAYER_START) || _phase == nameof(GamePhase.ZOMBIE_PLAYER_START))
+		{
+			var selectedNode = Map.GetSelectedNode();
+
+			if(selectedNode is Player player)
+			{
+				var playerPosition = player.GetGridPosition();
+
+				var movePositions = _movementManager.GetMovePositions(playerPosition, player.GetDirection(), player.AP);
+				_movementManager.ShowMovePoints(movePositions);
+			}
+		}
+	}
 }
 
 public enum GamePhase
