@@ -6,6 +6,11 @@ public class GridPosition
 {
 	public int Column { get; set; }
 	public int Row { get; set; }
+
+	public string ToEdgeString()
+	{
+		return $"col{Column}row{Row}";
+	}
 }
 
 public static class GridHelper

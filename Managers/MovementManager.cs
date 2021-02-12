@@ -5,247 +5,238 @@ using System.Linq;
 
 public class MovementManager
 {
-    private GameManager _root;
-    private PlayerManager _playerManager;
-    private const int MAXVALUE = 100;
-    private const int UNPASSABLE = -1;
-    private List<AttackIndicator> _attackIndicators;
+	private GameManager _root;
+	private PlayerManager _playerManager;
+	private const int MAXVALUE = 100;
+	private const int UNPASSABLE = -1;
+	private List<AttackIndicator> _attackIndicators;
 
-    public MovementManager(GameManager root, PlayerManager playerManager)
-    {
-        _root = root;
-        _playerManager = playerManager;
-        _attackIndicators = new List<AttackIndicator>();
-    }
+	public MovementManager(GameManager root, PlayerManager playerManager)
+	{
+		_root = root;
+		_playerManager = playerManager;
+		_attackIndicators = new List<AttackIndicator>();
+	}
 
-    public void GetAttackPositions(GridPosition position, string direction, int ap, int range, int wide)
-    {
-        GetMovePositions(position, direction, ap - 1);
-    }
+	public void GetAttackPositions(GridPosition position, string direction, int ap, int range, int wide)
+	{
+		GetMovePositions(position, direction, ap - 1);
+	}
 
-    public List<string> GetMovePositions(GridPosition position, string direction, int ap)
-    {
-        var column = position.Column;
-        var row = position.Row;
-        var (maxColumn, maxRow) = _root.Map.GetDimension();
+	public IEnumerable<GridPosition> GetMovePositions(GridPosition position, string direction, int ap)
+	{
+		var column = position.Column;
+		var row = position.Row;
+		var (maxColumn, maxRow) = _root.Map.GetDimension();
 
-        var edges = GetMapEdges(maxColumn, maxRow);
+		var edges = GetMapEdges(maxColumn, maxRow);
 
-        var upEdgeKey = $"col{position.Column}row{position.Row}_up";
-        var downEdgeKey = $"col{position.Column}row{position.Row}_down";
-        var leftEdgeKey = $"col{position.Column}row{position.Row}_left";
-        var rightEdgeKey = $"col{position.Column}row{position.Row}_right";
+		var initialNeighbors = GetNeighborEdges(position);
 
-        SetScore(edges, upEdgeKey, 0, direction, ap);
-        SetScore(edges, downEdgeKey, 0, direction, ap);
-        SetScore(edges, leftEdgeKey, 0, direction, ap);
-        SetScore(edges, rightEdgeKey, 0, direction, ap);
+		edges[position.ToEdgeString()] = 0;
 
-        return edges.Where(x => x.Value <= ap)
-            .Select(x => x.Key)
-            .ToList();
-    }
+		foreach (var neighbors in initialNeighbors)
+		{
+			SetScore(edges, neighbors, 0, position, direction, ap);
+		}
 
-    private void SetScore(IDictionary<string, int> edges, string currentEdge, int currentAP, string currentDirection, int maxAP)
-    {
-        if(!edges.ContainsKey(currentEdge))
-            return;
+		var movePositions = edges.Where(x => x.Value <= ap && x.Key != position.ToEdgeString()).Select(edge =>
+		{
+			var parsedKey = edge.Key.Replace("col", "").Replace("row", "_");
 
-        var edgeDirection = GetDirection(currentEdge);
-        var computedScore = edges[currentEdge];
+			var x = int.Parse(parsedKey.Split("_")[0]);
+			var y = int.Parse(parsedKey.Split("_")[1]);
 
-        if (edgeDirection == currentDirection)
-        {
-            computedScore = currentAP + 1 < computedScore ? currentAP + 1 : computedScore;
-        }
-        else if (IsSideDirection(currentDirection, edgeDirection))
-        {
-            computedScore = currentAP + 2 < computedScore ? currentAP + 1 : computedScore;
-        }
-        else if (IsOppositeDirection(currentDirection, edgeDirection))
-        {
-            computedScore = currentAP + 3 < computedScore ? currentAP + 1 : computedScore;
-        }
+			return new GridPosition { Column = x, Row = y };
+		});
 
-        if(computedScore >= edges[currentEdge])
-            return;
+		return movePositions;
+	}
 
-        if (computedScore < maxAP)
-        {
-            edges[currentEdge] = computedScore;
+	private void SetScore(IDictionary<string, int> edges, GridPosition targetPosition, int currentAP, GridPosition currentPosition, 
+		string currentDirection, int maxAP)
+	{
+		var targetEdge = targetPosition.ToEdgeString();
+		var targetDirection = GetTargetDirection(targetPosition, currentPosition);
 
-            var neighbors = GetNeighborEdges(currentEdge);
+		if(!GridHelper.CanMoveForward(_root.Map, currentPosition.Column, currentPosition.Row, targetDirection))
+			return;
 
-            foreach (var neighbor in neighbors)
-            {
-                SetScore(edges, neighbor, computedScore, edgeDirection, maxAP);
-            }
-        }
-    }
+		if (!edges.ContainsKey(targetEdge))
+			return;
 
-    private List<string> GetNeighborEdges(string currentEdge)
-    {
-        var edgeDirection = GetDirection(currentEdge);
-        var parsedKey = currentEdge.Split("_")[0].Replace("col", "").Replace("row", "-");  //From col12row10_down to 12-10
+		var computedScore = edges[targetEdge];
 
-        var x = int.Parse(parsedKey.Split("-")[0]);
-        var y = int.Parse(parsedKey.Split("-")[1]);
+		if (targetDirection == currentDirection)
+		{
+			computedScore = currentAP + 1 < computedScore ? currentAP + 1 : computedScore;
+		}
+		else if (IsSideDirection(currentDirection, targetDirection))
+		{
+			computedScore = currentAP + 2 < computedScore ? currentAP + 2 : computedScore;
+		}
+		else if (IsOppositeDirection(currentDirection, targetDirection))
+		{
+			computedScore = currentAP + 3 < computedScore ? currentAP + 3 : computedScore;
+		}
 
-        switch (edgeDirection)
-        {
-            case "up":
-                y -= 1;
-                break;
+		if (computedScore >= edges[targetEdge])
+			return;
 
-            case "down":
-                y += 1;
-                break;
-                
-            case "left":
-                x -= 1;
-                break;
-                
-            case "right":
-                x += 1;
-                break;
-                
-        }
+		if (computedScore <= maxAP)
+		{
+			edges[targetEdge] = computedScore;
 
-        var upEdge = $"col{x}row{y}_up";
-        var downEdge = $"col{x}row{y}_down";
-        var leftEdge = $"col{x}row{y}_left";
-        var rightEdge = $"col{x}row{y}_right";
+			var neighbors = GetNeighborEdges(targetPosition);
 
-        return new List<string> { upEdge, downEdge, leftEdge, rightEdge };
-    }
+			foreach (var neighbor in neighbors)
+			{
+				SetScore(edges, neighbor, computedScore, targetPosition, targetDirection, maxAP);
+			}
+		}
+	}
 
-    private string GetDirection(string edgeKey)
-    {
-        return edgeKey.Split("_")[1];
-    }
+	private List<GridPosition> GetNeighborEdges(GridPosition currentPosition)
+	{
+		var x = currentPosition.Column;
+		var y = currentPosition.Row;
 
-    private bool IsSideDirection(string direction, string directionToCompare)
-    {
-        if (direction == "up" || direction == "down")
-        {
-            return directionToCompare == "left" || directionToCompare == "right";
-        }
-        else if (direction == "left" || direction == "right")
-        {
-            return directionToCompare == "up" || directionToCompare == "down";
-        }
+		var upEdge = new GridPosition { Column = x, Row = y - 1 };
+		var downEdge = new GridPosition { Column = x, Row = y + 1 };
+		var leftEdge = new GridPosition { Column = x - 1, Row = y };
+		var rightEdge = new GridPosition { Column = x + 1, Row = y };
 
-        return false;
-    }
+		return new List<GridPosition> { upEdge, downEdge, leftEdge, rightEdge };
+	}
 
-    private bool IsOppositeDirection(string direction, string directionToCompare)
-    {
-        switch (direction)
-        {
-            case "up":
-                return directionToCompare == "down";
-            case "down":
-                return directionToCompare == "up";
-            case "left":
-                return directionToCompare == "right";
-            case "right":
-                return directionToCompare == "left";
-        }
+	private string GetTargetDirection(GridPosition targetPosition, GridPosition currentPosition)
+	{
+		if(targetPosition.Column > currentPosition.Column)
+		{
+			return "right";
+		}
+		else if(targetPosition.Column < currentPosition.Column)
+		{
+			return "left";
+		}
+		else if(targetPosition.Row > currentPosition.Row)
+		{
+			return "down";
+		}
+		else if(targetPosition.Row < currentPosition.Row)
+		{
+			return "up";
+		}
 
-        return false;
-    }
+		return string.Empty;
+	}
 
-    private IDictionary<string, int> GetMapEdges(int maxColumn, int maxRow)
-    {
-        IDictionary<string, int> edges = new Dictionary<string, int>();
+	private bool IsSideDirection(string direction, string directionToCompare)
+	{
+		if (direction == "up" || direction == "down")
+		{
+			return directionToCompare == "left" || directionToCompare == "right";
+		}
+		else if (direction == "left" || direction == "right")
+		{
+			return directionToCompare == "up" || directionToCompare == "down";
+		}
 
-        for (int x = 1; x <= maxColumn; x++)
-        {
-            for (int y = 1; y <= maxRow; y++)
-            {
-                var upEdge = new KeyValuePair<string, int>($"col{x}row{y}_up", MAXVALUE);
-                var downEdge = new KeyValuePair<string, int>($"col{x}row{y}_down", MAXVALUE);
-                var leftEdge = new KeyValuePair<string, int>($"col{x}row{y}_left", MAXVALUE);
-                var rightEdge = new KeyValuePair<string, int>($"col{x}row{y}_right", MAXVALUE);
+		return false;
+	}
 
-                edges.Add(upEdge);
-                edges.Add(downEdge);
-                edges.Add(leftEdge);
-                edges.Add(rightEdge);
-            }
-        }
+	private bool IsOppositeDirection(string direction, string directionToCompare)
+	{
+		switch (direction)
+		{
+			case "up":
+				return directionToCompare == "down";
+			case "down":
+				return directionToCompare == "up";
+			case "left":
+				return directionToCompare == "right";
+			case "right":
+				return directionToCompare == "left";
+		}
 
-        return edges;
-    }
+		return false;
+	}
 
-    public void ShowMovePoints(List<string> edges)
-    {
-        var movePositions = edges.Select(edge =>
-        {
-            var parsedKey = edge.Split("_")[0].Replace("col", "").Replace("row", "-");
+	private IDictionary<string, int> GetMapEdges(int maxColumn, int maxRow)
+	{
+		IDictionary<string, int> edges = new Dictionary<string, int>();
 
-            var x = int.Parse(parsedKey.Split("-")[0]);
-            var y = int.Parse(parsedKey.Split("-")[1]);
+		for (int x = 1; x <= maxColumn; x++)
+		{
+			for (int y = 1; y <= maxRow; y++)
+			{
+				var gridPosition = new GridPosition { Column = x, Row = y };
 
-            return new Tuple<int, int>(x, y);
-        });
+				edges.Add(gridPosition.ToEdgeString(), MAXVALUE);
+			}
+		}
 
-        InstantiateAttackIndicators(movePositions.ToList());
-    }
+		return edges;
+	}
 
-    private void InstantiateAttackIndicators(List<Tuple<int, int>> movePositions)
-    {
-        var numberOfSpawnPoints = movePositions.Count;
-        var numberOfCurrentCellIndicator = _attackIndicators.Count;
-        var difference = numberOfCurrentCellIndicator - numberOfSpawnPoints;
+	public void ShowMovePoints(IEnumerable<GridPosition> movePositions)
+	{
+		InstantiateAttackIndicators(movePositions.ToList());
+	}
 
-        var reuseMax = difference < 0 ? numberOfCurrentCellIndicator : numberOfSpawnPoints;
+	private void InstantiateAttackIndicators(List<GridPosition> movePositions)
+	{
+		var numberOfSpawnPoints = movePositions.Count;
+		var numberOfCurrentCellIndicator = _attackIndicators.Count;
+		var difference = numberOfCurrentCellIndicator - numberOfSpawnPoints;
 
-        //Reuse Logic
-        for (var x = 0; x < reuseMax; x++)
-        {
-            var gridCellIndicator = _attackIndicators[x];
-            var gridPosition = movePositions[x];
+		var reuseMax = difference < 0 ? numberOfCurrentCellIndicator : numberOfSpawnPoints;
 
-            gridCellIndicator.UpdateGridPosition(gridPosition.Item1, gridPosition.Item2);
-            gridCellIndicator.Show();
-        }
+		//Reuse Logic
+		for (var x = 0; x < reuseMax; x++)
+		{
+			var gridCellIndicator = _attackIndicators[x];
+			var gridPosition = movePositions[x];
 
-        //Create new ones
-        if (difference < 0)
-        {
-            for (var x = numberOfCurrentCellIndicator; x < numberOfSpawnPoints; x++)
-            {
-                var gridCellIndicatorScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/InteractionButtons/AttackIndicator.tscn");
+			gridCellIndicator.UpdateGridPosition(gridPosition.Column, gridPosition.Row);
+			gridCellIndicator.Show();
+		}
 
-                if (gridCellIndicatorScene != null)
-                {
-                    var gridCellIndicatorInstance = (AttackIndicator)gridCellIndicatorScene.Instance();
-                    _root.Map.AddChild(gridCellIndicatorInstance);
+		//Create new ones
+		if (difference < 0)
+		{
+			for (var x = numberOfCurrentCellIndicator; x < numberOfSpawnPoints; x++)
+			{
+				var gridCellIndicatorScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/InteractionButtons/AttackIndicator.tscn");
 
-                    var gridPosition = movePositions[x];
+				if (gridCellIndicatorScene != null)
+				{
+					var gridCellIndicatorInstance = (AttackIndicator)gridCellIndicatorScene.Instance();
+					_root.Map.AddChild(gridCellIndicatorInstance);
 
-                    gridCellIndicatorInstance.UpdateGridPosition(gridPosition.Item1, gridPosition.Item2);
-                    gridCellIndicatorInstance.Show();
+					var gridPosition = movePositions[x];
 
-                    _attackIndicators.Add(gridCellIndicatorInstance);
-                }
-            }
-        }
-        else if(difference > 0)
-        {
-            for(var x = difference - 1; x >= 0; x--)
-            {
-                _attackIndicators[_attackIndicators.Count - 1].Free();
-                _attackIndicators.RemoveAt(_attackIndicators.Count - 1);
-            }
-        }
-    }
+					gridCellIndicatorInstance.UpdateGridPosition(gridPosition.Column, gridPosition.Row);
+					gridCellIndicatorInstance.Show();
+
+					_attackIndicators.Add(gridCellIndicatorInstance);
+				}
+			}
+		}
+		else if (difference > 0)
+		{
+			for (var x = difference - 1; x >= 0; x--)
+			{
+				_attackIndicators[_attackIndicators.Count - 1].Free();
+				_attackIndicators.RemoveAt(_attackIndicators.Count - 1);
+			}
+		}
+	}
 }
 
 public class AttackPosition
 {
-    public GridPosition Target { get; set; }
-    public string Direction { get; set; }
-    public GridPosition Position { get; set; }
+	public GridPosition Target { get; set; }
+	public string Direction { get; set; }
+	public GridPosition Position { get; set; }
 }
