@@ -25,14 +25,14 @@ animations = {
 "Tile 0": {
 "animation_rects": [ Rect2( 0, 0, 288, 384 ), Rect2( 288, 0, 288, 384 ), Rect2( 576, 0, 288, 384 ) ],
 "delay": 0.2,
-"frame": 2,
-"time": 0.0249369
+"frame": 0,
+"time": 0.0968239
 },
 "Tile 1": {
 "animation_rects": [ Rect2( 0, 384, 288, 384 ), Rect2( 288, 384, 288, 384 ), Rect2( 576, 384, 288, 384 ) ],
 "delay": 0.2,
-"frame": 2,
-"time": 0.0249369
+"frame": 0,
+"time": 0.0968239
 }
 }
 

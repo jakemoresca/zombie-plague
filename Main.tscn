@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/MainMap/MainMap.tscn" type="PackedScene" id=2]
@@ -18,7 +18,12 @@
 [ext_resource path="res://Assets/UI/ActionBarButtons/DoneButton.tscn" type="PackedScene" id=16]
 [ext_resource path="res://Managers/GameManager.cs" type="Script" id=17]
 [ext_resource path="res://Assets/Cards/Card.tscn" type="PackedScene" id=18]
+[ext_resource path="res://Fonts/Round9x13.ttf" type="DynamicFontData" id=19]
 [ext_resource path="res://Assets/UI/ActionBarButtons/BagButton.tscn" type="PackedScene" id=20]
+
+[sub_resource type="DynamicFont" id=1]
+size = 25
+font_data = ExtResource( 19 )
 
 [node name="Root" type="Node2D"]
 position = Vector2( -62.9961, 70.5555 )
@@ -28,6 +33,11 @@ script = ExtResource( 17 )
 mapData = "MainMap.json"
 
 [node name="SelectIndicator" parent="MainMap" instance=ExtResource( 15 )]
+
+[node name="MousePoint" parent="MainMap" instance=ExtResource( 3 )]
+position = Vector2( -913, -640 )
+InitialX = -913.0
+InitialY = -640.0
 
 [node name="Borders" type="Node2D" parent="."]
 script = ExtResource( 9 )
@@ -51,11 +61,12 @@ rotation = 1.5708
 scale = Vector2( 0.476627, 42.8665 )
 
 [node name="DebugMapPosition" type="RichTextLabel" parent="Borders"]
-margin_left = -827.0
-margin_top = -549.0
-margin_right = -623.0
-margin_bottom = -509.0
+margin_left = -835.0
+margin_top = -536.0
+margin_right = -253.0
+margin_bottom = -508.0
 size_flags_horizontal = 3
+custom_fonts/normal_font = SubResource( 1 )
 text = "Position : "
 fit_content_height = true
 scroll_active = false
@@ -94,11 +105,6 @@ position = Vector2( 344, 0 )
 
 [node name="DisplayText" parent="." instance=ExtResource( 14 )]
 z_index = 1000
-
-[node name="MousePoint" parent="." instance=ExtResource( 3 )]
-position = Vector2( -913, -640 )
-InitialX = -913.0
-InitialY = -640.0
 
 [node name="Card" parent="." instance=ExtResource( 18 )]
 position = Vector2( 0, 0 )

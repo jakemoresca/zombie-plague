@@ -7,6 +7,7 @@ public class Borders : Node2D
 	// private int a = 2;
 	// private string b = "text";
 	private Area2D _map;
+	private TileMap _tilemap;
 	private Area2D _upBorder;
 	private Area2D _downBorder;
 	private bool _isScrollingUp;
@@ -19,6 +20,8 @@ public class Borders : Node2D
 	public override void _Ready()
 	{
 		_map = this.GetNode<Area2D>("../MainMap");
+		_tilemap = _map.GetNode<TileMap>("./Ground");
+
 		_upBorder = this.GetNode<Area2D>("UpBorder");
 		_downBorder = this.GetNode<Area2D>("DownBorder");
 		_debugPosition = this.GetNode<RichTextLabel>("DebugMapPosition");
@@ -55,6 +58,9 @@ public class Borders : Node2D
 
 	public override void _Process(float delta)
 	{
+		var mousePosition = _tilemap.GetLocalMousePosition();
+		var coordPos = _tilemap.WorldToMap(mousePosition);
+
 		var currentMapPosition = _map.Position;
 
 		if (_isScrollingUp && currentMapPosition.y < _yUpLimit)
@@ -71,6 +77,6 @@ public class Borders : Node2D
 			_map.Position = newPosition;
 		}
 
-		_debugPosition.Text = $"Position : {_map.Position.x}         {_map.Position.y}";
+		_debugPosition.Text = $"Position : {_map.Position.x}         {_map.Position.y}    Mouse: {coordPos.x}, {coordPos.y}";
 	}
 }

@@ -4,6 +4,7 @@ using System;
 public class MousePointer : Area2D
 {
 	private Map _map;
+	private TileMap _tilemap;
 	private Sprite _cursor;
 	private Sprite _subCursor;
 
@@ -15,7 +16,9 @@ public class MousePointer : Area2D
 
 	public override void _Ready()
 	{
-		_map = this.GetNode<Map>("../MainMap");
+		_map = this.GetNode<Map>("../../MainMap");
+		_tilemap = _map.GetNode<TileMap>("./Ground");
+
 		_cursor = this.GetNode<Sprite>("./Cursor");
 		_subCursor = this.GetNode<Sprite>("./Cursor/SubCursor");
 
@@ -24,14 +27,12 @@ public class MousePointer : Area2D
 
 	public override void _Process(float delta)
 	{
-		var mousePosition = this.GetGlobalMousePosition();
-		var initialPosition = new Vector2(InitialX, InitialY);
+		var mousePosition = _tilemap.GetLocalMousePosition();
+		var coordPos = _tilemap.WorldToMap(mousePosition);
+		var (initX, initY) =  _map.GetInitCoordinates();
 
-		var difference = mousePosition - initialPosition;
-
-		var nearestPosition = new Vector2(RoundUp(difference.x), RoundUp(difference.y));
-
-		this.Position = new Vector2(nearestPosition.x + initialPosition.x - 48, nearestPosition.y + initialPosition.y - 48);
+		var gridPosition = new GridPosition{ Column = (int)coordPos.x - initX + 1, Row = (int)coordPos.y - initY + 1 };
+		this.Position = GridHelper.GetTargetPosition(_tilemap, gridPosition, _map.GetTileSize(), (initX, initY));
 	}
 
 	private float RoundUp(float toRound)
