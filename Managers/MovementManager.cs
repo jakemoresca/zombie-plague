@@ -9,18 +9,68 @@ public class MovementManager
 	private PlayerManager _playerManager;
 	private const int MAXVALUE = 100;
 	private const int UNPASSABLE = -1;
-	private List<AttackIndicator> _attackIndicators;
+	private List<GridIndicator> _attackIndicators;
+	private List<GridIndicator> _moveIndicators;
 
 	public MovementManager(GameManager root, PlayerManager playerManager)
 	{
 		_root = root;
 		_playerManager = playerManager;
-		_attackIndicators = new List<AttackIndicator>();
+		_attackIndicators = new List<GridIndicator>();
+		_moveIndicators = new List<GridIndicator>();
 	}
 
-	public void GetAttackPositions(GridPosition position, string direction, int ap, int range, int wide)
+	public IEnumerable<GridPosition> GetAttackPositions(GridPosition position, string direction, int range)
 	{
-		GetMovePositions(position, direction, ap - 1);
+		var column = position.Column;
+		var row = position.Row;
+		var (maxColumn, maxRow) = _root.Map.GetDimension();
+
+		var possibleAttackPoints = GetPossibleAttackPoints(position, direction, range);
+
+		return possibleAttackPoints.Where(attackPoint => GridHelper.HasPlayerUnits(_root, attackPoint.Column, attackPoint.Row, direction));
+	}
+
+	private List<GridPosition> GetPossibleAttackPoints(GridPosition position, string direction, int range)
+	{
+		var gridPositions = new List<GridPosition>();
+
+		switch (direction)
+		{
+			case "up":
+				for (var y = 0; y < range; y++)
+				{
+					var gridPosition = new GridPosition { Column = position.Column, Row = position.Row - y };
+					gridPositions.Add(gridPosition);
+				}
+				break;
+
+			case "down":
+				for (var y = 0; y < range; y++)
+				{
+					var gridPosition = new GridPosition { Column = position.Column, Row = position.Row + y };
+					gridPositions.Add(gridPosition);
+				}
+				break;
+
+			case "left":
+				for (var x = 0; x < range; x++)
+				{
+					var gridPosition = new GridPosition { Column = position.Column - x, Row = position.Row };
+					gridPositions.Add(gridPosition);
+				}
+				break;
+
+			case "right":
+				for (var x = 0; x < range; x++)
+				{
+					var gridPosition = new GridPosition { Column = position.Column + x, Row = position.Row };
+					gridPositions.Add(gridPosition);
+				}
+				break;
+		}
+
+		return gridPositions;
 	}
 
 	public IEnumerable<GridPosition> GetMovePositions(GridPosition position, string direction, int ap)
@@ -53,13 +103,13 @@ public class MovementManager
 		return movePositions;
 	}
 
-	private void SetScore(IDictionary<string, int> edges, GridPosition targetPosition, int currentAP, GridPosition currentPosition, 
+	private void SetScore(IDictionary<string, int> edges, GridPosition targetPosition, int currentAP, GridPosition currentPosition,
 		string currentDirection, int maxAP)
 	{
 		var targetEdge = targetPosition.ToEdgeString();
 		var targetDirection = GetTargetDirection(targetPosition, currentPosition);
 
-		if(!GridHelper.CanMoveForward(_root.Map, currentPosition.Column, currentPosition.Row, targetDirection))
+		if (!GridHelper.CanMoveForward(_root.Map, currentPosition.Column, currentPosition.Row, targetDirection))
 			return;
 
 		if (!edges.ContainsKey(targetEdge))
@@ -111,19 +161,19 @@ public class MovementManager
 
 	private string GetTargetDirection(GridPosition targetPosition, GridPosition currentPosition)
 	{
-		if(targetPosition.Column > currentPosition.Column)
+		if (targetPosition.Column > currentPosition.Column)
 		{
 			return "right";
 		}
-		else if(targetPosition.Column < currentPosition.Column)
+		else if (targetPosition.Column < currentPosition.Column)
 		{
 			return "left";
 		}
-		else if(targetPosition.Row > currentPosition.Row)
+		else if (targetPosition.Row > currentPosition.Row)
 		{
 			return "down";
 		}
-		else if(targetPosition.Row < currentPosition.Row)
+		else if (targetPosition.Row < currentPosition.Row)
 		{
 			return "up";
 		}
@@ -181,13 +231,28 @@ public class MovementManager
 
 	public void ShowMovePoints(IEnumerable<GridPosition> movePositions)
 	{
-		InstantiateAttackIndicators(movePositions.ToList());
+		InstantiateMoveIndicators(movePositions.ToList());
 	}
 
-	private void InstantiateAttackIndicators(List<GridPosition> movePositions)
+	public void ShowAttackPoints(IEnumerable<GridPosition> attackPositions)
 	{
-		var numberOfSpawnPoints = movePositions.Count;
-		var numberOfCurrentCellIndicator = _attackIndicators.Count;
+		InstantiateAttackIndicators(attackPositions.ToList());
+	}
+
+	private void InstantiateAttackIndicators(List<GridPosition> attackPositions)
+	{
+		InstantiateIndicators(attackPositions, "res://Assets/UI/InteractionButtons/AttackIndicator.tscn", _attackIndicators);
+	}
+
+	private void InstantiateMoveIndicators(List<GridPosition> movePositions)
+	{
+		InstantiateIndicators(movePositions, "res://Assets/UI/InteractionButtons/MoveIndicator.tscn", _moveIndicators);
+	}
+
+	private void InstantiateIndicators(List<GridPosition> positions, string resource, List<GridIndicator> indicators)
+	{
+		var numberOfSpawnPoints = positions.Count;
+		var numberOfCurrentCellIndicator = indicators.Count;
 		var difference = numberOfCurrentCellIndicator - numberOfSpawnPoints;
 
 		var reuseMax = difference < 0 ? numberOfCurrentCellIndicator : numberOfSpawnPoints;
@@ -195,8 +260,8 @@ public class MovementManager
 		//Reuse Logic
 		for (var x = 0; x < reuseMax; x++)
 		{
-			var gridCellIndicator = _attackIndicators[x];
-			var gridPosition = movePositions[x];
+			var gridCellIndicator = indicators[x];
+			var gridPosition = positions[x];
 
 			gridCellIndicator.UpdateGridPosition(gridPosition.Column, gridPosition.Row);
 			gridCellIndicator.Show();
@@ -211,15 +276,15 @@ public class MovementManager
 
 				if (gridCellIndicatorScene != null)
 				{
-					var gridCellIndicatorInstance = (AttackIndicator)gridCellIndicatorScene.Instance();
+					var gridCellIndicatorInstance = (GridIndicator)gridCellIndicatorScene.Instance();
 					_root.Map.AddChild(gridCellIndicatorInstance);
 
-					var gridPosition = movePositions[x];
+					var gridPosition = positions[x];
 
 					gridCellIndicatorInstance.UpdateGridPosition(gridPosition.Column, gridPosition.Row);
 					gridCellIndicatorInstance.Show();
 
-					_attackIndicators.Add(gridCellIndicatorInstance);
+					indicators.Add(gridCellIndicatorInstance);
 				}
 			}
 		}
@@ -227,8 +292,8 @@ public class MovementManager
 		{
 			for (var x = difference - 1; x >= 0; x--)
 			{
-				_attackIndicators[_attackIndicators.Count - 1].Free();
-				_attackIndicators.RemoveAt(_attackIndicators.Count - 1);
+				indicators[indicators.Count - 1].Free();
+				indicators.RemoveAt(indicators.Count - 1);
 			}
 		}
 	}

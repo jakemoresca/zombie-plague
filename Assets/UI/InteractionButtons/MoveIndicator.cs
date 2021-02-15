@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class AttackIndicator : GridIndicator
+public class MoveIndicator : GridIndicator
 {
 	public override void _Ready()
 	{
