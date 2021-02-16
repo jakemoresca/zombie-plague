@@ -289,6 +289,10 @@ public class GameManager : Node2D
 
 				var movePositions = _movementManager.GetMovePositions(playerPosition, player.GetDirection(), player.AP);
 				_movementManager.ShowMovePoints(movePositions);
+
+				var playerWeapon = _cardManager.GetPlayerWeapon(player.GetInstanceId());
+				var attackPositions = _movementManager.GetAttackPositions(playerPosition, player.GetDirection(), playerWeapon.Range);
+				_movementManager.ShowAttackPoints(attackPositions);
 			}
 		}
 	}

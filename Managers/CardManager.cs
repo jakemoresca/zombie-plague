@@ -5,186 +5,209 @@ using System.Linq;
 
 public class CardManager
 {
-	private GameManager _root;
-	private Inventory _inventory;
-	private Godot.Collections.Array _cards;
-	private Godot.Collections.Array _graveyard;
-	private RandomNumberGenerator _random;
-	private Dictionary<ulong, List<CardData>> _playerItems;
+    private GameManager _root;
+    private Inventory _inventory;
+    private Godot.Collections.Array _cards;
+    private Godot.Collections.Array _graveyard;
+    private RandomNumberGenerator _random;
+    private Dictionary<ulong, List<CardData>> _playerItems;
 
-	public CardManager(GameManager root)
-	{
-		_root = root;
+    public CardManager(GameManager root)
+    {
+        _root = root;
 
-		_playerItems = new Dictionary<ulong, List<CardData>>();
+        _playerItems = new Dictionary<ulong, List<CardData>>();
 
-		_random = new RandomNumberGenerator();
-		_random.Randomize();
-	}
+        _random = new RandomNumberGenerator();
+        _random.Randomize();
+    }
 
-	public void LoadCards(string mapName)
-	{
-		var cardDataFile = new Godot.File();
-		cardDataFile.Open("res://Data/Cards/" + _root.Map.MapDataFileName, File.ModeFlags.Read);
+    public void LoadCards(string mapName)
+    {
+        var cardDataFile = new Godot.File();
+        cardDataFile.Open("res://Data/Cards/" + _root.Map.MapDataFileName, File.ModeFlags.Read);
 
-		var content = Godot.JSON.Parse(cardDataFile.GetAsText());
-		var contentResult = (Godot.Collections.Dictionary)content.Result;
+        var content = Godot.JSON.Parse(cardDataFile.GetAsText());
+        var contentResult = (Godot.Collections.Dictionary)content.Result;
 
-		_cards = (Godot.Collections.Array)contentResult["cards"];
-		_graveyard = new Godot.Collections.Array();
+        _cards = (Godot.Collections.Array)contentResult["cards"];
+        _graveyard = new Godot.Collections.Array();
 
-		cardDataFile.Close();
-	}
+        cardDataFile.Close();
+    }
 
-	public CardData GetRandomCard()
-	{
-		var selectedIndex = (int)(_random.Randi() % _cards.Count);
-		var cardDataJson = (Godot.Collections.Dictionary)_cards[selectedIndex];
+    public CardData GetRandomCard()
+    {
+        var selectedIndex = (int)(_random.Randi() % _cards.Count);
+        var cardDataJson = (Godot.Collections.Dictionary)_cards[selectedIndex];
 
-		var cardData = new CardData
-		{
-			Id = cardDataJson["id"].ToString(),
-			Name = cardDataJson["name"].ToString(),
-			Description = cardDataJson["description"].ToString(),
-			Type = cardDataJson["type"].ToString(),
-			Image = cardDataJson["image"].ToString(),
-		};
+        var cardType = cardDataJson["type"].ToString();
 
-		_graveyard.Add(cardDataJson);
-		_cards.RemoveAt(selectedIndex);
+        var cardData = new CardData
+        {
+            Id = cardDataJson["id"].ToString(),
+            Name = cardDataJson["name"].ToString(),
+            Description = cardDataJson["description"].ToString(),
+            Type = cardDataJson["type"].ToString(),
+            Image = cardDataJson["image"].ToString(),
+        };
 
-		return cardData;
-	}
+        if (cardType == nameof(CardType.Weapon))
+        {
+            cardData = new WeaponCardData
+            {
+                Id = cardDataJson["id"].ToString(),
+                Name = cardDataJson["name"].ToString(),
+                Description = cardDataJson["description"].ToString(),
+                Type = cardDataJson["type"].ToString(),
+                Image = cardDataJson["image"].ToString(),
+				Range = int.Parse(cardDataJson["range"].ToString()),
+				Wide = int.Parse(cardDataJson["wide"].ToString()),
+            };
+        }
 
-	public void InitiateSearch(int playerNumber, string searchableKey)
-	{
-		_root.Map.IncrementSearchCount(searchableKey, playerNumber);
+        _graveyard.Add(cardDataJson);
+        _cards.RemoveAt(selectedIndex);
 
-		var cardData = GetRandomCard();
+        return cardData;
+    }
 
-		_root.Card.SetCardData(cardData);
-		_root.Card.SetPlayerNumber(playerNumber);
-	}
+    public void InitiateSearch(int playerNumber, string searchableKey)
+    {
+        _root.Map.IncrementSearchCount(searchableKey, playerNumber);
 
-	public void TakeCard(CardData cardData)
-	{
-		var currentSelectedNode = _root.Map.GetSelectedNode();
+        var cardData = GetRandomCard();
 
-		if (currentSelectedNode is Player player)
-		{
-			var playerInstanceId = player.GetInstanceId();
+        _root.Card.SetCardData(cardData);
+        _root.Card.SetPlayerNumber(playerNumber);
+    }
 
-			player.SetAP(player.AP - 1, true);
+    public void TakeCard(CardData cardData)
+    {
+        var currentSelectedNode = _root.Map.GetSelectedNode();
 
-			if (_playerItems.ContainsKey(playerInstanceId))
-			{
-				if (PlayerHasWeapon(playerInstanceId) && cardData.Type == CardManagerHelper.CardTypes.Weapon)
-				{
-					ReplaceWeapon(playerInstanceId, cardData, out var replacedWeapon);
-				}
-				else
-				{
-					var cards = GetPlayerItems(playerInstanceId);
-					_playerItems[playerInstanceId] = cards;
-				}
-			}
-			else
-			{
-				_playerItems.Add(playerInstanceId, new List<CardData> { cardData });
-			}
-		}
-	}
+        if (currentSelectedNode is Player player)
+        {
+            var playerInstanceId = player.GetInstanceId();
 
-	private bool PlayerHasWeapon(ulong playerInstanceID)
-	{
-		var playerItems = GetPlayerItems(playerInstanceID);
+            player.SetAP(player.AP - 1, true);
 
-		return playerItems.Any(x => x.Type == CardManagerHelper.CardTypes.Weapon);
-	}
+            if (_playerItems.ContainsKey(playerInstanceId))
+            {
+                if (PlayerHasWeapon(playerInstanceId) && cardData.Type == CardManagerHelper.CardTypes.Weapon)
+                {
+                    ReplaceWeapon(playerInstanceId, (WeaponCardData)cardData, out var replacedWeapon);
+                }
+                else
+                {
+                    var cards = GetPlayerItems(playerInstanceId);
+                    _playerItems[playerInstanceId] = cards;
+                }
+            }
+            else
+            {
+                _playerItems.Add(playerInstanceId, new List<CardData> { cardData });
+            }
+        }
+    }
 
-	private void ReplaceWeapon(ulong playerInstanceID, CardData newWeapon, out CardData replacedWeapon)
-	{
-		var currentWeapon = GetPlayerWeapon(playerInstanceID);
-		var playerItems = GetPlayerItems(playerInstanceID);
+    private bool PlayerHasWeapon(ulong playerInstanceID)
+    {
+        var playerItems = GetPlayerItems(playerInstanceID);
 
-		playerItems.Remove(currentWeapon);
-		playerItems.Add(newWeapon);
+        return playerItems.Any(x => x.Type == CardManagerHelper.CardTypes.Weapon);
+    }
 
-		_playerItems[playerInstanceID] = playerItems;
+    private void ReplaceWeapon(ulong playerInstanceID, WeaponCardData newWeapon, out WeaponCardData replacedWeapon)
+    {
+        var currentWeapon = GetPlayerWeapon(playerInstanceID);
+        var playerItems = GetPlayerItems(playerInstanceID);
 
-		replacedWeapon = currentWeapon;
-	}
+        playerItems.Remove(currentWeapon);
+        playerItems.Add(newWeapon);
 
-	private CardData GetPlayerWeapon(ulong playerInstanceID)
-	{
-		var playerItems = GetPlayerItems(playerInstanceID);
+        _playerItems[playerInstanceID] = playerItems;
 
-		return playerItems.FirstOrDefault(x => x.Type == CardManagerHelper.CardTypes.Weapon);
-	}
+        replacedWeapon = currentWeapon;
+    }
 
-	public void DiscardCard(CardData cardData)
-	{
-		var currentSelectedNode = _root.Map.GetSelectedNode();
+    public WeaponCardData GetPlayerWeapon(ulong playerInstanceID)
+    {
+        var playerItems = GetPlayerItems(playerInstanceID);
 
-		if (currentSelectedNode is Player player)
-		{
-			player.SetAP(player.AP - 1, true);
-		}
-	}
+        return (WeaponCardData)playerItems.FirstOrDefault(x => x.Type == CardManagerHelper.CardTypes.Weapon);
+    }
 
-	private List<CardData> GetPlayerItems(ulong playerInstanceID)
-	{
-		if (!_playerItems.TryGetValue(playerInstanceID, out var playerItems))
-			return new List<CardData>();
+    public void DiscardCard(CardData cardData)
+    {
+        var currentSelectedNode = _root.Map.GetSelectedNode();
 
-		return playerItems;
-	}
+        if (currentSelectedNode is Player player)
+        {
+            player.SetAP(player.AP - 1, true);
+        }
+    }
 
-	public void OpenInventory(ulong playerInstanceID)
-	{
-		var inventory = GetInventoryInstance();
+    private List<CardData> GetPlayerItems(ulong playerInstanceID)
+    {
+        if (!_playerItems.TryGetValue(playerInstanceID, out var playerItems))
+            return new List<CardData>();
 
-		inventory.SetItems(GetPlayerItems(playerInstanceID));
-		inventory.ShowWindow();
-	}
+        return playerItems;
+    }
 
-	private Inventory GetInventoryInstance()
-	{
-		if (_inventory != null)
-			return _inventory;
+    public void OpenInventory(ulong playerInstanceID)
+    {
+        var inventory = GetInventoryInstance();
 
-		var inventoryScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/Inventory/Inventory.tscn");
-		_inventory = inventoryScene.Instance() as Inventory;
-		_root.AddChild(_inventory);
+        inventory.SetItems(GetPlayerItems(playerInstanceID));
+        inventory.ShowWindow();
+    }
 
-		return _inventory;
-	}
+    private Inventory GetInventoryInstance()
+    {
+        if (_inventory != null)
+            return _inventory;
+
+        var inventoryScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/Inventory/Inventory.tscn");
+        _inventory = inventoryScene.Instance() as Inventory;
+        _root.AddChild(_inventory);
+
+        return _inventory;
+    }
 }
+
 public class CardData
 {
-	public string Id { get; set; }
-	public string Name { get; set; }
-	public string Description { get; set; }
-	public string Type { get; set; }
-	public string Image { get; set; }
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Type { get; set; }
+    public string Image { get; set; }
+}
+
+public class WeaponCardData : CardData
+{
+    public int Range { get; set; }
+    public int Wide { get; set; }
 }
 
 public struct CardType
 {
-	public string Weapon => "weapon";
-	public string Item => "item";
-	public string Event => "event";
+    public string Weapon => "weapon";
+    public string Item => "item";
+    public string Event => "event";
 }
 
 public static class CardManagerHelper
 {
-	private static CardType _cardType = new CardType();
+    private static CardType _cardType = new CardType();
 
-	public static StreamTexture GetCardResource(string cardImage)
-	{
-		var cardImageTexture = ResourceLoader.Load<StreamTexture>($"res://Graphics/Items/{cardImage}");
-		return cardImageTexture;
-	}
+    public static StreamTexture GetCardResource(string cardImage)
+    {
+        var cardImageTexture = ResourceLoader.Load<StreamTexture>($"res://Graphics/Items/{cardImage}");
+        return cardImageTexture;
+    }
 
-	public static CardType CardTypes => _cardType;
+    public static CardType CardTypes => _cardType;
 }
