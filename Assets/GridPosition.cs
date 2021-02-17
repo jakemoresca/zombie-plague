@@ -121,7 +121,7 @@ public static class GridHelper
 		return passable;
 	}
 
-	public static bool HasPlayerUnits(GameManager _root, int column, int row, string direction)
+	public static bool HasPlayerUnits(GameManager _root, int column, int row, string direction = "any")
 	{
 		var tempColumn = column;
 		var tempRow = row;
@@ -144,6 +144,31 @@ public static class GridHelper
 		}
 
 		return _root.HasPlayerUnits(tempColumn, tempRow);
+	}
+
+	public static bool HasEnemyUnit(GameManager _root, int column, int row, int playerNumber, string direction = "any")
+	{
+		var tempColumn = column;
+		var tempRow = row;
+
+		if (direction == "up")
+		{
+			tempRow -= 1;
+		}
+		else if (direction == "left")
+		{
+			tempColumn -= 1;
+		}
+		else if (direction == "right")
+		{
+			tempColumn += 1;
+		}
+		else if (direction == "down")
+		{
+			tempRow += 1;
+		}
+
+		return _root.HasEnemyUnit(tempColumn, tempRow, playerNumber);
 	}
 
 	public static bool HasSearchable(Map map, int column, int row, string direction, int playerNumber)

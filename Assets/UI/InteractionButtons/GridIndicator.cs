@@ -14,9 +14,9 @@ public class GridIndicator : Area2D
 	public CollisionShape2D _collisionShape;
 	public float _currentTime = 0;
 	public string _phase = "NONE";
-	public const string RED_COLOR = "ffff0000";
-	public const string VISIBLE_COLOR = "ffffffff";
-	public const string BLUR_COLOr = "31ffffff";
+	public string HIGHLIGHT_COLOR = "ffff0000";
+	public string VISIBLE_COLOR = "ffffffff";
+	public string BLUR_COLOr = "31ffffff";
 	public bool _disabled = false;
 
 	public override void _Ready()
@@ -45,7 +45,7 @@ public class GridIndicator : Area2D
 		var position = new GridPosition { Row = this.Row, Column = this.Column };
 
 		this.Position = GridHelper.GetTargetPosition(_map.Tilemap, position, (int)tileSize, initCoordinates);
-		this.Modulate = new Color(RED_COLOR);
+		this.Modulate = new Color(HIGHLIGHT_COLOR);
 
 		PlayAnimation();
 	}
@@ -92,10 +92,10 @@ public class GridIndicator : Area2D
 		{
 			_currentTime += (delta);
 
-			var newColor = this.Modulate.LinearInterpolate(new Color(RED_COLOR), _currentTime);
+			var newColor = this.Modulate.LinearInterpolate(new Color(HIGHLIGHT_COLOR), _currentTime);
 			this.Modulate = newColor;
 
-			if (this.Modulate.ToHtml() == RED_COLOR)
+			if (this.Modulate.ToHtml() == HIGHLIGHT_COLOR)
 			{
 				_phase = "SHOWING";
 				_currentTime = 0;

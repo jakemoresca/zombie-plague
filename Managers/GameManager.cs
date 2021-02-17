@@ -265,6 +265,7 @@ public class GameManager : Node2D
 	}
 
 	public bool HasPlayerUnits(int column, int row) => _playerManager.HasPlayerUnits(column, row);
+	public bool HasEnemyUnit(int column, int row, int playerNumber) => _playerManager.HasEnemyUnit(column, row, playerNumber);
 
 	public void InitiateSearch(int playerNumber, string searchableKey)
 	{
@@ -286,13 +287,12 @@ public class GameManager : Node2D
 			if(selectedNode is Player player)
 			{
 				var playerPosition = player.GetGridPosition();
-
-				var movePositions = _movementManager.GetMovePositions(playerPosition, player.GetDirection(), player.AP);
-				_movementManager.ShowMovePoints(movePositions);
-
 				var playerWeapon = _cardManager.GetPlayerWeapon(player.GetInstanceId());
-				var attackPositions = _movementManager.GetAttackPositions(playerPosition, player.GetDirection(), playerWeapon.Range);
-				_movementManager.ShowAttackPoints(attackPositions);
+
+				var movePositions = _movementManager.GetMovePositions(playerPosition, player.GetDirection(), player.AP, 
+					player.GetPlayerNumber(), playerWeapon.Range, playerWeapon.Wide);
+
+				_movementManager.ShowMovePoints(movePositions);
 			}
 		}
 	}

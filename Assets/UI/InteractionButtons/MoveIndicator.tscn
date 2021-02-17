@@ -6,11 +6,11 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 30.631, 31.3376 )
 
-[node name="AttackIndicator" type="Area2D"]
+[node name="MoveIndicator" type="Area2D"]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 1, 0, 0, 1 )
+modulate = Color( 0, 1, 0, 1 )
 position = Vector2( 0, -0.629944 )
 texture = ExtResource( 1 )
 

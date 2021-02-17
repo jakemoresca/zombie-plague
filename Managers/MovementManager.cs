@@ -20,7 +20,7 @@ public class MovementManager
 		_moveIndicators = new List<GridIndicator>();
 	}
 
-	public IEnumerable<GridPosition> GetAttackPositions(GridPosition position, string direction, int range)
+	public IEnumerable<GridPosition> GetAttackPositions(GridPosition position, string direction, int range, int playerNumber)
 	{
 		var column = position.Column;
 		var row = position.Row;
@@ -28,7 +28,7 @@ public class MovementManager
 
 		var possibleAttackPoints = GetPossibleAttackPoints(position, direction, range);
 
-		return possibleAttackPoints.Where(attackPoint => GridHelper.HasPlayerUnits(_root, attackPoint.Column, attackPoint.Row, direction));
+		return possibleAttackPoints.Where(attackPoint => GridHelper.HasEnemyUnit(_root, attackPoint.Column, attackPoint.Row, playerNumber));
 	}
 
 	private List<GridPosition> GetPossibleAttackPoints(GridPosition position, string direction, int range)
@@ -38,7 +38,7 @@ public class MovementManager
 		switch (direction)
 		{
 			case "up":
-				for (var y = 0; y < range; y++)
+				for (var y = 1; y <= range; y++)
 				{
 					var gridPosition = new GridPosition { Column = position.Column, Row = position.Row - y };
 					gridPositions.Add(gridPosition);
@@ -46,7 +46,7 @@ public class MovementManager
 				break;
 
 			case "down":
-				for (var y = 0; y < range; y++)
+				for (var y = 1; y <= range; y++)
 				{
 					var gridPosition = new GridPosition { Column = position.Column, Row = position.Row + y };
 					gridPositions.Add(gridPosition);
@@ -54,7 +54,7 @@ public class MovementManager
 				break;
 
 			case "left":
-				for (var x = 0; x < range; x++)
+				for (var x = 1; x <= range; x++)
 				{
 					var gridPosition = new GridPosition { Column = position.Column - x, Row = position.Row };
 					gridPositions.Add(gridPosition);
@@ -62,7 +62,7 @@ public class MovementManager
 				break;
 
 			case "right":
-				for (var x = 0; x < range; x++)
+				for (var x = 1; x <= range; x++)
 				{
 					var gridPosition = new GridPosition { Column = position.Column + x, Row = position.Row };
 					gridPositions.Add(gridPosition);
@@ -73,7 +73,7 @@ public class MovementManager
 		return gridPositions;
 	}
 
-	public IEnumerable<GridPosition> GetMovePositions(GridPosition position, string direction, int ap)
+	public IEnumerable<PlayerMove> GetMovePositions(GridPosition position, string direction, int ap, int playerNumber, int range, int wide)
 	{
 		var column = position.Column;
 		var row = position.Row;
@@ -83,39 +83,40 @@ public class MovementManager
 
 		var initialNeighbors = GetNeighborEdges(position);
 
-		edges[position.ToEdgeString()] = 0;
+		edges[position.ToEdgeString()].APWeight = 0;
 
 		foreach (var neighbors in initialNeighbors)
 		{
-			SetScore(edges, neighbors, 0, position, direction, ap);
+			SetScore(edges, neighbors, 0, position, direction, ap, playerNumber, range, wide);
 		}
 
-		var movePositions = edges.Where(x => x.Value <= ap && x.Key != position.ToEdgeString()).Select(edge =>
-		{
-			var parsedKey = edge.Key.Replace("col", "").Replace("row", "_");
-
-			var x = int.Parse(parsedKey.Split("_")[0]);
-			var y = int.Parse(parsedKey.Split("_")[1]);
-
-			return new GridPosition { Column = x, Row = y };
-		});
+		var movePositions = edges.Where(x => x.Value.APWeight <= ap && x.Key != position.ToEdgeString()).Select(edge => edge.Value);
 
 		return movePositions;
 	}
 
-	private void SetScore(IDictionary<string, int> edges, GridPosition targetPosition, int currentAP, GridPosition currentPosition,
-		string currentDirection, int maxAP)
+
+	//ToDo: split functions
+	private void SetScore(IDictionary<string, PlayerMove> edges, GridPosition targetPosition, int currentAP, GridPosition currentPosition,
+		string currentDirection, int maxAP, int playerNumber, int range, int wide)
 	{
 		var targetEdge = targetPosition.ToEdgeString();
+		var moveType = PlayerMoveType.Move;
 		var targetDirection = GetTargetDirection(targetPosition, currentPosition);
 
 		if (!GridHelper.CanMoveForward(_root.Map, currentPosition.Column, currentPosition.Row, targetDirection))
 			return;
 
+		if (GridHelper.HasPlayerUnits(_root, currentPosition.Column, currentPosition.Row, targetDirection))
+			return;
+
 		if (!edges.ContainsKey(targetEdge))
 			return;
 
-		var computedScore = edges[targetEdge];
+		if (edges[targetEdge].Type == PlayerMoveType.Attack)
+			return;
+
+		var computedScore = edges[targetEdge].APWeight;
 
 		if (targetDirection == currentDirection)
 		{
@@ -130,18 +131,39 @@ public class MovementManager
 			computedScore = currentAP + 3 < computedScore ? currentAP + 3 : computedScore;
 		}
 
-		if (computedScore >= edges[targetEdge])
+		if (currentAP < maxAP)
+		{
+			var attackPositions = GetAttackPositions(currentPosition, currentDirection, range, playerNumber);
+
+			foreach (var attackPosition in attackPositions)
+			{
+				GD.Print($"Got attack position to {attackPosition.Column}, {attackPosition.Row} from {currentPosition.Column}, {currentPosition.Row} with {range} range.");
+
+				var attackPositionEdge = attackPosition.ToEdgeString();
+				computedScore = currentAP + 1 < computedScore ? currentAP + 1 : computedScore;
+
+				edges[attackPositionEdge].Type = PlayerMoveType.Attack;
+				edges[attackPositionEdge].APWeight = computedScore;
+				edges[attackPositionEdge].AttackerPosition = currentPosition;
+			}
+		}
+
+		if (computedScore >= edges[targetEdge].APWeight)
 			return;
 
 		if (computedScore <= maxAP)
 		{
-			edges[targetEdge] = computedScore;
+			edges[targetEdge].APWeight = computedScore;
+			edges[targetEdge].Type = moveType;
+
+			if (moveType == PlayerMoveType.Attack)
+				return;
 
 			var neighbors = GetNeighborEdges(targetPosition);
 
 			foreach (var neighbor in neighbors)
 			{
-				SetScore(edges, neighbor, computedScore, targetPosition, targetDirection, maxAP);
+				SetScore(edges, neighbor, computedScore, targetPosition, targetDirection, maxAP, playerNumber, range, wide);
 			}
 		}
 	}
@@ -212,31 +234,28 @@ public class MovementManager
 		return false;
 	}
 
-	private IDictionary<string, int> GetMapEdges(int maxColumn, int maxRow)
+	private IDictionary<string, PlayerMove> GetMapEdges(int maxColumn, int maxRow)
 	{
-		IDictionary<string, int> edges = new Dictionary<string, int>();
+		IDictionary<string, PlayerMove> edges = new Dictionary<string, PlayerMove>();
 
 		for (int x = 1; x <= maxColumn; x++)
 		{
 			for (int y = 1; y <= maxRow; y++)
 			{
 				var gridPosition = new GridPosition { Column = x, Row = y };
+				var playerMove = new PlayerMove { Position = gridPosition, APWeight = MAXVALUE };
 
-				edges.Add(gridPosition.ToEdgeString(), MAXVALUE);
+				edges.Add(gridPosition.ToEdgeString(), playerMove);
 			}
 		}
 
 		return edges;
 	}
 
-	public void ShowMovePoints(IEnumerable<GridPosition> movePositions)
+	public void ShowMovePoints(IEnumerable<PlayerMove> movePositions)
 	{
-		InstantiateMoveIndicators(movePositions.ToList());
-	}
-
-	public void ShowAttackPoints(IEnumerable<GridPosition> attackPositions)
-	{
-		InstantiateAttackIndicators(attackPositions.ToList());
+		InstantiateMoveIndicators(movePositions.Where(x => x.Type == PlayerMoveType.Move).Select(x => x.Position).ToList());
+		InstantiateAttackIndicators(movePositions.Where(x => x.Type == PlayerMoveType.Attack).Select(x => x.Position).ToList());
 	}
 
 	private void InstantiateAttackIndicators(List<GridPosition> attackPositions)
@@ -272,7 +291,7 @@ public class MovementManager
 		{
 			for (var x = numberOfCurrentCellIndicator; x < numberOfSpawnPoints; x++)
 			{
-				var gridCellIndicatorScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/InteractionButtons/AttackIndicator.tscn");
+				var gridCellIndicatorScene = ResourceLoader.Load<PackedScene>(resource);
 
 				if (gridCellIndicatorScene != null)
 				{
@@ -299,9 +318,17 @@ public class MovementManager
 	}
 }
 
-public class AttackPosition
+public class PlayerMove
 {
-	public GridPosition Target { get; set; }
+	public GridPosition AttackerPosition { get; set; }
 	public string Direction { get; set; }
 	public GridPosition Position { get; set; }
+	public PlayerMoveType Type { get; set; }
+	public int APWeight { get; set; }
+}
+
+public enum PlayerMoveType
+{
+	Move,
+	Attack
 }
