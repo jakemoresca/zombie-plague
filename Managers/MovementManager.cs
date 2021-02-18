@@ -137,14 +137,16 @@ public class MovementManager
 
 			foreach (var attackPosition in attackPositions)
 			{
-				GD.Print($"Got attack position to {attackPosition.Column}, {attackPosition.Row} from {currentPosition.Column}, {currentPosition.Row} with {range} range.");
-
 				var attackPositionEdge = attackPosition.ToEdgeString();
-				computedScore = currentAP + 1 < computedScore ? currentAP + 1 : computedScore;
+				var attackComputedScore = edges[attackPositionEdge].APWeight;
 
-				edges[attackPositionEdge].Type = PlayerMoveType.Attack;
-				edges[attackPositionEdge].APWeight = computedScore;
-				edges[attackPositionEdge].AttackerPosition = currentPosition;
+				if (currentAP + 1 < attackComputedScore)
+				{
+					edges[attackPositionEdge].Type = PlayerMoveType.Attack;
+					edges[attackPositionEdge].APWeight = currentAP + 1;
+					edges[attackPositionEdge].AttackerPosition = currentPosition;
+					edges[attackPositionEdge].Direction = currentDirection;
+				}
 			}
 		}
 
@@ -155,6 +157,7 @@ public class MovementManager
 		{
 			edges[targetEdge].APWeight = computedScore;
 			edges[targetEdge].Type = moveType;
+			edges[targetEdge].Direction = targetDirection;
 
 			if (moveType == PlayerMoveType.Attack)
 				return;
@@ -254,23 +257,23 @@ public class MovementManager
 
 	public void ShowMovePoints(IEnumerable<PlayerMove> movePositions)
 	{
-		InstantiateMoveIndicators(movePositions.Where(x => x.Type == PlayerMoveType.Move).Select(x => x.Position).ToList());
-		InstantiateAttackIndicators(movePositions.Where(x => x.Type == PlayerMoveType.Attack).Select(x => x.Position).ToList());
+		InstantiateMoveIndicators(movePositions.Where(x => x.Type == PlayerMoveType.Move).ToList());
+		InstantiateAttackIndicators(movePositions.Where(x => x.Type == PlayerMoveType.Attack).ToList());
 	}
 
-	private void InstantiateAttackIndicators(List<GridPosition> attackPositions)
+	private void InstantiateAttackIndicators(List<PlayerMove> attackPositions)
 	{
 		InstantiateIndicators(attackPositions, "res://Assets/UI/InteractionButtons/AttackIndicator.tscn", _attackIndicators);
 	}
 
-	private void InstantiateMoveIndicators(List<GridPosition> movePositions)
+	private void InstantiateMoveIndicators(List<PlayerMove> movePositions)
 	{
 		InstantiateIndicators(movePositions, "res://Assets/UI/InteractionButtons/MoveIndicator.tscn", _moveIndicators);
 	}
 
-	private void InstantiateIndicators(List<GridPosition> positions, string resource, List<GridIndicator> indicators)
+	private void InstantiateIndicators(List<PlayerMove> playerMove, string resource, List<GridIndicator> indicators)
 	{
-		var numberOfSpawnPoints = positions.Count;
+		var numberOfSpawnPoints = playerMove.Count;
 		var numberOfCurrentCellIndicator = indicators.Count;
 		var difference = numberOfCurrentCellIndicator - numberOfSpawnPoints;
 
@@ -280,9 +283,10 @@ public class MovementManager
 		for (var x = 0; x < reuseMax; x++)
 		{
 			var gridCellIndicator = indicators[x];
-			var gridPosition = positions[x];
+			var gridPosition = playerMove[x].Position;
 
 			gridCellIndicator.UpdateGridPosition(gridPosition.Column, gridPosition.Row);
+			gridCellIndicator.SetPlayerMove(playerMove[x]);
 			gridCellIndicator.Show();
 		}
 
@@ -298,9 +302,10 @@ public class MovementManager
 					var gridCellIndicatorInstance = (GridIndicator)gridCellIndicatorScene.Instance();
 					_root.Map.AddChild(gridCellIndicatorInstance);
 
-					var gridPosition = positions[x];
+					var gridPosition = playerMove[x].Position;
 
 					gridCellIndicatorInstance.UpdateGridPosition(gridPosition.Column, gridPosition.Row);
+					gridCellIndicatorInstance.SetPlayerMove(playerMove[x]);
 					gridCellIndicatorInstance.Show();
 
 					indicators.Add(gridCellIndicatorInstance);

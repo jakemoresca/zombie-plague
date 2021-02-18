@@ -18,6 +18,7 @@ public class GridIndicator : Area2D
 	public string VISIBLE_COLOR = "ffffffff";
 	public string BLUR_COLOr = "31ffffff";
 	public bool _disabled = false;
+	public PlayerMove _playerMove;
 
 	public override void _Ready()
 	{
@@ -102,4 +103,16 @@ public class GridIndicator : Area2D
 			}
 		}
 	}
+
+	public void SetPlayerMove(PlayerMove playerMove)
+	{
+		_playerMove = playerMove;
+	}
+
+	public void MovePlayerUnitIntoPosition(Player player)
+	{
+		player.SetGridPosition(Column, Row, _playerMove.Direction);
+	}
+
+	public PlayerMove PlayerMove => _playerMove;
 }
