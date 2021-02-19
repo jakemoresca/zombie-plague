@@ -98,6 +98,36 @@ public class Player : Area2D
 		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
 	}
 
+	public void PushFrom(string originDirection)
+	{
+		var tileSize = _map.GetTileSize();
+		var initCoordinates = _map.GetInitCoordinates();
+
+		switch (originDirection)
+		{
+			case "up":
+				_position.Row += 1;
+				break;
+
+			case "left":
+				_position.Column += 1;
+				break;
+
+			case "right":
+				_position.Column -= 1;
+				break;
+
+			case "down":
+				_position.Row -= 1;
+				break;
+		}
+
+		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
+		this.Position = new Vector2(position.x, position.y - 28);
+
+		EmitSignal(nameof(FinishedMovement), _position.Column, _position.Row, _direction);
+	}
+
 	public void SpawnTo(int column, int row)
 	{
 		var tileSize = _map.GetTileSize();
@@ -176,6 +206,12 @@ public class Player : Area2D
 	public int GetPlayerNumber()
 	{
 		return _playerNumber;
+	}
+
+	public void KillUnit()
+	{
+		_map.RemoveChild(this);
+		this.Free();
 	}
 }
 

@@ -153,26 +153,45 @@ public class PlayerManager
         }));
     }
 
-    public bool HasEnemyUnit(int column, int row, int playerNumber)
+    public bool HasEnemyUnit(int column, int row, int playerNumber, out Player enemy)
     {
         if (playerNumber == (int)PlayerNumber.Zombie)
         {
-            return _playerUnits.Any(x => x.Key != (int)PlayerNumber.Zombie && x.Value.Any(y =>
+            foreach (var player in _playerUnits.Where(x => x.Key != (int)PlayerNumber.Zombie))
             {
-                var position = y.GetGridPosition();
+                foreach (var playerUnit in player.Value)
+                {
+                    var position = playerUnit.GetGridPosition();
+                    var isEnemyInPosition = position.Column == column && position.Row == row;
 
-                return position.Column == column && position.Row == row;
-            }));
+                    if (isEnemyInPosition)
+                    {
+                        enemy = playerUnit;
+                        return true;
+                    }
+                }
+            }
         }
         else
         {
-            return _playerUnits.Any(x => x.Key == (int)PlayerNumber.Zombie && x.Value.Any(y =>
-			{
-				var position = y.GetGridPosition();
+            foreach (var player in _playerUnits.Where(x => x.Key == (int)PlayerNumber.Zombie))
+            {
+                foreach (var playerUnit in player.Value)
+                {
+                    var position = playerUnit.GetGridPosition();
+                    var isEnemyInPosition = position.Column == column && position.Row == row;
 
-				return position.Column == column && position.Row == row;
-			}));
+                    if (isEnemyInPosition)
+                    {
+                        enemy = playerUnit;
+                        return true;
+                    }
+                }
+            }
         }
+
+        enemy = null;
+        return false;
     }
 }
 

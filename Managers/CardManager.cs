@@ -131,6 +131,15 @@ public class CardManager
 		replacedWeapon = currentWeapon;
 	}
 
+	public void RemoveWeapon(ulong playerInstanceID)
+	{
+		if(PlayerHasWeapon(playerInstanceID))
+		{
+			var currentWeapon = GetPlayerWeapon(playerInstanceID);
+			_playerItems[playerInstanceID].Remove(currentWeapon);
+		}
+	}
+
 	public WeaponCardData GetPlayerWeapon(ulong playerInstanceID)
 	{
 		var playerItems = GetPlayerItems(playerInstanceID);

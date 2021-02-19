@@ -123,11 +123,11 @@ public class MovementManager
 		{
 			computedScore = currentAP + 1 < computedScore ? currentAP + 1 : computedScore;
 		}
-		else if (IsSideDirection(currentDirection, targetDirection))
+		else if (GridHelper.IsSideDirection(currentDirection, targetDirection))
 		{
 			computedScore = currentAP + 2 < computedScore ? currentAP + 2 : computedScore;
 		}
-		else if (IsOppositeDirection(currentDirection, targetDirection))
+		else if (GridHelper.IsOppositeDirection(currentDirection, targetDirection))
 		{
 			computedScore = currentAP + 3 < computedScore ? currentAP + 3 : computedScore;
 		}
@@ -205,37 +205,6 @@ public class MovementManager
 		}
 
 		return string.Empty;
-	}
-
-	private bool IsSideDirection(string direction, string directionToCompare)
-	{
-		if (direction == "up" || direction == "down")
-		{
-			return directionToCompare == "left" || directionToCompare == "right";
-		}
-		else if (direction == "left" || direction == "right")
-		{
-			return directionToCompare == "up" || directionToCompare == "down";
-		}
-
-		return false;
-	}
-
-	private bool IsOppositeDirection(string direction, string directionToCompare)
-	{
-		switch (direction)
-		{
-			case "up":
-				return directionToCompare == "down";
-			case "down":
-				return directionToCompare == "up";
-			case "left":
-				return directionToCompare == "right";
-			case "right":
-				return directionToCompare == "left";
-		}
-
-		return false;
 	}
 
 	private IDictionary<string, PlayerMove> GetMapEdges(int maxColumn, int maxRow)
