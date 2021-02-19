@@ -53,6 +53,32 @@ public class DiceManager
             return default(Dice);
         }
     }
+
+    public Dice GetAttackDice()
+    {
+        if(HasDice(nameof(DiceName.AttackDice)))
+        {
+            return GetDice(nameof(DiceName.AttackDice));
+        }
+        else
+        {
+            var diceScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/Dice/AttackDice/AttackDice.tscn");
+
+            if (diceScene != null)
+            {
+                var diceInstance = (Dice)diceScene.Instance();
+                _root.AddChild(diceInstance);
+
+                diceInstance.Connect("DiceRolled", _root, "_on_Attack_DiceRolled");
+                
+                SetDice(nameof(DiceName.DirectionDice), diceInstance);
+
+                return diceInstance;
+            }
+
+            return default(Dice);
+        }
+    }
 }
 
 public enum DiceName

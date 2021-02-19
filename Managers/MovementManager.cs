@@ -11,6 +11,7 @@ public class MovementManager
 	private const int UNPASSABLE = -1;
 	private List<GridIndicator> _attackIndicators;
 	private List<GridIndicator> _moveIndicators;
+	private PlayerMove _currentPlayerMove;
 
 	public MovementManager(GameManager root, PlayerManager playerManager)
 	{
@@ -319,6 +320,36 @@ public class MovementManager
 				indicators[indicators.Count - 1].Free();
 				indicators.RemoveAt(indicators.Count - 1);
 			}
+		}
+	}
+
+	public void SetCurrentMove(PlayerMove playerMove)
+	{
+		_currentPlayerMove = playerMove;
+	}
+
+	public PlayerMove CurrentPlayerMove => _currentPlayerMove;
+
+	public void ProcessAttackOutput(string attackValue, WeaponCardData weaponData, 
+		Func<string, int> weaponDestroyed, Func<string, int> missed, Func<string, int> bodyShot, Func<string, int> headShot)
+	{
+		switch(attackValue)
+		{
+			case "Oops":
+				weaponDestroyed("Your weapon has been destroyed!");
+				break;
+			
+			case "Miss":
+				missed("You missed your shot!");
+				break;
+
+			case "Bodyshot":
+				bodyShot("Body shot!");
+				break;
+
+			case "Headshot":
+				headShot("Head shot!");
+				break;
 		}
 	}
 }

@@ -35,6 +35,9 @@ public class Player : Area2D
 		var tileSize = _map.GetTileSize();
 		var initCoordinates = _map.GetInitCoordinates();
 
+		var animatedSprite = this.GetNode<AnimatedSprite>("./AnimatedSprite");
+		animatedSprite.Animation = _direction;
+
 		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
 		this.Position = new Vector2(position.x, position.y - 48);
 	}

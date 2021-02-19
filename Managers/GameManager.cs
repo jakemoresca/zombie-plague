@@ -296,6 +296,49 @@ public class GameManager : Node2D
 			}
 		}
 	}
+
+	public void SetupAttack(Player player, PlayerMove playerMove)
+	{
+		_movementManager.SetCurrentMove(playerMove);
+
+		var attackDice = _diceManager.GetAttackDice();
+		attackDice.ShowDice();
+	}
+
+	private void _on_Attack_DiceRolled(string rolledValue)
+	{
+		var selectedPlayer = (Player)Map.GetSelectedNode();
+		var weapon = _cardManager.GetPlayerWeapon(selectedPlayer.GetInstanceId());
+
+		_movementManager.ProcessAttackOutput(rolledValue, weapon, (string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			return 1;
+		},
+		(string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			return 1;
+		},
+		(string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			return 1;
+		},
+		(string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			return 1;
+		});
+	}
 }
 
 public enum GamePhase

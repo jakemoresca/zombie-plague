@@ -109,9 +109,9 @@ public class GridIndicator : Area2D
 		_playerMove = playerMove;
 	}
 
-	public void MovePlayerUnitIntoPosition(Player player)
+	public void MovePlayerUnitIntoPosition(Player player, GridPosition position)
 	{
-		player.SetGridPosition(Column, Row, _playerMove.Direction);
+		player.SetGridPosition(position.Column, position.Row, _playerMove.Direction);
 	}
 
 	public PlayerMove PlayerMove => _playerMove;

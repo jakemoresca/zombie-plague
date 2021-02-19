@@ -28,8 +28,8 @@ public class MoveIndicator : GridIndicator
 
 					if(selectedNode is Player player)
 					{
-						MovePlayerUnitIntoPosition(player);
-						player.SetAP(player.AP - this.PlayerMove.APWeight);
+						MovePlayerUnitIntoPosition(player, this.PlayerMove.Position);
+						player.SetAP(player.AP - this.PlayerMove.APWeight, true);
 					}
 
 					break;
