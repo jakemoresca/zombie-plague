@@ -106,19 +106,19 @@ public class Player : Area2D
 		switch (originDirection)
 		{
 			case "up":
-				_position.Row += 1;
+				_position.Row -= 1;
 				break;
 
 			case "left":
-				_position.Column += 1;
-				break;
-
-			case "right":
 				_position.Column -= 1;
 				break;
 
+			case "right":
+				_position.Column += 1;
+				break;
+
 			case "down":
-				_position.Row -= 1;
+				_position.Row += 1;
 				break;
 		}
 

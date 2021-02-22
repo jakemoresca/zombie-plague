@@ -71,7 +71,7 @@ public class DiceManager
 
                 diceInstance.Connect("DiceRolled", _root, "_on_Attack_DiceRolled");
                 
-                SetDice(nameof(DiceName.DirectionDice), diceInstance);
+                SetDice(nameof(DiceName.AttackDice), diceInstance);
 
                 return diceInstance;
             }

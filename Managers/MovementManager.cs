@@ -243,6 +243,14 @@ public class MovementManager
 
 	private void InstantiateIndicators(List<PlayerMove> playerMove, string resource, List<GridIndicator> indicators)
 	{
+		//Temp fix for indicators not being removed
+		foreach (var indicator in indicators)
+		{
+			indicator.QueueFree();
+		}
+
+		indicators.Clear();
+
 		var numberOfSpawnPoints = playerMove.Count;
 		var numberOfCurrentCellIndicator = indicators.Count;
 		var difference = numberOfCurrentCellIndicator - numberOfSpawnPoints;

@@ -193,6 +193,25 @@ public class PlayerManager
         enemy = null;
         return false;
     }
+
+    public void KillUnit(Player player)
+    {
+        var playerNumber = player.GetPlayerNumber();
+        
+        _playerUnits[playerNumber].Remove(player);
+
+        if(playerNumber == (int)PlayerNumber.Zombie)
+        {
+            player.KillUnit();
+        }
+        else
+        {
+            player.SetPlayerNumber((int)PlayerNumber.Zombie);
+            player.SetMaxAP(ZombieAP);
+            
+            _playerUnits[(int)PlayerNumber.Zombie].Add(player);
+        }
+    }
 }
 
 public enum PlayerNumber
