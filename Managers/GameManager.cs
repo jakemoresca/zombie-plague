@@ -340,7 +340,8 @@ public class GameManager : Node2D
 			_displayText.SetText($"[center]{text}[/center]");
 			_displayText.Display();
 
-			if (GridHelper.CanMoveForward(Map, currentMove.Position.Column, currentMove.Position.Row, currentMove.Direction))
+			if (GridHelper.CanMoveForward(Map, currentMove.Position.Column, currentMove.Position.Row, currentMove.Direction) &&
+				GridHelper.HasPlayerUnits(this, currentMove.Position.Column, currentMove.Position.Row, currentMove.Direction))
 			{
 				if (HasEnemyUnit(currentMove.Position.Column, currentMove.Position.Row, selectedPlayer.GetPlayerNumber(), out var enemy))
 				{

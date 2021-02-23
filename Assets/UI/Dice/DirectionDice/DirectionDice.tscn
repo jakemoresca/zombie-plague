@@ -11,7 +11,7 @@ z_index = 25
 script = ExtResource( 3 )
 DiceNames = PoolStringArray( "North", "East", "West", "South", "Wild", "Wild" )
 DiceArtAngles = PoolIntArray( 0, 90, 270, 180, 0, 0 )
-DiceArts = PoolStringArray( "arrow.svg", "arrow.svg", "arrow.svg", "arrow.svg", "wild.svg", "wild.svg" )
+DiceArts = PoolStringArray( "res://Assets/UI/Dice/DirectionDice/arrow.svg", "res://Assets/UI/Dice/DirectionDice/arrow.svg", "res://Assets/UI/Dice/DirectionDice/arrow.svg", "res://Assets/UI/Dice/DirectionDice/arrow.svg", "res://Assets/UI/Dice/DirectionDice/wild.svg", "res://Assets/UI/Dice/DirectionDice/wild.svg" )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = -312.0

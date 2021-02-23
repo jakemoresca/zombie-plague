@@ -11,7 +11,7 @@ z_index = 25
 script = ExtResource( 3 )
 DiceNames = PoolStringArray( "Oops", "Miss", "Miss", "Miss", "Bodyshot", "Headshot" )
 DiceArtAngles = PoolIntArray( 0, 0, 0, 0, 0, 0 )
-DiceArts = PoolStringArray( "oops.png", "miss.png", "miss.png", "miss.png", "bodyshot.png", "headshot.png" )
+DiceArts = PoolStringArray( "res://Assets/UI/Dice/AttackDice/oops.png", "res://Assets/UI/Dice/AttackDice/miss.png", "res://Assets/UI/Dice/AttackDice/miss.png", "res://Assets/UI/Dice/AttackDice/miss.png", "res://Assets/UI/Dice/AttackDice/bodyshot.png", "res://Assets/UI/Dice/AttackDice/headshot.png" )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = -312.0

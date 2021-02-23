@@ -69,7 +69,7 @@ public class Dice : Node2D
 
 			var selectedIndex = _random.Randi() % DiceArts.Length;
 
-			var texture = ResourceLoader.Load<Texture>(this.Filename.Replace($"{this.Name}.tscn", string.Empty) + DiceArts[selectedIndex]);
+			var texture = ResourceLoader.Load<Texture>(DiceArts[selectedIndex]);
 			_sprite.Texture = texture;
 			_sprite.RotationDegrees = DiceArtAngles[selectedIndex];
 
