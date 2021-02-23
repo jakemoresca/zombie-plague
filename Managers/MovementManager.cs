@@ -307,15 +307,15 @@ public class MovementManager
 
 	public PlayerMove CurrentPlayerMove => _currentPlayerMove;
 
-	public void ProcessAttackOutput(string attackValue, WeaponCardData weaponData, 
+	public void ProcessAttackOutput(string attackValue, WeaponCardData weaponData,
 		Func<string, int> weaponDestroyed, Func<string, int> missed, Func<string, int> bodyShot, Func<string, int> headShot)
 	{
-		switch(attackValue)
+		switch (attackValue)
 		{
 			case "Oops":
 				weaponDestroyed("Your weapon has been destroyed!");
 				break;
-			
+
 			case "Miss":
 				missed("You missed your shot!");
 				break;
@@ -326,6 +326,34 @@ public class MovementManager
 
 			case "Headshot":
 				headShot("Head shot!");
+				break;
+		}
+	}
+
+	public void ProcessZombieBiteOutput(string attackValue, Func<string, int> bitten, Func<string, int> missed)
+	{
+		switch (attackValue)
+		{
+			case "Bite":
+				bitten("Bite successful!");
+				break;
+
+			case "Miss":
+				missed("You missed your shot!");
+				break;
+		}
+	}
+
+	public void ProcessInfectionOutput(string attackValue, Func<string, int> infected, Func<string, int> notInfected)
+	{
+		switch (attackValue)
+		{
+			case "Infected":
+				infected("Bitten player was turned into zombie.");
+				break;
+
+			case "Ok":
+				notInfected("Bitten player didn't get turned.");
 				break;
 		}
 	}

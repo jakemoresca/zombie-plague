@@ -154,7 +154,7 @@ public class GameManager : Node2D
 		}
 	}
 
-	private void _on_Zombie_DiceRolled(string rolledValue)
+	private void _on_Direction_DiceRolled(string rolledValue)
 	{
 		_displayText.SetText($"You rolled, {rolledValue}");
 		_displayText.Display();
@@ -301,8 +301,16 @@ public class GameManager : Node2D
 	{
 		_movementManager.SetCurrentMove(playerMove);
 
-		var attackDice = _diceManager.GetAttackDice();
-		attackDice.ShowDice();
+		if (player.GetPlayerNumber() == (int)PlayerNumber.Zombie)
+		{
+			var zombieDice = _diceManager.GetZombieDice();
+			zombieDice.ShowDice();
+		}
+		else
+		{
+			var attackDice = _diceManager.GetAttackDice();
+			attackDice.ShowDice();
+		}
 	}
 
 	private void _on_Attack_DiceRolled(string rolledValue)
@@ -359,6 +367,71 @@ public class GameManager : Node2D
 
 		var attackDice = _diceManager.GetAttackDice();
 		attackDice.HideDice();
+	}
+
+	private void _on_Zombie_DiceRolled(string rolledValue)
+	{
+		var selectedPlayer = (Player)Map.GetSelectedNode();
+		var currentMove = _movementManager.CurrentPlayerMove;
+
+		var zombieDice = _diceManager.GetZombieDice();
+		zombieDice.HideDice();
+
+		_movementManager.ProcessZombieBiteOutput(rolledValue, (string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			SetupInfection();
+
+			return 1;
+		},
+		(string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			selectedPlayer.SetAP(selectedPlayer.AP - currentMove.APWeight, emitSignal: true);
+
+			return 1;
+		});
+	}
+
+	private void SetupInfection()
+	{
+		var infectionDice = _diceManager.GetInfectionDice();
+		infectionDice.ShowDice();
+	}
+
+	private void _on_Infection_DiceRolled(string rolledValue)
+	{
+		var selectedPlayer = (Player)Map.GetSelectedNode();
+		var currentMove = _movementManager.CurrentPlayerMove;
+
+		var infectionDice = _diceManager.GetInfectionDice();
+		infectionDice.HideDice();
+
+		_movementManager.ProcessInfectionOutput(rolledValue, (string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			if (HasEnemyUnit(currentMove.Position.Column, currentMove.Position.Row, selectedPlayer.GetPlayerNumber(), out var enemy))
+			{
+				_playerManager.KillUnit(enemy);
+			}
+
+			return 1;
+		},
+		(string text) =>
+		{
+			_displayText.SetText($"[center]{text}[/center]");
+			_displayText.Display();
+
+			return 1;
+		});
+
+		selectedPlayer.SetAP(selectedPlayer.AP - currentMove.APWeight, emitSignal: true);
 	}
 }
 
