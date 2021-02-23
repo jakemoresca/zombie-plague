@@ -355,6 +355,8 @@ public class GameManager : Node2D
 			return 1;
 		});
 
+		selectedPlayer.SetAP(selectedPlayer.AP - currentMove.APWeight, emitSignal: true);
+
 		var attackDice = _diceManager.GetAttackDice();
 		attackDice.HideDice();
 	}

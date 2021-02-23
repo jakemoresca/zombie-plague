@@ -27,8 +27,6 @@ public class AttackIndicator : GridIndicator
 					if(selectedNode is Player player)
 					{
 						MovePlayerUnitIntoPosition(player, this.PlayerMove.AttackerPosition);
-						player.SetAP(player.AP - this.PlayerMove.APWeight, emitSignal: false);
-
 						_gameManager.SetupAttack(player, PlayerMove);
 					}
 
