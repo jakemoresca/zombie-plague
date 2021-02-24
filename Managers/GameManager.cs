@@ -13,6 +13,7 @@ public class GameManager : Node2D
 	private PlayerManager _playerManager;
 	private CardManager _cardManager;
 	private MovementManager _movementManager;
+	private VictoryManager _victoryManager;
 	private DisplayText _displayText;
 	public Map Map;
 	public SpawnQueue SpawnQueue;
@@ -38,6 +39,7 @@ public class GameManager : Node2D
 		_playerManager = new PlayerManager(this);
 		_cardManager = new CardManager(this);
 		_movementManager = new MovementManager(this, _playerManager);
+		_victoryManager = new VictoryManager(this, _playerManager, 8, 10, 17, 18);
 
 		_playerManager.SetNumberOfPlayers(5);
 		_cardManager.LoadCards("MainMap.json");

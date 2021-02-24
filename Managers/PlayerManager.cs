@@ -29,6 +29,11 @@ public class PlayerManager
 		return _numberOfPlayers;
 	}
 
+	public bool HasHumanPlayerUnits()
+	{
+		return _playerUnits.Any(x => x.Key != (int)PlayerNumber.Zombie && x.Value.Any());
+	}
+
 	public bool CanCreateAdditionalCharacter(int playerNumber)
 	{
 		if (playerNumber == (int)PlayerNumber.Zombie)
