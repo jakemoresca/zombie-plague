@@ -27,23 +27,33 @@ public class VictoryManager
         this.safeTotalY = safeTotalY;
     }
 
-    public VictoryResult CheckForVictory()
+    public void CheckForVictory()
     {
         if(HumanPlayersWon)
         {
-            return VictoryResult.HumanWinner;
+            _root.SetupVictory(VictoryResult.HumanWinner);
         }
         else if(HasNohumanPlayers)
         {
-            return VictoryResult.ZombieWinner;
+            _root.SetupVictory(VictoryResult.ZombieWinner);
         }
         else
         {
-            return VictoryResult.NoWinner;
+            _root.SetupVictory(VictoryResult.NoWinner);
         }
     }
 
-    public bool HumanPlayersWon => HasStartedCar || (HasNoZombieOnSafeZone && CompletedBarricade);
+    public void SetHasStartedCar(bool hasStartedCar)
+    {
+        _hasStartedCar = hasStartedCar;
+    }
+
+    public void CheckIfHasNoHumanPlayers()
+    {
+        _hasNoMoreHumanPlayers = !_playerManager.HasHumanPlayerUnits();
+    }
+
+    private bool HumanPlayersWon => HasStartedCar || (HasNoZombieOnSafeZone && CompletedBarricade);
     private bool HasStartedCar => _hasStartedCar;
     private bool HasNoZombieOnSafeZone => !_hasZombieOnSafeZone;
     private bool CompletedBarricade => _completedBarricade;
@@ -62,16 +72,6 @@ public class VictoryManager
                 }
             }
         }
-    }
-
-    public void SetHasStartedCar(bool hasStartedCar)
-    {
-        _hasStartedCar = hasStartedCar;
-    }
-
-    public void CheckIfHasNoHumanPlayers()
-    {
-        _hasNoMoreHumanPlayers = !_playerManager.HasHumanPlayerUnits();
     }
 
     private bool HasNohumanPlayers => _hasNoMoreHumanPlayers;

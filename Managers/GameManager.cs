@@ -153,6 +153,10 @@ public class GameManager : Node2D
 				StartPlayersTurn();
 
 				break;
+
+			case "victory":
+				ChangePhase(nameof(GamePhase.GAME_END));
+				break;
 		}
 	}
 
@@ -361,6 +365,7 @@ public class GameManager : Node2D
 			if (HasEnemyUnit(currentMove.Position.Column, currentMove.Position.Row, selectedPlayer.GetPlayerNumber(), out var enemy))
 			{
 				_playerManager.KillUnit(enemy);
+				_victoryManager.CheckForVictory();
 			}
 
 			return 1;
@@ -422,6 +427,8 @@ public class GameManager : Node2D
 			if (HasEnemyUnit(currentMove.Position.Column, currentMove.Position.Row, selectedPlayer.GetPlayerNumber(), out var enemy))
 			{
 				_playerManager.KillUnit(enemy);
+				_victoryManager.CheckIfHasNoHumanPlayers();
+				_victoryManager.CheckForVictory();
 			}
 
 			return 1;
@@ -435,6 +442,20 @@ public class GameManager : Node2D
 		});
 
 		selectedPlayer.SetAP(selectedPlayer.AP - currentMove.APWeight, emitSignal: true);
+	}
+
+	public void SetupVictory(VictoryResult victoryResult)
+	{
+		if(victoryResult == VictoryResult.HumanWinner)
+		{
+			_displayText.SetText($"[center]Human Wins[/center]");
+			_displayText.Display("victory");
+		}
+		else if(victoryResult == VictoryResult.ZombieWinner)
+		{
+			_displayText.SetText($"[center]Zombies Wins[/center]");
+			_displayText.Display("victory");
+		}
 	}
 }
 
