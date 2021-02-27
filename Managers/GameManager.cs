@@ -390,6 +390,15 @@ public class GameManager : Node2D
 			_displayText.SetText($"[center]{text}[/center]");
 			_displayText.Display();
 
+			if (GridHelper.CanMoveForward(Map, currentMove.Position.Column, currentMove.Position.Row, currentMove.Direction) &&
+			GridHelper.HasPlayerUnits(this, currentMove.Position.Column, currentMove.Position.Row, currentMove.Direction))
+			{
+				if (HasEnemyUnit(currentMove.Position.Column, currentMove.Position.Row, selectedPlayer.GetPlayerNumber(), out var enemy))
+				{
+					enemy.PushFrom(currentMove.Direction);
+				}
+			}
+
 			SetupInfection();
 
 			return 1;
@@ -446,12 +455,12 @@ public class GameManager : Node2D
 
 	public void SetupVictory(VictoryResult victoryResult)
 	{
-		if(victoryResult == VictoryResult.HumanWinner)
+		if (victoryResult == VictoryResult.HumanWinner)
 		{
 			_displayText.SetText($"[center]Human Wins[/center]");
 			_displayText.Display("victory");
 		}
-		else if(victoryResult == VictoryResult.ZombieWinner)
+		else if (victoryResult == VictoryResult.ZombieWinner)
 		{
 			_displayText.SetText($"[center]Zombies Wins[/center]");
 			_displayText.Display("victory");

@@ -48,6 +48,12 @@ public class VictoryManager
         _hasStartedCar = hasStartedCar;
     }
 
+    public void CheckHasCompletedBarricade()
+    {
+        //ToDo: do completed barricade logic
+        _completedBarricade = false;
+    }
+
     public void CheckIfHasNoHumanPlayers()
     {
         _hasNoMoreHumanPlayers = !_playerManager.HasHumanPlayerUnits();
