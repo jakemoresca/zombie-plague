@@ -14,7 +14,7 @@ public class Barricade : Area2D
 
 		_position = new GridPosition { Column = 0, Row = 0 };
 
-		this.Connect("input_event", this, "_on_Player_input_event");
+		this.Connect("input_event", this, "_on_Barricade_input_event");
 	}
 
 	public void SetGridPosition(int column, int row, string direction = "up")
@@ -43,74 +43,17 @@ public class Barricade : Area2D
 		return _direction;
 	}
 
-	private void _on_Player_input_event(Viewport viewport, InputEvent @event, int shape_idx)
+	private void _on_Barricade_input_event(Viewport viewport, InputEvent @event, int shape_idx)
 	{
 		if (@event is InputEventMouseButton mouseEvent && @mouseEvent.Pressed)
 		{
 			switch ((ButtonList)mouseEvent.ButtonIndex)
 			{
 				case ButtonList.Left:
-					GD.Print($"Left button was clicked at {mouseEvent.Position}");
-					_map.SelectNode(this);
+					
 					break;
 			}
 		}
-	}
-
-	public void MoveForward()
-	{
-		var tileSize = _map.GetTileSize();
-		var initCoordinates = _map.GetInitCoordinates();
-
-		switch (_direction)
-		{
-			case "up":
-				_position.Row -= 1;
-				break;
-
-			case "left":
-				_position.Column -= 1;
-				break;
-
-			case "right":
-				_position.Column += 1;
-				break;
-
-			case "down":
-				_position.Row += 1;
-				break;
-		}
-
-		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
-		this.Position = new Vector2(position.x, position.y - 28);
-	}
-
-	public void PushFrom(string originDirection)
-	{
-		var tileSize = _map.GetTileSize();
-		var initCoordinates = _map.GetInitCoordinates();
-
-		switch (originDirection)
-		{
-			case "up":
-				_position.Row -= 1;
-				break;
-
-			case "left":
-				_position.Column -= 1;
-				break;
-
-			case "right":
-				_position.Column += 1;
-				break;
-
-			case "down":
-				_position.Row += 1;
-				break;
-		}
-
-		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
-		this.Position = new Vector2(position.x, position.y - 28);
 	}
 
 	public void SpawnTo(int column, int row)

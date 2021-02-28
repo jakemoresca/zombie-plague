@@ -189,6 +189,33 @@ public static class GridHelper
 		return hasSearchable;
 	}
 
+	public static bool CanSetBarricade(Map map, int column, int row, string direction, int playerNumber)
+	{
+		var collisionMapKey = $"col{column}row{row}";
+		
+		var doors = map.Doors;
+		var windows = map.Windows;
+
+		var collisionChecks = new List<Tuple<Godot.Collections.Dictionary, bool>>();
+		collisionChecks.Add(new Tuple<Godot.Collections.Dictionary, bool>(doors, true));
+		collisionChecks.Add(new Tuple<Godot.Collections.Dictionary, bool>(windows, true));
+
+		foreach(var collisionCheck in collisionChecks)
+		{
+			if (collisionCheck.Item1.Contains(collisionMapKey))
+			{
+				var hasBarricade = !HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, collisionCheck.Item2);
+
+				if(hasBarricade)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public static bool IsSideDirection(string direction, string directionToCompare)
 	{
 		if (direction == "up" || direction == "down")

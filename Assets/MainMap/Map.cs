@@ -82,14 +82,14 @@ public class Map : Area2D
 
 	public void SelectNode(Node2D node)
 	{
-		if(_currentSelectedNode != null && _currentSelectedNode.IsConnected("FinishedMovement", this, "_on_Player_FinishedMovement"))
+		if (_currentSelectedNode != null && _currentSelectedNode.IsConnected("FinishedMovement", this, "_on_Player_FinishedMovement"))
 			_currentSelectedNode.Disconnect("FinishedMovement", this, "_on_Player_FinishedMovement");
 
 		_currentSelectedNode = node;
 
 		_currentSelectedNode.Connect("FinishedMovement", this, "_on_Player_FinishedMovement");
 
-		if(node is Player player)
+		if (node is Player player)
 		{
 			var position = player.GetGridPosition();
 			_on_Player_FinishedMovement(position.Column, position.Row, player.GetDirection());
@@ -141,7 +141,7 @@ public class Map : Area2D
 
 		var hasSearchCount = searchable.Contains("searchCount");
 
-		if(hasSearchCount)
+		if (hasSearchCount)
 		{
 			var searchCount = (int)searchable["searchCount"];
 			searchCount += 1;
@@ -154,5 +154,34 @@ public class Map : Area2D
 		}
 
 		searchable.Add($"searchByPlayer{playerNumber}", true);
+	}
+
+	public void SetBarricadeStatus(string barricadeKey, bool isClosed)
+	{
+		Godot.Collections.Dictionary barricade;
+
+		if (_doors.Contains(barricadeKey))
+		{
+			barricade = (Godot.Collections.Dictionary)_doors[barricadeKey];
+		}
+		else if (_windows.Contains(barricadeKey))
+		{
+			barricade = (Godot.Collections.Dictionary)_windows[barricadeKey];
+		}
+		else
+		{
+			return;
+		}
+
+		var hasIsClosed = barricade.Contains("IsClosed");
+
+		if (hasIsClosed)
+		{
+			barricade["IsClosed"] = isClosed;
+		}
+		else
+		{
+			barricade.Add("IsClosed", isClosed);
+		}
 	}
 }

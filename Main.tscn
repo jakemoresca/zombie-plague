@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Assets/UI/SpawnQueue/SpawnQueue.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/MainMap/MainMap.tscn" type="PackedScene" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://Assets/Cards/Card.tscn" type="PackedScene" id=18]
 [ext_resource path="res://Fonts/Round9x13.ttf" type="DynamicFontData" id=19]
 [ext_resource path="res://Assets/UI/ActionBarButtons/BagButton.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Assets/UI/ActionBarButtons/SetBarricade.tscn" type="PackedScene" id=21]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -79,6 +80,9 @@ position = Vector2( 0, 400 )
 scale = Vector2( 0.8, 0.8 )
 
 [node name="APStatus" parent="ActionButtons" instance=ExtResource( 10 )]
+position = Vector2( -258, 0 )
+
+[node name="SearchButton2" parent="ActionButtons" instance=ExtResource( 21 )]
 position = Vector2( -172, 0 )
 
 [node name="BagButton" parent="ActionButtons" instance=ExtResource( 20 )]

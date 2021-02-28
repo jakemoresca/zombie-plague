@@ -466,6 +466,8 @@ public class GameManager : Node2D
 			_displayText.Display("victory");
 		}
 	}
+
+	public void SpawnBarricade(int column, int row) => _playerManager.SpawnBarricade(column, row);
 }
 
 public enum GamePhase

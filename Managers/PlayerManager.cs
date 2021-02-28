@@ -8,6 +8,7 @@ public class PlayerManager
 	private GameManager _root;
 	private int _numberOfPlayers;
 	private Dictionary<int, List<Player>> _playerUnits;
+	private List<Barricade> _barricades;
 	public int ZombieAP = 2;
 	public int PlayerAP = 4;
 
@@ -15,6 +16,7 @@ public class PlayerManager
 	{
 		_root = root;
 		_playerUnits = new Dictionary<int, List<Player>>();
+		_barricades = new List<Barricade>();
 
 		_root.SpawnQueue.Connect("SpawnFinished", root, "_on_SpawnFinished");
 	}
@@ -69,7 +71,9 @@ public class PlayerManager
 			var toCreateZombieUnits = _root.Phase == nameof(GamePhase.ZOMBIE_START) ? 1 : maxNumberOfZombieUnits - numberOfZombieUnits;
 
 			if (toCreateZombieUnits > 2)
+			{
 				toCreateZombieUnits = 2;
+			}
 
 			//ToDo: randomize/unique character scene
 			CreateAdditionalUnit("res://Assets/Zombie/Zombie.tscn", toCreateZombieUnits, playerNumber);
@@ -222,6 +226,22 @@ public class PlayerManager
 			
 			_playerUnits[(int)PlayerNumber.Zombie].Add(player);
 		}
+	}
+
+	public Barricade SpawnBarricade(int column, int row)
+	{
+		var barricadeScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/ActionBarButtons/SetBarricade.tscn");
+		var barricadeInstance = barricadeScene.Instance() as Barricade;
+		var barricadeKey = $"col{column}row{row}";
+
+		_root.Map.AddChild(barricadeInstance);
+		_barricades.Add(barricadeInstance);
+
+		barricadeInstance.SpawnTo(column, row);
+
+		_root.Map.SetBarricadeStatus(barricadeKey, true);
+
+		return barricadeInstance;
 	}
 }
 
