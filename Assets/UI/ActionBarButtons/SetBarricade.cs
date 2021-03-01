@@ -55,9 +55,30 @@ public class SetBarricade : Area2D
 					if (currentSelectedNode is Player player)
 					{
 						var gridPosition = player.GetGridPosition();
-						var barricadeKey = $"col{gridPosition.Column}row{gridPosition.Row}";
+						var column = gridPosition.Column;
+						var row = gridPosition.Row;
+						var direction = player.GetDirection();
 
-						_gameManager.InitiateSearch(player.GetPlayerNumber(), barricadeKey);
+						switch (direction)
+						{
+							case "up":
+								row -= 1;
+								break;
+
+							case "left":
+								column -= 1;
+								break;
+
+							case "right":
+								column += 1;
+								break;
+
+							case "down":
+								row += 1;
+								break;
+						}
+
+						_gameManager.SpawnBarricade(column, row);
 					}
 
 					break;

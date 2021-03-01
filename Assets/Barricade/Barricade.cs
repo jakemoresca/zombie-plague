@@ -65,7 +65,7 @@ public class Barricade : Area2D
 		_position.Column = column;
 
 		var position = GridHelper.GetTargetPosition(_map.Tilemap, _position, (int)tileSize, initCoordinates);
-		this.Position = new Vector2(position.x, position.y - 28);
+		this.Position = new Vector2(position.x, position.y);
 
 		this.Show();
 	}

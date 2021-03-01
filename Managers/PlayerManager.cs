@@ -230,8 +230,8 @@ public class PlayerManager
 
 	public Barricade SpawnBarricade(int column, int row)
 	{
-		var barricadeScene = ResourceLoader.Load<PackedScene>("res://Assets/UI/ActionBarButtons/SetBarricade.tscn");
-		var barricadeInstance = barricadeScene.Instance() as Barricade;
+		var barricadeScene = ResourceLoader.Load<PackedScene>("res://Assets/Barricade/Barricade.tscn");
+		var barricadeInstance = (Barricade)barricadeScene.Instance();
 		var barricadeKey = $"col{column}row{row}";
 
 		_root.Map.AddChild(barricadeInstance);

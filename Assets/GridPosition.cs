@@ -204,7 +204,7 @@ public static class GridHelper
 		{
 			if (collisionCheck.Item1.Contains(collisionMapKey))
 			{
-				var hasBarricade = !HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, collisionCheck.Item2);
+				var hasBarricade = HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, collisionCheck.Item2);
 
 				if(hasBarricade)
 				{
