@@ -191,6 +191,9 @@ public static class GridHelper
 
 	public static bool CanSetBarricade(Map map, int column, int row, string direction, int playerNumber)
 	{
+		if(playerNumber == (int)PlayerNumber.Zombie)
+			return false;
+			
 		var collisionMapKey = $"col{column}row{row}";
 		
 		var doors = map.Doors;
@@ -250,5 +253,93 @@ public static class GridHelper
 		}
 
 		return string.Empty;
+	}
+
+	public static bool HasFourPileFriendlies(GameManager gameManager, GridPosition position, string doorDirection, int playerNumber)
+	{
+		var score = 1;
+
+		var fourPilePositions = GetFourPilePositions(position, doorDirection);
+
+		foreach (var fourPilePosition in fourPilePositions)
+		{
+			if(gameManager.HasFriendlyUnit(fourPilePosition.Column, fourPilePosition.Row, playerNumber))
+				score++;
+
+			if(score >= 4)
+				break;
+		}
+	
+		return score >= 4;
+	}
+
+	private static List<GridPosition> GetFourPilePositions(GridPosition position, string doorDirection)
+	{
+		var column = position.Column;
+		var row = position.Row;
+		var fourPilePositions = new List<GridPosition>();
+
+		if(doorDirection == "right")
+		{
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 1 });
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row - 1 });
+
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 1 });
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row + 1 });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 2, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column - 3, Row = row });
+
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 2 });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 2 });
+		}
+		else if(doorDirection == "left")
+		{
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 1 });
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row - 1 });
+
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 1 });
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row + 1 });
+
+			fourPilePositions.Add(new GridPosition { Column = column + 2, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column + 3, Row = row });
+
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 2 });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 2 });
+		}
+		else if(doorDirection == "up")
+		{
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 1 });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 2 });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row - 3 });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row - 1 });
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row - 1 });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 2, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column + 2, Row = row });
+		}
+		else if(doorDirection == "down")
+		{
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 1 });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 2 });
+			fourPilePositions.Add(new GridPosition { Column = column, Row = row + 3 });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 1, Row = row + 1 });
+			fourPilePositions.Add(new GridPosition { Column = column + 1, Row = row + 1 });
+
+			fourPilePositions.Add(new GridPosition { Column = column - 2, Row = row });
+			fourPilePositions.Add(new GridPosition { Column = column + 2, Row = row });
+		}
+
+		return fourPilePositions;
 	}
 }

@@ -82,7 +82,7 @@ scale = Vector2( 0.8, 0.8 )
 [node name="APStatus" parent="ActionButtons" instance=ExtResource( 10 )]
 position = Vector2( -258, 0 )
 
-[node name="SearchButton2" parent="ActionButtons" instance=ExtResource( 21 )]
+[node name="SetBarricade" parent="ActionButtons" instance=ExtResource( 21 )]
 position = Vector2( -172, 0 )
 
 [node name="BagButton" parent="ActionButtons" instance=ExtResource( 20 )]

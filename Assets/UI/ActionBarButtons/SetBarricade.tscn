@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 40.1756, 40.7008 )
 
-[node name="SearchButton" type="Area2D"]
+[node name="SetBarricade" type="Area2D"]
 script = ExtResource( 3 )
 
 [node name="Cell" type="Sprite" parent="."]

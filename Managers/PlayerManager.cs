@@ -167,6 +167,44 @@ public class PlayerManager
 		}));
 	}
 
+	public bool HasFriendlyUnit(int column, int row, int playerNumber)
+	{
+		if (playerNumber == (int)PlayerNumber.Zombie)
+		{
+			foreach (var player in _playerUnits.Where(x => x.Key == playerNumber))
+			{
+				foreach (var playerUnit in player.Value)
+				{
+					var position = playerUnit.GetGridPosition();
+					var isInPosition = position.Column == column && position.Row == row;
+
+					if (isInPosition)
+					{
+						return true;
+					}
+				}
+			}
+		}
+		else if (playerNumber != (int)PlayerNumber.Zombie)
+		{
+			foreach (var player in _playerUnits.Where(x => x.Key != (int)PlayerNumber.Zombie))
+			{
+				foreach (var playerUnit in player.Value)
+				{
+					var position = playerUnit.GetGridPosition();
+					var isInPosition = position.Column == column && position.Row == row;
+
+					if (isInPosition)
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public bool HasEnemyUnit(int column, int row, int playerNumber, out Player enemy)
 	{
 		if (playerNumber == (int)PlayerNumber.Zombie)
@@ -242,6 +280,29 @@ public class PlayerManager
 		_root.Map.SetBarricadeStatus(barricadeKey, true);
 
 		return barricadeInstance;
+	}
+	
+	public bool HasBarricade(int column, int row)
+	{
+		return _barricades.Any(x => 
+		{
+			var gridPosition = x.GetGridPosition();
+
+			return gridPosition.Column == column && gridPosition.Row == row;
+		});
+	}
+
+	public void RemoveBarricade(int column, int row)
+	{
+		var barricade = _barricades.FirstOrDefault(x => 
+		{
+			var gridPosition = x.GetGridPosition();
+
+			return gridPosition.Column == column && gridPosition.Row == row;
+		});
+
+		_barricades.Remove(barricade);
+		barricade.KillUnit();
 	}
 }
 

@@ -272,6 +272,7 @@ public class GameManager : Node2D
 
 	public bool HasPlayerUnits(int column, int row) => _playerManager.HasPlayerUnits(column, row);
 	public bool HasEnemyUnit(int column, int row, int playerNumber, out Player enemy) => _playerManager.HasEnemyUnit(column, row, playerNumber, out enemy);
+	public bool HasFriendlyUnit(int column, int row, int playerNumber) => _playerManager.HasFriendlyUnit(column, row, playerNumber);
 
 	public void InitiateSearch(int playerNumber, string searchableKey)
 	{
@@ -468,6 +469,10 @@ public class GameManager : Node2D
 	}
 
 	public void SpawnBarricade(int column, int row) => _playerManager.SpawnBarricade(column, row);
+
+	public bool HasBarricade(int column, int row) => _playerManager.HasBarricade(column, row);
+
+	public void RemoveBarricade(int column, int row) => _playerManager.RemoveBarricade(column, row);
 }
 
 public enum GamePhase
