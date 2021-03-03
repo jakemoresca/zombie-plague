@@ -199,27 +199,25 @@
         "col16row18": { "down": true }     
     },
     "windows": {
-        "col7row11": { "right": true },
-        "col8row11": { "left": true },
-        "col7row17": { "right": true },
-        "col8row17": { "left": true },
-        "col7row18": { "right": true },
-        "col8row18": { "left": true }
+        "col7row11": { "left": true, "right": true },
+        "col7row12": { "left": true, "right": true },
+        "col7row14": { "left": true, "right": true },
+        "col7row17": { "left": true, "right": true },
+        "col7row18": { "left": true, "right": true }
     },
     "car": {
         "col7row2": { "down": true },
         "col7row6": { "up": true }
     },
     "doors": {
-        "col16row6": { "down": true },
-        "col16row7": { "up": true },
-        "col12row8": { "down": true },
-        "col12row9": { "up": true },
-        "col18row12": { "right": true },
-        "col19row12": { "left": true },
-        "col7row14": { "right": true },
-        "col8row14": { "left": true },
-        "col18row16": { "right": true },
-        "col19row16": { "left": true }
+        "col16row6": { "up": true, "down": true },
+        "col16row7": { "up": true, "down": true },
+        "col12row8": { "up": true, "down": true },
+        "col12row9": { "up": true, "down": true },
+        "col18row12": { "left": true, "right": true },
+        "col19row12": { "left": true, "right": true },
+        "col7row14": { "left": true, "right": true },
+        "col18row16": { "left": true, "right": true },
+        "col19row16": { "left": true, "right": true }
     }
 }

@@ -76,7 +76,11 @@ public static class GridHelper
 		{
 			if (collisionCheck.Item1.Contains(collisionMapKey))
 			{
-				passable = HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, collisionCheck.Item2);
+				var hasFound = false;
+				passable = HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, out hasFound, collisionCheck.Item2);
+
+				if(hasFound && collisionCheck.Item2 && !passable)
+					break;
 			}
 		}
 
@@ -84,9 +88,10 @@ public static class GridHelper
 	}
 
 	private static bool HasCollisionWithCollisionMaps(Godot.Collections.Dictionary collisionMap, string collisionMapKey,
-		string direction, bool canClose = false)
+		string direction, out bool hasFound, bool canClose = false)
 	{
 		var passable = true;
+		hasFound = false;
 
 		if (collisionMap.Contains(collisionMapKey))
 		{
@@ -102,11 +107,15 @@ public static class GridHelper
 						passable = !isClosed && !bool.Parse(collisionMapValue[direction].ToString());
 
 						GD.Print($"Can Pass: {passable} {collisionMapKey}");
+
+						hasFound = true;
 					}
 					else
 					{
-						GD.Print($"Can Pass {collisionMapKey}");
+						GD.Print($"Can Pass {true} {collisionMapKey}");
+
 						passable = true;
+						hasFound = true;
 					}
 				}
 				else
@@ -114,6 +123,8 @@ public static class GridHelper
 					passable = !bool.Parse(collisionMapValue[direction].ToString());
 
 					GD.Print($"Can Pass: {passable} {collisionMapKey}");
+
+					hasFound = true;
 				}
 			}
 		}
@@ -176,7 +187,7 @@ public static class GridHelper
 		var searchableKey = $"col{column}row{row}";
 		
 		var searchables = map.Searchables;
-		var hasSearchable = !HasCollisionWithCollisionMaps(searchables, searchableKey, direction);
+		var hasSearchable = !HasCollisionWithCollisionMaps(searchables, searchableKey, direction, out _);
 
 		if(hasSearchable)
 		{
@@ -207,7 +218,7 @@ public static class GridHelper
 		{
 			if (collisionCheck.Item1.Contains(collisionMapKey))
 			{
-				var hasBarricade = HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, collisionCheck.Item2);
+				var hasBarricade = HasCollisionWithCollisionMaps(collisionCheck.Item1, collisionMapKey, direction, out _, collisionCheck.Item2);
 
 				if(hasBarricade)
 				{

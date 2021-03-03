@@ -1,0 +1,110 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Resources/Tilesets/TINY_WORLD_TILESET.tres" type="TileSet" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "tool
+extends TileMap
+
+
+export(Dictionary) var animations = {
+	\"Tile 0\":
+		{
+			\"frame\"	: 0,
+			\"delay\"	: 0.2,
+			\"time\"	: 0,
+			\"animation_rects\":
+				[
+					Rect2(0, 0, 288, 384),
+					Rect2(288, 0, 288, 384),
+					Rect2(576, 0, 288, 384)
+				],
+		},
+	\"Tile 1\":
+		{
+			\"frame\"	: 0,
+			\"delay\"	: 0.2,
+			\"time\"	: 0,
+			\"animation_rects\":
+				[
+					Rect2(0, 384, 288, 384),
+					Rect2(288, 384, 288, 384),
+					Rect2(576, 384, 288, 384)
+				],
+		},
+	\"Tile 2\":
+		{
+			\"frame\"	: 0,
+			\"delay\"	: 0.2,
+			\"time\"	: 0,
+			\"animation_rects\":
+				[
+					Rect2(0, 768, 288, 384),
+					Rect2(288, 768, 288, 384),
+					Rect2(576, 768, 288, 384)
+				],
+		},
+	\"Tile 29\":
+		{
+			\"frame\"	: 0,
+			\"delay\"	: 0.18,
+			\"time\"	: 0,
+			\"animation_rects\":
+				[
+					Rect2(576, 4224, 288, 192),
+					Rect2(576, 4416, 288, 192),
+					Rect2(0, 4608, 288, 192)
+				],
+		},
+
+}
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if !tile_set: return
+	for key in animations.keys():
+		var tile_id = int(key)
+		var animation = animations[key]
+		animation.time += delta
+		if animation.time >= animation.delay:
+			animation.time = 0
+			animation.frame += 1
+			if animation.frame >= animation.animation_rects.size():
+				animation.frame = 0
+			var current_rect = animation.animation_rects[animation.frame]
+			tile_set.tile_set_region(tile_id, current_rect)
+"
+
+[node name="TileMap" type="TileMap"]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 48, 48 )
+cell_quadrant_size = 32
+cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+format = 1
+script = SubResource( 1 )
+animations = {
+"Tile 0": {
+"animation_rects": [ Rect2( 0, 0, 288, 384 ), Rect2( 288, 0, 288, 384 ), Rect2( 576, 0, 288, 384 ) ],
+"delay": 0.2,
+"frame": 2,
+"time": 0
+},
+"Tile 1": {
+"animation_rects": [ Rect2( 0, 384, 288, 384 ), Rect2( 288, 384, 288, 384 ), Rect2( 576, 384, 288, 384 ) ],
+"delay": 0.2,
+"frame": 2,
+"time": 0
+},
+"Tile 2": {
+"animation_rects": [ Rect2( 0, 768, 288, 384 ), Rect2( 288, 768, 288, 384 ), Rect2( 576, 768, 288, 384 ) ],
+"delay": 0.2,
+"frame": 2,
+"time": 0
+},
+"Tile 29": {
+"animation_rects": [ Rect2( 576, 4224, 288, 192 ), Rect2( 576, 4416, 288, 192 ), Rect2( 0, 4608, 288, 192 ) ],
+"delay": 0.18,
+"frame": 2,
+"time": 0.115221
+}
+}
