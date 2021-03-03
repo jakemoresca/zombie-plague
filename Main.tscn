@@ -31,6 +31,10 @@ position = Vector2( -62.9961, 70.5555 )
 script = ExtResource( 17 )
 
 [node name="MainMap" parent="." instance=ExtResource( 2 )]
+position = Vector2( -869.896, -752.428 )
+numberOfRows = 21
+initX = 0
+initY = 0
 mapData = "MainMap.json"
 
 [node name="SelectIndicator" parent="MainMap" instance=ExtResource( 15 )]
