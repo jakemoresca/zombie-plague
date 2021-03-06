@@ -25,8 +25,6 @@ public class Map : Area2D
 	private delegate void FinishedUpdating();
 
 	private Godot.Collections.Dictionary _collisionMaps;
-
-	private Godot.Collections.Dictionary _doors;
 	private Godot.Collections.Dictionary _windows;
 	private Godot.Collections.Dictionary _searchables;
 
@@ -116,15 +114,12 @@ public class Map : Area2D
 
 		_collisionMaps = (Godot.Collections.Dictionary)contentResult["collisionMaps"];
 		_windows = (Godot.Collections.Dictionary)contentResult["windows"];
-		_doors = (Godot.Collections.Dictionary)contentResult["doors"];
 		_searchables = (Godot.Collections.Dictionary)contentResult["searchables"];
 
 		mapDataFile.Close();
 	}
 
 	public Godot.Collections.Dictionary CollisionMaps => _collisionMaps;
-
-	public Godot.Collections.Dictionary Doors => _doors;
 
 	public Godot.Collections.Dictionary Windows => _windows;
 	public Godot.Collections.Dictionary Searchables => _searchables;
@@ -160,11 +155,7 @@ public class Map : Area2D
 	{
 		Godot.Collections.Dictionary barricade;
 
-		if (_doors.Contains(barricadeKey))
-		{
-			barricade = (Godot.Collections.Dictionary)_doors[barricadeKey];
-		}
-		else if (_windows.Contains(barricadeKey))
+		if (_windows.Contains(barricadeKey))
 		{
 			barricade = (Godot.Collections.Dictionary)_windows[barricadeKey];
 		}

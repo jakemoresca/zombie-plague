@@ -3,9 +3,6 @@ using System;
 
 public class Borders : Node2D
 {
-	// Declare member variables here. Examples:
-	// private int a = 2;
-	// private string b = "text";
 	private Area2D _map;
 	private TileMap _tilemap;
 	private Area2D _upBorder;
