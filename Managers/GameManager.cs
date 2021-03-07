@@ -473,6 +473,10 @@ public class GameManager : Node2D
 	public bool HasBarricade(int column, int row) => _playerManager.HasBarricade(column, row);
 
 	public void RemoveBarricade(int column, int row) => _playerManager.RemoveBarricade(column, row);
+
+	public bool HasFullBarricade() => _playerManager.HasFullBarricade();
+
+	public void CheckForVictory() => _victoryManager.CheckForVictory();
 }
 
 public enum GamePhase

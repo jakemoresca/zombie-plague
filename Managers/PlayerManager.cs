@@ -307,6 +307,17 @@ public class PlayerManager
 		_barricades.Remove(barricade);
 		barricade.KillUnit();
 	}
+
+	public bool HasFullBarricade()
+	{
+		var outsideBarricades = _barricades.Where(x => {
+			var gridPosition = x.GetGridPosition();
+
+			return gridPosition.Column == 6 || gridPosition.Column == 17 || gridPosition.Column == 11;
+		});
+
+		return outsideBarricades.Count() == 8;
+	}
 }
 
 public enum PlayerNumber

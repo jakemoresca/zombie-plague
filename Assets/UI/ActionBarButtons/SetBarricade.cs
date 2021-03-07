@@ -102,6 +102,8 @@ public class SetBarricade : Area2D
 						{
 							_gameManager.SpawnBarricade(targetPosition.Column, targetPosition.Row);
 							player.SetAP(player.AP - 1, true);
+
+							_gameManager.CheckForVictory();
 						}
 						else
 						{

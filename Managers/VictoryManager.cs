@@ -48,21 +48,15 @@ public class VictoryManager
         _hasStartedCar = hasStartedCar;
     }
 
-    public void CheckHasCompletedBarricade()
-    {
-        //ToDo: do completed barricade logic
-        _completedBarricade = false;
-    }
-
     public void CheckIfHasNoHumanPlayers()
     {
         _hasNoMoreHumanPlayers = !_playerManager.HasHumanPlayerUnits();
     }
 
-    private bool HumanPlayersWon => HasStartedCar || (HasNoZombieOnSafeZone && CompletedBarricade);
+    private bool HumanPlayersWon => HasStartedCar || (HasNoZombieOnSafeZone && HasCompletedBarricade);
     private bool HasStartedCar => _hasStartedCar;
     private bool HasNoZombieOnSafeZone => !_hasZombieOnSafeZone;
-    private bool CompletedBarricade => _completedBarricade;
+    private bool HasCompletedBarricade => _root.HasFullBarricade();
 
     private void CheckIfHasNoZombieOnSafeZone()
     {
