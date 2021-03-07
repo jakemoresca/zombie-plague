@@ -128,19 +128,19 @@ public class GridCellIndicator : Area2D
 						{
 							var (maxColumn, maxRow) = _map.GetDimension();
 
-							if(Row == 1)
+							if(Row == 0)
 							{
 								_gameManager.SetLastZombieDirection("North");
 							}
-							else if(Row == maxRow)
+							else if(Row == maxRow - 1)
 							{
 								_gameManager.SetLastZombieDirection("South");
 							}
-							else if(Column == 1)
+							else if(Column == 0)
 							{
 								_gameManager.SetLastZombieDirection("West");
 							}
-							else if(Column == maxColumn)
+							else if(Column == maxColumn - 1)
 							{
 								_gameManager.SetLastZombieDirection("East");
 							}

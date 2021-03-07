@@ -31,7 +31,7 @@ public class MousePointer : Area2D
 		var coordPos = _tilemap.WorldToMap(mousePosition);
 		var (initX, initY) =  _map.GetInitCoordinates();
 
-		var gridPosition = new GridPosition{ Column = (int)coordPos.x - initX + 1, Row = (int)coordPos.y - initY + 1 };
+		var gridPosition = new GridPosition{ Column = (int)coordPos.x, Row = (int)coordPos.y};
 		this.Position = GridHelper.GetTargetPosition(_tilemap, gridPosition, _map.GetTileSize(), (initX, initY));
 	}
 
@@ -50,20 +50,5 @@ public class MousePointer : Area2D
 
 	private void _on_Map_finished_updating()
 	{
-		/*
-		var tileSize = _map.GetTileSize();
-		var initCoordinates = _map.GetInitCoordinates();
-		var currentSelectedNode = _map.GetSelectedNode();
-
-		if (currentSelectedNode is Player player)
-		{
-			var gridPosition = player.GetGridPosition();
-			var position = new GridPosition { Row = gridPosition.Row, Column = gridPosition.Column };
-
-			initCoordinates.Item2 += 28;
-
-			this.Position = GridHelper.GetTargetPosition(position, tileSize, initCoordinates);
-		}
-		*/
 	}
 }

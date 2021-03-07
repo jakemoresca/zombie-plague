@@ -211,9 +211,9 @@ public class MovementManager
 	{
 		IDictionary<string, PlayerMove> edges = new Dictionary<string, PlayerMove>();
 
-		for (int x = 1; x <= maxColumn; x++)
+		for (int x = 0; x < maxColumn; x++)
 		{
-			for (int y = 1; y <= maxRow; y++)
+			for (int y = 0; y < maxRow; y++)
 			{
 				var gridPosition = new GridPosition { Column = x, Row = y };
 				var playerMove = new PlayerMove { Position = gridPosition, APWeight = MAXVALUE };

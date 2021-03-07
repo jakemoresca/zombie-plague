@@ -21,22 +21,22 @@ public static class GridHelper
 
         var (numberOfColumns, numberOfRows) = map.GetDimension();
 
-        if (direction == "up" && row <= 1)
+        if (direction == "up" && row <= 0)
         {
             return passable;
         }
 
-        if (direction == "left" && column <= 1)
+        if (direction == "left" && column <= 0)
         {
             return passable;
         }
 
-        if (direction == "right" && column >= numberOfColumns)
+        if (direction == "right" && column > numberOfColumns)
         {
             return passable;
         }
 
-        if (direction == "down" && row >= numberOfRows)
+        if (direction == "down" && row > numberOfRows)
         {
             return passable;
         }
@@ -326,11 +326,11 @@ public static class GridHelper
     {
         var (initX, initY) = initCoordinates;
 
-        var vector2Position = new Vector2(position.Column + initX, position.Row + initY);
+        var vector2Position = new Vector2(position.Column, position.Row);
         var targetPosition = tilemap.MapToWorld(vector2Position, true);
 
-        var targetX = (targetPosition.x - (tileSize / 2)) * 1.5f;
-        var targetY = (targetPosition.y - (tileSize / 2)) * 1.5f;
+        var targetX = (targetPosition.x + (tileSize / 2)) * 1.5f;
+        var targetY = (targetPosition.y + (tileSize / 2)) * 1.5f;
 
         return new Vector2(targetX, targetY);
     }

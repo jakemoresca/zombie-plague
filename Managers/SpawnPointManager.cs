@@ -61,30 +61,30 @@ public class SpawnPointManager
 
         if (direction == "North")
         {
-            for (var x = 1; x <= maxColumns; x++)
+            for (var x = 0; x < maxColumns; x++)
             {
-                spawnCellPosition.Add(new Tuple<int, int>(x, 1));
+                spawnCellPosition.Add(new Tuple<int, int>(x, 0));
             }
         }
         else if (direction == "South")
         {
-            for (var x = 1; x <= maxColumns; x++)
+            for (var x = 0; x < maxColumns; x++)
             {
-                spawnCellPosition.Add(new Tuple<int, int>(x, maxRows));
+                spawnCellPosition.Add(new Tuple<int, int>(x, maxRows - 1));
             }
         }
         else if (direction == "East")
         {
-            for (var y = 1; y <= maxRows; y++)
+            for (var y = 0; y < maxRows; y++)
             {
-                spawnCellPosition.Add(new Tuple<int, int>(maxColumns, y));
+                spawnCellPosition.Add(new Tuple<int, int>(maxColumns - 1, y));
             }
         }
         else if (direction == "West")
         {
-            for (var y = 1; y <= maxRows; y++)
+            for (var y = 0; y < maxRows; y++)
             {
-                spawnCellPosition.Add(new Tuple<int, int>(1, y));
+                spawnCellPosition.Add(new Tuple<int, int>(0, y));
             }
         }
 

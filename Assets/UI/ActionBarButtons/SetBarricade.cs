@@ -29,12 +29,12 @@ public class SetBarricade : Area2D
 		{
 			var gridPosition = player.GetGridPosition();
 			var direction = player.GetDirection();
-			var (targetCol, targetRow) = GetTargetPosition(gridPosition, direction);
+			var targetPosition = GridHelper.GetTargetPosition(gridPosition.Column, gridPosition.Row, direction);
 			var playerNumber = player.GetPlayerNumber();
 			var isHumanPlayer = playerNumber != (int)PlayerNumber.Zombie;
 			var isZombiePlayer = playerNumber == (int)PlayerNumber.Zombie;
 
-			if (isZombiePlayer || _gameManager.HasBarricade(targetCol, targetRow))
+			if (isZombiePlayer || _gameManager.HasBarricade(targetPosition.Column, targetPosition.Row))
 			{
 				ChangeToDestroy();
 			}
@@ -66,7 +66,7 @@ public class SetBarricade : Area2D
 					this.Modulate = new Color("ffffff");
 					_disabled = false;
 				}
-				else if(_gameManager.HasBarricade(targetCol, targetRow) && isHumanPlayer && player.AP >= 4)
+				else if(_gameManager.HasBarricade(targetPosition.Column, targetPosition.Row) && isHumanPlayer && player.AP >= 4)
 				{
 					this.Modulate = new Color("ffffff");
 					_disabled = false;
@@ -96,16 +96,16 @@ public class SetBarricade : Area2D
 					if (currentSelectedNode is Player player)
 					{
 						var gridPosition = player.GetGridPosition();
-						var (column, row) = GetTargetPosition(gridPosition, player.GetDirection());
+						var targetPosition = GridHelper.GetTargetPosition(gridPosition.Column, gridPosition.Row, player.GetDirection());
 
 						if(_isSetMode)
 						{
-							_gameManager.SpawnBarricade(column, row);
+							_gameManager.SpawnBarricade(targetPosition.Column, targetPosition.Row);
 							player.SetAP(player.AP - 1, true);
 						}
 						else
 						{
-							_gameManager.RemoveBarricade(column, row);
+							_gameManager.RemoveBarricade(targetPosition.Column, targetPosition.Row);
 
 							if(player.GetPlayerNumber() == (int)PlayerNumber.Zombie)
 							{
@@ -137,32 +137,5 @@ public class SetBarricade : Area2D
 
 		var texture = ResourceLoader.Load<Texture>(SetBarricadeImage);
 		_sprite.Texture = texture;
-	}
-
-	private (int column, int row) GetTargetPosition(GridPosition gridPosition, string direction)
-	{
-		var column = gridPosition.Column;
-		var row = gridPosition.Row;
-
-		switch (direction)
-		{
-			case "up":
-				row -= 1;
-				break;
-
-			case "left":
-				column -= 1;
-				break;
-
-			case "right":
-				column += 1;
-				break;
-
-			case "down":
-				row += 1;
-				break;
-		}
-
-		return (column, row);
 	}
 }

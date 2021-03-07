@@ -301,6 +301,9 @@ public class PlayerManager
 			return gridPosition.Column == column && gridPosition.Row == row;
 		});
 
+		var barricadeKey = $"col{column}row{row}";
+		_root.Map.SetBarricadeStatus(barricadeKey, false);
+
 		_barricades.Remove(barricade);
 		barricade.KillUnit();
 	}

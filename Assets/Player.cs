@@ -21,7 +21,7 @@ public class Player : Area2D
 		_map = this.GetNode<Map>("../../MainMap");
 		_direction = "up";
 
-		_position = new GridPosition { Column = 0, Row = 0 };
+		_position = new GridPosition { Column = -1, Row = -1 };
 
 		this.Connect("input_event", this, "_on_Player_input_event");
 	}
@@ -180,7 +180,7 @@ public class Player : Area2D
 
 	public bool HasPosition()
 	{
-		return _position.Column > 0 && _position.Row > 0;
+		return _position.Column > -1 && _position.Row > -1;
 	}
 
 	public AnimatedSprite GetAnimatedSprite()
