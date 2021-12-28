@@ -33,9 +33,9 @@ script = ExtResource( 17 )
 [node name="MainMap" parent="." instance=ExtResource( 2 )]
 position = Vector2( -869.896, -752.428 )
 numberOfRows = 21
+mapData = "MainMap.json"
 initX = 0
 initY = 0
-mapData = "MainMap.json"
 
 [node name="SelectIndicator" parent="MainMap" instance=ExtResource( 15 )]
 
@@ -120,6 +120,7 @@ z_index = 999
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
 [connection signal="input_event" from="ActionButtons/Forward" to="ActionButtons/Forward" method="_on_Forward_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateLeft" to="ActionButtons/RotateLeft" method="_on_RotateLeft_input_event"]
 [connection signal="input_event" from="ActionButtons/RotateRight" to="ActionButtons/RotateRight" method="_on_RotateRight_input_event"]
